@@ -13,11 +13,11 @@ app.get("/", (_, res) => {
 });
 app.get("/time", (_, res) => {
     const date_obj = new Date();
-    const curr_time = date_obj.getHours() +
+    const curr_time = String(date_obj.getHours()).padStart(2, "0") +
         ":" +
-        date_obj.getMinutes() +
+        String(date_obj.getMinutes()).padStart(2, "0") +
         ":" +
-        date_obj.getSeconds();
+        String(date_obj.getSeconds()).padStart(2, "0");
     res.json({ message: "The current time is " + curr_time });
 });
 app.listen(port, () => {
