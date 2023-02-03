@@ -11,6 +11,15 @@ const port = process.env.PORT_NUM;
 app.get("/", (_, res) => {
     res.send("Express + TypeScript Server");
 });
+app.get("/time", (_, res) => {
+    const date_obj = new Date();
+    const curr_time = date_obj.getHours() +
+        ":" +
+        date_obj.getMinutes() +
+        ":" +
+        date_obj.getSeconds();
+    res.json({ message: "The current time is " + curr_time });
+});
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
