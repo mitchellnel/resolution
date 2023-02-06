@@ -33,7 +33,7 @@ app.get("/", (_: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
-app.get("/time", (_: Request, res: Response) => {
+app.get("/api/time", (_: Request, res: Response) => {
   const date_obj = new Date();
   const curr_time =
     String(date_obj.getHours()).padStart(2, "0") +

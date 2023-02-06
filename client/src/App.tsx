@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import { API_BASE_URL } from "./constants";
+import { API_TIME_ENDPOINT } from "./constants";
 
 function App() {
   const [time, setTime] = useState<string>("");
@@ -10,7 +10,7 @@ function App() {
   // use API call to get time from server and set state when it has been received
   const getTime = async () => {
     try {
-      const res = await fetch(API_BASE_URL + "/time");
+      const res = await fetch(API_TIME_ENDPOINT);
       const json = await res.json();
 
       const time = json.message;
