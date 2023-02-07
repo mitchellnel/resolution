@@ -2,6 +2,24 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## First Time Setup
+
+To install all of the necessary Node Modules, run:
+
+```bash
+npm install
+```
+
+Then, to test that everything is working, run:
+
+```
+npm start
+```
+
+And proceed to [http://localhost:3000](http://localhost:3000)
+
+(If it doesn't work the first time, try again)
+
 ## Available Scripts
 
 In the project directory, you can run:

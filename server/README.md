@@ -1,5 +1,21 @@
 # Getting Started with `server`
 
+## First Time Setup
+
+To install all of the necessary Node Modules, run:
+
+```bash
+npm install
+```
+
+Then, to test that everything is working, run:
+
+```
+npm start
+```
+
+And proceed to [http://localhost:3333](http://localhost:3333)
+
 ## Available Scripts
 
 In the project directory, you can run:
