@@ -25,6 +25,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+// @ts-ignore
 const firebase_app = initializeApp(firebaseConfig);
 
 /* */

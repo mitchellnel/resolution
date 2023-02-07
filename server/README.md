@@ -22,8 +22,10 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the server.\
+Builds _and_ runs the server.\
 Open [http://localhost:3333](http://localhost:3333) to view it in your browser.
+
+This command will not cause the server to run if there are build errors. Some of these build errors may be unused variables. You can comment `// @ts-ignore` on the line before the error-causing line to ignore the error.
 
 The page **will not** reload when you make changes.
 
