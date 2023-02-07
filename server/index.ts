@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env.development.local" });
 
 const app: Express = express();
-const port = process.env.PORT_NUM;
+const PORT_NUM = 3333;
 
 /* FIREBASE SETUP */
 // Import the functions you need from the SDKs you need
@@ -45,6 +45,6 @@ app.get("/api/time", (_: Request, res: Response) => {
   res.json({ message: "The current time is " + curr_time });
 });
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+app.listen(PORT_NUM, () => {
+  console.log(`⚡️[server]: Server is running at http://localhost:${PORT_NUM}`);
 });
