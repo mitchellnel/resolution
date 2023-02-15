@@ -38,10 +38,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const firebase_app = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
 // Initialize Realtime Database and get a reference to the service
-const database = getDatabase(firebase_app);
+const database = getDatabase(firebaseApp);
 
 /* */
 
@@ -50,30 +50,30 @@ app.get("/", (_: Request, res: Response) => {
 });
 
 app.get("/api/time", (_: Request, res: Response) => {
-  const date_obj = new Date();
-  const curr_time =
-    String(date_obj.getHours()).padStart(2, "0") +
+  const dateObj = new Date();
+  const currTime =
+    String(dateObj.getHours()).padStart(2, "0") +
     ":" +
-    String(date_obj.getMinutes()).padStart(2, "0") +
+    String(dateObj.getMinutes()).padStart(2, "0") +
     ":" +
-    String(date_obj.getSeconds()).padStart(2, "0");
+    String(dateObj.getSeconds()).padStart(2, "0");
 
-  res.json({ message: "The current time is " + curr_time });
+  res.json({ message: currTime });
 });
 
 // DB CRUD Test Endpoints
 app.post("/api/create", async (req: Request, res: Response) => {
   const data = req.body;
-  const json_data = JSON.stringify(data);
+  const jsonData = JSON.stringify(data);
 
   // add data to the DB
   try {
-    await set(ref(database, "more/sample_data/"), json_data);
-    res.send(`Data Received: ${json_data}\n\t... Data added to DB!`);
+    await set(ref(database, "more/sample_data/"), jsonData);
+    res.send(`Data Received: ${jsonData}\n\t... Data added to DB!`);
   } catch (err) {
     console.log(err);
     res.send(
-      `Data Received: ${json_data}\n\t... Data could not be added to the DB ...`
+      `Data Received: ${jsonData}\n\t... Data could not be added to the DB ...`
     );
   }
 });
