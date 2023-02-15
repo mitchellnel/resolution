@@ -6,6 +6,8 @@ dotenv.config({ path: "./.env.development.local" });
 const app: Express = express();
 const PORT_NUM = 3333;
 
+app.use(express.json());
+
 /* FIREBASE SETUP */
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -27,7 +29,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-// @ts-ignore
 const firebase_app = initializeApp(firebaseConfig);
 
 // Initialize Realtime Database and get a reference to the service
@@ -49,6 +50,16 @@ app.get("/api/time", (_: Request, res: Response) => {
     String(date_obj.getSeconds()).padStart(2, "0");
 
   res.json({ message: "The current time is " + curr_time });
+});
+
+app.post("/api/create", (req: Request, res: Response) => {
+  const data = req.body;
+  const json_data = JSON.stringify(data);
+
+  // add data to the DB
+  set(ref(database, "more/sample_data/"), json_data);
+
+  res.send(`Data Received: ${json_data}\n\t... Data added to DB!`);
 });
 
 app.listen(PORT_NUM, () => {
