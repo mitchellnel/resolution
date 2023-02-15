@@ -19,6 +19,7 @@ import {
   get,
   push,
   update,
+  remove,
 } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -139,6 +140,27 @@ app.post("/api/update", async (req: Request, res: Response) => {
   } catch (err) {
     console.log(err);
     res.send("Update not successful...");
+  }
+});
+
+app.post("/api/delete", async (req: Request, res: Response) => {
+  // get the path to delete
+  // reject request if path not included
+  const data = req.body;
+  const deletePath: string = data["deletePath"] ?? "";
+
+  if (deletePath === "") {
+    res.send("No delete path given");
+    return;
+  }
+
+  // delete data at the path
+  try {
+    await remove(ref(database, deletePath));
+    res.send("Deletion successful!");
+  } catch (err) {
+    console.log(err);
+    res.send("Deletion was not successful ...");
   }
 });
 
