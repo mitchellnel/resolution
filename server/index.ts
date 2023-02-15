@@ -9,6 +9,7 @@ const PORT_NUM = 3333;
 /* FIREBASE SETUP */
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,11 +23,15 @@ const firebaseConfig = {
   messagingSenderId: "132359590757",
   appId: "1:132359590757:web:6c2bf789203dd4873d478c",
   measurementId: "G-GP51SC0WBL",
+  databaseURL: "https://resolution-bcmmz-default-rtdb.firebaseio.com/",
 };
 
 // Initialize Firebase
 // @ts-ignore
 const firebase_app = initializeApp(firebaseConfig);
+
+// Initialize Realtime Database and get a reference to the service
+const database = getDatabase(firebase_app);
 
 /* */
 
