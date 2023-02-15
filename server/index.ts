@@ -61,14 +61,20 @@ app.get("/api/time", (_: Request, res: Response) => {
 });
 
 // DB CRUD Test Endpoints
-app.post("/api/create", (req: Request, res: Response) => {
+app.post("/api/create", async (req: Request, res: Response) => {
   const data = req.body;
   const json_data = JSON.stringify(data);
 
   // add data to the DB
-  set(ref(database, "more/sample_data/"), json_data);
-
-  res.send(`Data Received: ${json_data}\n\t... Data added to DB!`);
+  try {
+    await set(ref(database, "more/sample_data/"), json_data);
+    res.send(`Data Received: ${json_data}\n\t... Data added to DB!`);
+  } catch (err) {
+    console.log(err);
+    res.send(
+      `Data Received: ${json_data}\n\t... Data could not be added to the DB ...`
+    );
+  }
 });
 
 app.get("/api/read", async (req: Request, res: Response) => {
@@ -97,7 +103,7 @@ app.get("/api/read", async (req: Request, res: Response) => {
     }
   } catch (err) {
     console.log(err);
-    res.send(err);
+    res.send("Read was unsuccessful ...");
   }
 });
 
