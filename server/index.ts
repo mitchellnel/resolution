@@ -11,7 +11,7 @@ app.use(express.json());
 /* FIREBASE SETUP */
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, child, get } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -60,6 +60,36 @@ app.post("/api/create", (req: Request, res: Response) => {
   set(ref(database, "more/sample_data/"), json_data);
 
   res.send(`Data Received: ${json_data}\n\t... Data added to DB!`);
+});
+
+app.get("/api/read", async (req: Request, res: Response) => {
+  // NOTE: should use onValue and return some listener -- maybe do this client side?
+
+  // find out what DB path to read from
+  // reject request if path not included
+  if (req.query.path === undefined) {
+    res.send("No path parameter sent");
+    return;
+  }
+
+  const path = req.query.path as string;
+
+  console.log(path);
+
+  // get a snapshot of the data currently at the ref and path
+  try {
+    const snapshot = await get(child(ref(database), path));
+
+    // data may not be available at ref and path
+    if (snapshot.exists()) {
+      res.send(snapshot.val());
+    } else {
+      res.send("No data available");
+    }
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
 });
 
 app.listen(PORT_NUM, () => {
