@@ -11,7 +11,15 @@ app.use(express.json());
 /* FIREBASE SETUP */
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, child, get } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  child,
+  get,
+  push,
+  update,
+} from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -52,6 +60,7 @@ app.get("/api/time", (_: Request, res: Response) => {
   res.json({ message: "The current time is " + curr_time });
 });
 
+// DB CRUD Test Endpoints
 app.post("/api/create", (req: Request, res: Response) => {
   const data = req.body;
   const json_data = JSON.stringify(data);
@@ -89,6 +98,41 @@ app.get("/api/read", async (req: Request, res: Response) => {
   } catch (err) {
     console.log(err);
     res.send(err);
+  }
+});
+
+app.post("/api/update", async (req: Request, res: Response) => {
+  // push used instead of update -- makes more sense to "push" a new child onto the parent JSON node
+
+  // get the path to push to
+  // reject request if path not included
+  const data = req.body;
+  const pushPath: string = data["pushPath"] ?? "";
+
+  if (pushPath === "") {
+    res.send("No push path given");
+    return;
+  }
+
+  // create the data to push
+  const pushedData = {
+    number: Math.random(),
+  };
+
+  // get a key for the new child
+  const childKey = push(child(ref(database), pushPath)).key;
+
+  // NOTE: you can simultaneously push multiple updates just by adding another field to the updates
+  //  object
+  const updates: any = {};
+  updates[pushPath + childKey] = pushedData;
+
+  try {
+    await update(ref(database), updates);
+    res.send("Update successful!");
+  } catch (err) {
+    console.log(err);
+    res.send("Update not successful...");
   }
 });
 
