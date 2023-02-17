@@ -3,27 +3,12 @@ import React from "react";
 import Button from "@mui/material/Button";
 
 // Firebase
-import { FirebaseApp, FirebaseOptions, initializeApp } from "firebase/app";
-import { Auth, getAuth, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { auth } from "../../utils/firebase";
 
 interface GoogleSignOutButtonProps {
   setAuthenticatedFlag: (flagState: boolean) => void;
 }
-
-const firebaseConfig: FirebaseOptions = {
-  apiKey: "AIzaSyDAseiGrImJilP9immR_yspzVF9LUOGZhI",
-  authDomain: "resolution-bcmmz.firebaseapp.com",
-  databaseURL: "https://resolution-bcmmz-default-rtdb.firebaseio.com",
-  projectId: "resolution-bcmmz",
-  storageBucket: "resolution-bcmmz.appspot.com",
-  messagingSenderId: "132359590757",
-  appId: "1:132359590757:web:6c2bf789203dd4873d478c",
-  measurementId: "G-GP51SC0WBL",
-};
-
-const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
-
-const auth: Auth = getAuth(firebaseApp);
 
 function GoogleSignOutButton({
   setAuthenticatedFlag,
