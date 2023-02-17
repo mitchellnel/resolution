@@ -1,44 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import { API_TIME_ENDPOINT } from "./constants";
+import { User } from "firebase/auth";
+
+import GoogleSignInButton from "./components/GoogleLogin/GoogleSignInButton";
+import GoogleSignOutButton from "./components/GoogleLogin/GoogleSignOutButton";
 
 function App() {
-  const [time, setTime] = useState<string>("");
-
-  // use API call to get time from server and set state when it has been received
-  const getTime = async () => {
-    try {
-      const res = await fetch(API_TIME_ENDPOINT);
-      const json = await res.json();
-
-      const time = json.message;
-
-      setTime(time);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // useEffect to call getTime every second
-  useEffect(() => {
-    // call getTime() every 1000ms = 1s
-    const intervalCall = setInterval(() => {
-      getTime();
-    }, 1000);
-
-    return () => {
-      // clean up
-      clearInterval(intervalCall);
-    };
-  }, []);
+  // state objects for authentication and the user
+  const [authenticatedFlag, setAuthenticatedFlag] = useState<boolean>(false);
+  const [user, setUser] = useState<User>();
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>The current time is {time}</p>
+
+        {authenticatedFlag ? (
+          <h1>Hello, {user?.displayName}!</h1>
+        ) : (
+          <h1>Please authenticate yourself using the button below.</h1>
+        )}
+
+        {authenticatedFlag ? (
+          <GoogleSignOutButton setAuthenticatedFlag={setAuthenticatedFlag} />
+        ) : (
+          <GoogleSignInButton
+            setAuthenticatedFlag={setAuthenticatedFlag}
+            setUser={setUser}
+          />
+        )}
       </header>
     </div>
   );
