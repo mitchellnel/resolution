@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import { signOut } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 
+import GoogleButtonStyling from "./GoogleButtonStyling";
+
 interface GoogleSignOutButtonProps {
   setAuthenticatedFlag: (flagState: boolean) => void;
 }
@@ -24,18 +26,7 @@ function GoogleSignOutButton({
       <Button
         variant="contained"
         size="large"
-        sx={{
-          backgroundColor: "#f8f8f8",
-          color: "#5485eb",
-          fontWeight: 800,
-          fontSize: "1.2rem",
-          paddingBottom: "15px",
-          paddingTop: "15px",
-          "&:hover": {
-            backgroundColor: "#5485eb",
-            color: "#f8f8f8",
-          },
-        }}
+        sx={GoogleButtonStyling}
         onClick={signOutUser}
       >
         Sign out
