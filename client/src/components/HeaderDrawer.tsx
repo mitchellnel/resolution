@@ -140,7 +140,7 @@ export default function HeaderDrawer({children} : any) {
           {text: 'Feed', icon: <DynamicFeedIcon />}, 
           {text: 'Settings', icon: <SettingsIcon />}].map(({text, icon}) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton>
+              <ListItemButton sx={text === 'Dashboard' ? {backgroundColor: '#eeeded'} : null}>
                 <ListItemIcon>
                   {icon}
                 </ListItemIcon>
