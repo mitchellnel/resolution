@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import GoogleSignInButton from "./components/GoogleLogin/GoogleLogin";
 import { User } from "firebase/auth";
+
+import GoogleSignInButton from "./components/GoogleLogin/GoogleSignInButton";
+import GoogleSignOutButton from "./components/GoogleLogin/GoogleSignOutButton";
 
 function App() {
   // state objects for authentication and the user
@@ -21,10 +23,14 @@ function App() {
           <h1>Please authenticate yourself using the button below.</h1>
         )}
 
-        <GoogleSignInButton
-          setAuthenticatedFlag={setAuthenticatedFlag}
-          setUser={setUser}
-        />
+        {authenticatedFlag ? (
+          <GoogleSignOutButton setAuthenticatedFlag={setAuthenticatedFlag} />
+        ) : (
+          <GoogleSignInButton
+            setAuthenticatedFlag={setAuthenticatedFlag}
+            setUser={setUser}
+          />
+        )}
       </header>
     </div>
   );
