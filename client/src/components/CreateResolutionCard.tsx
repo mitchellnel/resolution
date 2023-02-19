@@ -1,7 +1,7 @@
 import { Card, Grid, IconButton } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-const CreateResolutionCard = ({resolution}: any) => {
+const CreateResolutionCard = () => {
 
   return (
     <Grid item xs={4}>
