@@ -16,13 +16,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Avatar } from '@mui/material';
-
-import avatar from '../sample_profile_pic.jpg'
 
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ProfileIcon from './ProfileIcon';
 
 const drawerWidth = 240;
 
@@ -75,7 +73,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-export default function HeaderDrawer({children} : any) {
+interface HeaderDrawerProps {
+  children: React.ReactNode
+}
+
+export default function HeaderDrawer({children}: HeaderDrawerProps) {
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -106,14 +109,7 @@ export default function HeaderDrawer({children} : any) {
               Resolutions
             </Typography>
           </div>
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <Typography>
-              John Doe
-            </Typography>
-            <IconButton>
-              <Avatar src={avatar} alt="John Doe"/>
-            </IconButton>
-          </div>
+          <ProfileIcon />
         </Toolbar>
       </AppBar>
       <Drawer
