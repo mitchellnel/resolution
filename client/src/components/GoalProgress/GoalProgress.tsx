@@ -1,6 +1,11 @@
 import './GoalProgress.css'
 
-const GoalProgress = ({goalsCompleted, goalCount}: any) => {
+interface GoalProgressProps {
+  goalsCompleted: number,
+  goalCount: number
+}
+
+const GoalProgress = ({goalsCompleted, goalCount}: GoalProgressProps) => {
 
   return (
     <div className="progress">
