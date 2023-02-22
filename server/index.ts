@@ -12,7 +12,7 @@ app.use(express.json());
 
 /* FIREBASE IMPORTS */
 import { database } from "./utils/firebase";
-import { ref, set, child, get, push, update, remove } from "firebase/database";
+import { ref, child, push, update, remove } from "firebase/database";
 
 /* */
 
@@ -23,36 +23,6 @@ app.get("/", (_: Request, res: Response) => {
 app.use(resolutionCRUDAPI);
 
 // DB CRUD Test Endpoints
-app.get("/api/read", async (req: Request, res: Response) => {
-  // NOTE: should use onValue and return some listener -- maybe do this client side?
-
-  // find out what DB path to read from
-  // reject request if path not included
-  if (req.query.path === undefined) {
-    res.send("No path parameter sent");
-    return;
-  }
-
-  const path = req.query.path as string;
-
-  console.log(path);
-
-  // get a snapshot of the data currently at the ref and path
-  try {
-    const snapshot = await get(child(ref(database), path));
-
-    // data may not be available at ref and path
-    if (snapshot.exists()) {
-      res.send(snapshot.val());
-    } else {
-      res.send("No data available");
-    }
-  } catch (err) {
-    console.log(err);
-    res.send("Read was unsuccessful ...");
-  }
-});
-
 app.post("/api/update", async (req: Request, res: Response) => {
   // push used instead of update -- makes more sense to "push" a new child onto the parent JSON node
 

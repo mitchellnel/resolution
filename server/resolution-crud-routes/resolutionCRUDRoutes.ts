@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { ref, push, set } from "firebase/database";
+import { ref, push, set, get, child } from "firebase/database";
 
 import { API_CREATE_RESOLUTION_ENDPOINT } from "../constants/apiEndpoints";
 import {
@@ -65,6 +65,41 @@ router.post("/api/create-resolution", async (req: Request, res: Response) => {
     res.send(
       `Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
     );
+  }
+});
+
+router.get("/api/read-resolution", async (req: Request, res: Response) => {
+  // NOTE: consider looking at using onValue and returning some listener -- perhaps on the client side
+
+  // use query parameters to find out what DB path (user_id) to read from
+  // reject request if user_id not included
+  if (req.query.user_id === undefined) {
+    res.send("No path parameter sent");
+    return;
+  }
+
+  const user_id = req.query.user_id as string;
+
+  // get a reference to the database
+  const databaseRef = ref(database);
+
+  // get a snapshot of the data currently at the ref and path
+  try {
+    const snapshot = await get(
+      child(databaseRef, RTDB_RESOLUTIONS_PATH + user_id)
+    );
+
+    // data may not be available at path
+    if (!snapshot.exists()) {
+      res.send(`No data available at ${RTDB_RESOLUTIONS_PATH + user_id}`);
+      return;
+    }
+
+    res.send(snapshot.val());
+  } catch (err) {
+    console.log(err);
+
+    res.send(`Call to /api/read-resolution was unsuccessful: ${err}`);
   }
 });
 
