@@ -37,7 +37,7 @@ interface APIReadResolutionArguments {
 }
 
 interface APIReadResolutionReturn {
-  resolutions: Resolution[];
+  [key: string]: Resolution | undefined;
 }
 
 // /api/update-resolution
