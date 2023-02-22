@@ -1,8 +1,9 @@
 import { Router, Request, Response } from "express";
-import { ref, push, set, get, child, update } from "firebase/database";
+import { ref, push, set, get, child, update, remove } from "firebase/database";
 
 import {
   API_CREATE_RESOLUTION_ENDPOINT,
+  API_DELETE_RESOLUTION_ENDPOINT,
   API_READ_RESOLUTION_ENDPOINT,
   API_UPDATE_RESOLUTION_ENDPOINT,
 } from "../constants/apiEndpoints";
@@ -12,6 +13,8 @@ import {
   apiCreateResolutionArgumentsSchema,
   APIUpdateResolutionArguments,
   apiUpdateResolutionArgumentsSchema,
+  APIDeleteResolutionArguments,
+  apiDeleteResolutionArgumentsSchema,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -122,7 +125,7 @@ router.post(
   async (req: Request, res: Response) => {
     const data = req.body;
 
-    // try to unwrap data into APICreateResolutionArguments type
+    // try to unwrap data into APIUpdateResolutionArguments type
     try {
       // use yup ObjectSchema cast method to validate the request arguments
       const updateData: APIUpdateResolutionArguments =
@@ -172,6 +175,59 @@ router.post(
       console.log(err);
       res.send(
         `Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
+      );
+    }
+  }
+);
+
+router.post(
+  API_DELETE_RESOLUTION_ENDPOINT,
+  async (req: Request, res: Response) => {
+    const data = req.body;
+
+    // try to unwrap data into APIDeleteResolutionArguments type
+    try {
+      // use yup ObjectSchema cast method to validate the request arguments
+      const deleteData: APIDeleteResolutionArguments =
+        await apiDeleteResolutionArgumentsSchema.validate(data, {
+          strict: true,
+        });
+      // MARK: validate is used instead of cast since we want to strictly disallow empty strings
+      //   to be provided for either field in APIDeleteResolutionArguments
+
+      // get the parameters for the path to delete on
+      // this will be resolution/user_id/firebase_key
+      const deletePath =
+        RTDB_RESOLUTIONS_PATH +
+        deleteData.user_id +
+        "/" +
+        deleteData.firebase_key;
+
+      // get a reference to the database on the path resolution/user_id/firebase_key
+      const deleteRef = ref(database, deletePath);
+
+      // delete the object at the path
+      try {
+        await remove(deleteRef);
+
+        res.send(
+          `Data Received: ${JSON.stringify(
+            deleteData
+          )}\n\t ... data at ${deletePath} successfully deleted`
+        );
+      } catch (err) {
+        console.log(err);
+
+        res.send(
+          `Data Received: ${JSON.stringify(
+            deleteData
+          )}\n\t ... delete could not be made on the DB: ${err}`
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      res.send(
+        `Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
       );
     }
   }
