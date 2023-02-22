@@ -66,12 +66,18 @@ const apiUpdateResolutionReturnSchema: ObjectSchema<APICreateResolutionReturn> =
 // /api/delete-resolution
 interface APIDeleteResolutionArguments {
   user_id: string;
-  title_to_delete: string;
+  firebase_key: string;
 }
+
+const apiDeleteResolutionArgumentsSchema: ObjectSchema<APIDeleteResolutionArguments> =
+  object({ user_id: string().required(), firebase_key: string().required() });
 
 interface APIDeleteResolutionReturn {
   success: boolean;
 }
+
+const apiDeleteResolutionReturnSchema: ObjectSchema<APIUpdateResolutionReturn> =
+  object({ success: boolean().required() });
 
 export {
   Resolution,
@@ -87,5 +93,7 @@ export {
   APIUpdateResolutionReturn,
   apiUpdateResolutionReturnSchema,
   APIDeleteResolutionArguments,
+  apiDeleteResolutionArgumentsSchema,
   APIDeleteResolutionReturn,
+  apiDeleteResolutionReturnSchema,
 };
