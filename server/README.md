@@ -113,6 +113,10 @@ Arguments:
 
 Returns: a Boolean indicating creation success.
 
+The argument object is interfaced as `APICreateResolutionArguments`, and the return object is interfaces as `APICreateResolutionReturn`.
+
+If the body of the request has _extra_ fields that those defined above, and error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+
 ### `/api/read-resolution?user_id=<user_id>`
 
 Reads all of the resolutions that belong to a user -- these are located in the database under the path `resolutions/user_id`
