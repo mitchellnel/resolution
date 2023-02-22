@@ -43,14 +43,25 @@ interface APIReadResolutionReturn {
 // /api/update-resolution
 interface APIUpdateResolutionArguments {
   user_id: string;
-  current_title: string;
+  firebase_key: string;
   new_title: string;
   new_description: string;
 }
 
+const apiUpdateResolutionArgumentsSchema: ObjectSchema<APIUpdateResolutionArguments> =
+  object({
+    user_id: string().required(),
+    firebase_key: string().required(),
+    new_title: string().required(),
+    new_description: string().required(),
+  }).noUnknown(true);
+
 interface APIUpdateResolutionReturn {
   success: boolean;
 }
+
+const apiUpdateResolutionReturnSchema: ObjectSchema<APICreateResolutionReturn> =
+  object({ success: boolean().required() });
 
 // /api/delete-resolution
 interface APIDeleteResolutionArguments {
@@ -72,7 +83,9 @@ export {
   APIReadResolutionArguments,
   APIReadResolutionReturn,
   APIUpdateResolutionArguments,
+  apiUpdateResolutionArgumentsSchema,
   APIUpdateResolutionReturn,
+  apiUpdateResolutionReturnSchema,
   APIDeleteResolutionArguments,
   APIDeleteResolutionReturn,
 };
