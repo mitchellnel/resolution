@@ -95,7 +95,9 @@ For usage instructions, see the docs [here](https://www.npmjs.com/package/dotenv
 
 # API Documentation
 
-Every resolution in the database is uniquely keyed by its case-sensitive title. This means that no two resolutions belonging to the same user can have the same title.
+Every resolution in the database is uniquely keyed by the Firebase Realtime Database service. This key is generated when the resolution is pushed to the database.
+
+These keys are received by the client when reading resolutions, and must be passed to the `/api/update-resolution` or `/api/delete-resolution` endpoints in order to utilise their functionality.
 
 ## Endpoints
 
@@ -115,7 +117,7 @@ Returns: a Boolean indicating creation success.
 
 The argument object is interfaced as `APICreateResolutionArguments`, and the return object is interfaces as `APICreateResolutionReturn`.
 
-If the body of the request has _extra_ fields that those defined above, and error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
 
 ### `/api/read-resolution?user_id=<user_id>`
 
@@ -127,22 +129,30 @@ Arguments:
 
 - `user_id` (string)
 
-Returns: a JSON object containing a list of Resolution objects -- objects that have a title and description field representing the fields of a resolution.
+Returns: a JSON object containing what is essentially a map of RTDB keys to Resolution objects -- objects that have a title and description field representing the fields of a resolution.
+
+If the the request has _extra_ query parameters than those defined above, an error **will not** be thrown. If the request lacks any of the query parameters defined above, an error **will** be thrown.
 
 ### `/api/update-resolution`
 
-Updates a specific resolution that belongs to the user -- these are located in the database under the path `resolutions/user_id`
+Updates a specific resolution that belongs to the user -- these are located in the database under the path `resolutions/user_id/firebase_key`
 
 This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
 
 Arguments:
 
 - `user_id` (string)
-- `current_title` (string)
+- `firebase_key` (string)
 - `new_title` (string)
 - `new_description` (string)
 
 Returns: a Boolean indicating update success.
+
+The argument object is interfaced as `APIUpdateResolutionArguments`, and the return object is interfaces as `APIUpdateResolutionReturn`.
+
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+
+A `new_title` and a `new_description` must **both** be passed to make the update. This should be somewhat trivial to implement on the front-end using the received resolution data.
 
 ### `/api/delete-resolution`
 
@@ -153,9 +163,13 @@ This API must be called by making a **POST** request on this endpoint to the ser
 Arguments:
 
 - `user_id` (string)
-- `title_to_delete` (string)
+- `firebase_key` (string)
 
 Returns: a Boolean indicating delete success.
+
+The argument object is interfaced as `APIDeleteResolutionArguments`, and the return object is interfaces as `APIDeleteResolutionReturn`.
+
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
 
 ## TypeScript Interfaces
 
