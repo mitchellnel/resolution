@@ -97,6 +97,8 @@ For usage instructions, see the docs [here](https://www.npmjs.com/package/dotenv
 
 Every resolution in the database is uniquely keyed by its case-sensitive title. This means that no two resolutions belonging to the same user can have the same title.
 
+## Endpoints
+
 ### `/api/create-resolution`
 
 Creates a resolution and adds it to the database under the path `resolutions/user_id`.
@@ -140,4 +142,17 @@ Returns: a Boolean indicating update success.
 
 ### `/api/delete-resolution`
 
-Deletes a specific resolution that belongs to the user
+Deletes a specific resolution that belongs to the user -- these are located in the database under the path `resolutions/user_id`
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `title_to_delete` (string)
+
+Returns: a Boolean indicating delete success.
+
+## TypeScript Interfaces
+
+(TODO) To make utilising the APIs easier, various TypeScript interfaces can be found in the [server-side](https://github.com/mitchellnel/resolution/tree/main/server/constants/apiInterfaces.ts) and [client-side](https://github.com/mitchellnel/resolution/tree/main/client/constants/apiInterfaces.ts) directories.
