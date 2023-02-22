@@ -1,6 +1,8 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 
+import resolutionCRUDAPI from "./resolution-crud-routes/resolutionCRUDRoutes";
+
 dotenv.config({ path: "./.env.development.local" });
 
 const app: Express = express();
@@ -18,35 +20,9 @@ app.get("/", (_: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
-app.get("/api/time", (_: Request, res: Response) => {
-  const dateObj = new Date();
-  const currTime =
-    String(dateObj.getHours()).padStart(2, "0") +
-    ":" +
-    String(dateObj.getMinutes()).padStart(2, "0") +
-    ":" +
-    String(dateObj.getSeconds()).padStart(2, "0");
-
-  res.json({ message: currTime });
-});
+app.use(resolutionCRUDAPI);
 
 // DB CRUD Test Endpoints
-app.post("/api/create", async (req: Request, res: Response) => {
-  const data = req.body;
-  const jsonData = JSON.stringify(data);
-
-  // add data to the DB
-  try {
-    await set(ref(database, "more/sample_data/"), jsonData);
-    res.send(`Data Received: ${jsonData}\n\t... Data added to DB!`);
-  } catch (err) {
-    console.log(err);
-    res.send(
-      `Data Received: ${jsonData}\n\t... Data could not be added to the DB ...`
-    );
-  }
-});
-
 app.get("/api/read", async (req: Request, res: Response) => {
   // NOTE: should use onValue and return some listener -- maybe do this client side?
 
