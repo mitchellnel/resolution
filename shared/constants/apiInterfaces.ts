@@ -40,3 +40,19 @@ interface APIDeleteResolutionArguments {
   user_id: string;
   title_to_delete: string;
 }
+
+interface APIDeleteResolutionReturn {
+  success: boolean;
+}
+
+export {
+  Resolution,
+  APICreateResolutionArguments,
+  APICreateResolutionReturn,
+  APIReadResolutionArguments,
+  APIReadResolutionReturn,
+  APIUpdateResolutionArguments,
+  APIUpdateResolutionReturn,
+  APIDeleteResolutionArguments,
+  APIDeleteResolutionReturn,
+};
