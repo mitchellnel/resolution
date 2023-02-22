@@ -18,18 +18,29 @@ router.post("/api/create-resolution", async (req: Request, res: Response) => {
 
   // try to unwrap data into APICreateResolutionArguments type
   try {
+    // use yup ObjectSchema cast method to validate the request arguments
     const createData: APICreateResolutionArguments =
       apiCreateResolutionArgumentsSchema.cast(data);
 
-    // add data to the database
+    // MARK: cast is used instead of validate
+    // - cast will just make sure that the defined schema fields exist, and throw away any extra
+    //     fields
+    // - whereas validate will raise an error if extra fields exist
+    // for now, I've decided we won't care if extra data is sent, as long as the required data
+    //   is there
+
     const user_id = createData.user_id;
 
+    // create the object to add to the database
     const dataToAdd: Resolution = {
       title: createData.title,
       description: createData.description,
     };
 
+    // get reference to the database at the specified path
     const userResolutionsRef = ref(database, RTDB_RESOLUTIONS_PATH + user_id);
+
+    // we use push to basically append to a list
     const newResolutionRef = push(userResolutionsRef);
 
     try {
