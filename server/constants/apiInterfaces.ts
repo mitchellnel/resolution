@@ -53,7 +53,7 @@ const apiUpdateResolutionArgumentsSchema: ObjectSchema<APIUpdateResolutionArgume
     user_id: string().required(),
     firebase_key: string().required(),
     new_title: string().required(),
-    new_description: string().required(),
+    new_description: string().defined(),
   }).noUnknown(true);
 
 interface APIUpdateResolutionReturn {
