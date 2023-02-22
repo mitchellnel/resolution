@@ -12,7 +12,7 @@ app.use(express.json());
 
 /* FIREBASE IMPORTS */
 import { database } from "./utils/firebase";
-import { ref, child, push, update, remove } from "firebase/database";
+import { ref, remove } from "firebase/database";
 
 /* */
 
@@ -23,41 +23,6 @@ app.get("/", (_: Request, res: Response) => {
 app.use(resolutionCRUDAPI);
 
 // DB CRUD Test Endpoints
-app.post("/api/update", async (req: Request, res: Response) => {
-  // push used instead of update -- makes more sense to "push" a new child onto the parent JSON node
-
-  // get the path to push to
-  // reject request if path not included
-  const data = req.body;
-  const pushPath: string = data["pushPath"] ?? "";
-
-  if (pushPath === "") {
-    res.send("No push path given");
-    return;
-  }
-
-  // create the data to push
-  const pushedData = {
-    number: Math.random(),
-  };
-
-  // get a key for the new child
-  const childKey = push(child(ref(database), pushPath)).key;
-
-  // NOTE: you can simultaneously push multiple updates just by adding another field to the updates
-  //  object
-  const updates: any = {};
-  updates[pushPath + childKey] = pushedData;
-
-  try {
-    await update(ref(database), updates);
-    res.send("Update successful!");
-  } catch (err) {
-    console.log(err);
-    res.send("Update not successful...");
-  }
-});
-
 app.post("/api/delete", async (req: Request, res: Response) => {
   // get the path to delete
   // reject request if path not included
