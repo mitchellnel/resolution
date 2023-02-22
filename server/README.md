@@ -155,4 +155,4 @@ Returns: a Boolean indicating delete success.
 
 ## TypeScript Interfaces
 
-(TODO) To make utilising the APIs easier, various TypeScript interfaces can be found in the [server-side](https://github.com/mitchellnel/resolution/tree/main/server/constants/apiInterfaces.ts) and [client-side](https://github.com/mitchellnel/resolution/tree/main/client/constants/apiInterfaces.ts) directories.
+To make utilising the APIs easier, various TypeScript interfaces can be found in the [shared](https://github.com/mitchellnel/resolution/tree/main/shared) directory.
