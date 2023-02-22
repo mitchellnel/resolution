@@ -1,3 +1,8 @@
+# Quick Links
+
+- [Getting Started with `server`](https://github.com/mitchellnel/resolution/tree/main/server#getting-started-with-server)
+- [API Documentation](https://github.com/mitchellnel/resolution/tree/main/server#api-documentation)
+
 # Getting Started with `server`
 
 ## First Time Setup
@@ -87,3 +92,52 @@ From the dotenv docs:
 .env files are simple text configuration files that carry information that may be necessary for controlling your applications. They may also contain sensitive data that we don't want uploaded to GitHub (or other file hosting services), such as API keys.
 
 For usage instructions, see the docs [here](https://www.npmjs.com/package/dotenv#Usage).
+
+# API Documentation
+
+Every resolution in the database is uniquely keyed by its case-sensitive title. This means that no two resolutions belonging to the same user can have the same title.
+
+### `/api/create-resolution`
+
+Creates a resolution and adds it to the database under the path `resolutions/user_id`.
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `title` (string)
+- `description` (string)
+
+Returns: a Boolean indicating creation success.
+
+### `/api/read-resolution?user_id=<user_id>`
+
+Reads all of the resolutions that belong to a user -- these are located in the database under the path `resolutions/user_id`
+
+This API must be called by making a **GET** request on this endpoint to the server (using HTTP). The arguments for the request will be sent as query parameters.
+
+Arguments:
+
+- `user_id` (string)
+
+Returns: a JSON object containing a list of Resolution objects -- objects that have a title and description field representing the fields of a resolution.
+
+### `/api/update-resolution`
+
+Updates a specific resolution that belongs to the user -- these are located in the database under the path `resolutions/user_id`
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `current_title` (string)
+- `new_title` (string)
+- `new_description` (string)
+
+Returns: a Boolean indicating update success.
+
+### `/api/delete-resolution`
+
+Deletes a specific resolution that belongs to the user
