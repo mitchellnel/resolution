@@ -1,7 +1,14 @@
+import { object, string, boolean, ObjectSchema } from "yup";
+
 interface Resolution {
   title: string;
   description: string;
 }
+
+const resolutionSchema: ObjectSchema<Resolution> = object({
+  title: string().required(),
+  description: string().defined(),
+});
 
 // /api/create-resolution
 interface APICreateResolutionArguments {
@@ -10,9 +17,19 @@ interface APICreateResolutionArguments {
   description: string;
 }
 
+const apiCreateResolutionArgumentsSchema: ObjectSchema<APICreateResolutionArguments> =
+  object({
+    user_id: string().required(),
+    title: string().required(),
+    description: string().defined(),
+  }).noUnknown(true);
+
 interface APICreateResolutionReturn {
   success: boolean;
 }
+
+const apiCreateResolutionReturnSchema: ObjectSchema<APICreateResolutionReturn> =
+  object({ success: boolean().required() });
 
 // /api/read-resolution
 interface APIReadResolutionArguments {
@@ -47,8 +64,11 @@ interface APIDeleteResolutionReturn {
 
 export {
   Resolution,
+  resolutionSchema,
   APICreateResolutionArguments,
+  apiCreateResolutionArgumentsSchema,
   APICreateResolutionReturn,
+  apiCreateResolutionReturnSchema,
   APIReadResolutionArguments,
   APIReadResolutionReturn,
   APIUpdateResolutionArguments,
