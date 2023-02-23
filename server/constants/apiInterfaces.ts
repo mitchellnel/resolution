@@ -37,8 +37,13 @@ interface APIReadResolutionArguments {
   user_id: string;
 }
 
+const apiReadResolutionArgumentsSchema: ObjectSchema<APIReadResolutionArguments> =
+  object({ user_id: string().defined() }).noUnknown(true);
+
 interface APIReadResolutionReturn {
-  [key: string]: Resolution | undefined;
+  success: boolean;
+  resolutions?: { [key: string]: Resolution | undefined };
+  reason?: string;
 }
 
 // /api/update-resolution
@@ -88,6 +93,7 @@ export {
   APICreateResolutionReturn,
   apiCreateResolutionReturnSchema,
   APIReadResolutionArguments,
+  apiReadResolutionArgumentsSchema,
   APIReadResolutionReturn,
   APIUpdateResolutionArguments,
   apiUpdateResolutionArgumentsSchema,

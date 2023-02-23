@@ -12,6 +12,9 @@ import {
   APICreateResolutionArguments,
   apiCreateResolutionArgumentsSchema,
   APICreateResolutionReturn,
+  APIReadResolutionArguments,
+  apiReadResolutionArgumentsSchema,
+  APIReadResolutionReturn,
   APIUpdateResolutionArguments,
   apiUpdateResolutionArgumentsSchema,
   APIDeleteResolutionArguments,
@@ -77,8 +80,6 @@ router.post(
         res.json({ success: false, reason: err } as APICreateResolutionReturn);
       }
     } catch (err) {
-      console.log(err);
-
       console.log(
         `Data Received: ${JSON.stringify(
           data
@@ -98,37 +99,63 @@ router.post(
 router.get(
   API_READ_RESOLUTION_ENDPOINT,
   async (req: Request, res: Response) => {
+    const params = req.query;
     // NOTE: consider looking at using onValue and returning some listener -- perhaps on the client side
 
-    // use query parameters to find out what DB path (user_id) to read from
-    // reject request if user_id not included
-    if (req.query.user_id === undefined) {
-      res.send("No path parameter sent");
-      return;
-    }
-
-    const user_id = req.query.user_id as string;
-
-    // get a reference to the database
-    const databaseRef = ref(database);
-
-    // get a snapshot of the data currently at the ref and path
+    // try to unwrap query params into APIReadResolutionArguments type
     try {
-      const snapshot = await get(
-        child(databaseRef, RTDB_RESOLUTIONS_PATH + user_id)
+      const readData: APIReadResolutionArguments =
+        apiReadResolutionArgumentsSchema.cast(req.query);
+
+      // user_id will help us path the read request
+      const user_id = readData.user_id;
+
+      // get a reference to the database
+      const databaseRef = ref(database);
+
+      // get a snapshot of the data currently at the ref and path
+      try {
+        const snapshot = await get(
+          child(databaseRef, RTDB_RESOLUTIONS_PATH + user_id)
+        );
+
+        // data may not be available at path
+        if (!snapshot.exists()) {
+          res.json({
+            success: false,
+            reason: `FAILURE: No data available at ${
+              RTDB_RESOLUTIONS_PATH + user_id
+            }`,
+          } as APIReadResolutionReturn);
+
+          return;
+        }
+
+        res.json({
+          success: true,
+          resolutions: snapshot.val(),
+        } as APIReadResolutionReturn);
+      } catch (err) {
+        console.log(err);
+
+        res.json({
+          success: false,
+          reason: `FAILURE: Call to /api/read-resolution was unsuccessful: ${err}`,
+        } as APIReadResolutionReturn);
+      }
+    } catch (err) {
+      console.log(
+        `Queury Params Received: ${JSON.stringify(
+          params
+        )}\n\t ... FAILURE: Body of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
       );
 
-      // data may not be available at path
-      if (!snapshot.exists()) {
-        res.send(`No data available at ${RTDB_RESOLUTIONS_PATH + user_id}`);
-        return;
-      }
-
-      res.send(snapshot.val());
-    } catch (err) {
-      console.log(err);
-
-      res.send(`Call to /api/read-resolution was unsuccessful: ${err}`);
+      res.json({
+        success: false,
+        reason: `Data Received: ${JSON.stringify(
+          params
+        )}\n\t ... FAILURE: Body of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
+      });
     }
   }
 );
