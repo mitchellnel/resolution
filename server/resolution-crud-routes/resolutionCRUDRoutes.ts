@@ -20,6 +20,7 @@ import {
   APIUpdateResolutionReturn,
   APIDeleteResolutionArguments,
   apiDeleteResolutionArgumentsSchema,
+  APIDeleteResolutionReturn,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -268,25 +269,40 @@ router.post(
       try {
         await remove(deleteRef);
 
-        res.send(
+        console.log(
           `Data Received: ${JSON.stringify(
             deleteData
           )}\n\t ... data at ${deletePath} successfully deleted`
         );
-      } catch (err) {
-        console.log(err);
 
-        res.send(
+        res.json({ success: true } as APIDeleteResolutionReturn);
+      } catch (err) {
+        console.log(
           `Data Received: ${JSON.stringify(
             deleteData
           )}\n\t ... delete could not be made on the DB: ${err}`
         );
+
+        res.json({
+          success: false,
+          reason: `Data Received: ${JSON.stringify(
+            deleteData
+          )}\n\t ... delete could not be made on the DB: ${err}`,
+        } as APIDeleteResolutionReturn);
       }
     } catch (err) {
-      console.log(err);
-      res.send(
-        `Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
+      console.log(
+        `Data Received: ${JSON.stringify(
+          data
+        )}\n\t ... FAILURE: Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
       );
+
+      res.json({
+        success: false,
+        reason: `Data Received: ${JSON.stringify(
+          data
+        )}\n\t ... FAILURE: Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
+      } as APIDeleteResolutionReturn);
     }
   }
 );

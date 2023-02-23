@@ -77,14 +77,18 @@ interface APIDeleteResolutionArguments {
 }
 
 const apiDeleteResolutionArgumentsSchema: ObjectSchema<APIDeleteResolutionArguments> =
-  object({ user_id: string().required(), firebase_key: string().required() });
+  object({
+    user_id: string().required(),
+    firebase_key: string().required(),
+  }).noUnknown(true);
 
 interface APIDeleteResolutionReturn {
   success: boolean;
+  reason?: string;
 }
 
 const apiDeleteResolutionReturnSchema: ObjectSchema<APIDeleteResolutionReturn> =
-  object({ success: boolean().required() });
+  object({ success: boolean().required(), reason: string().optional() });
 
 export {
   Resolution,
