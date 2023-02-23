@@ -64,10 +64,11 @@ const apiUpdateResolutionArgumentsSchema: ObjectSchema<APIUpdateResolutionArgume
 
 interface APIUpdateResolutionReturn {
   success: boolean;
+  reason?: string;
 }
 
 const apiUpdateResolutionReturnSchema: ObjectSchema<APIUpdateResolutionReturn> =
-  object({ success: boolean().required() });
+  object({ success: boolean().required(), reason: string().optional() });
 
 // /api/delete-resolution
 interface APIDeleteResolutionArguments {
@@ -82,7 +83,7 @@ interface APIDeleteResolutionReturn {
   success: boolean;
 }
 
-const apiDeleteResolutionReturnSchema: ObjectSchema<APIUpdateResolutionReturn> =
+const apiDeleteResolutionReturnSchema: ObjectSchema<APIDeleteResolutionReturn> =
   object({ success: boolean().required() });
 
 export {

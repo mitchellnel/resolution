@@ -17,6 +17,7 @@ import {
   APIReadResolutionReturn,
   APIUpdateResolutionArguments,
   apiUpdateResolutionArgumentsSchema,
+  APIUpdateResolutionReturn,
   APIDeleteResolutionArguments,
   apiDeleteResolutionArgumentsSchema,
 } from "../constants/apiInterfaces";
@@ -195,27 +196,44 @@ router.post(
       try {
         await update(databaseRef, updates);
 
-        res.send(
+        console.log(
           `Data Received: ${JSON.stringify(
             updateData
-          )}\n\t ... ${JSON.stringify(dataToUpdate)} updated to the RTDB at ${
+          )}\n\t ... SUCCESS: ${JSON.stringify(
+            dataToUpdate
+          )} updated to the RTDB at ${
             RTDB_RESOLUTIONS_PATH + user_id
           }/${firebase_key}`
         );
-      } catch (err) {
-        console.log(err);
 
-        res.send(
+        res.json({ success: true } as APIUpdateResolutionReturn);
+      } catch (err) {
+        console.log(
           `Data Received: ${JSON.stringify(
             updateData
-          )}\n\t ... update could not be made to the DB: ${err}`
+          )}\n\t ... FAILURE: update could not be made to the DB: ${err}`
         );
+
+        res.json({
+          success: false,
+          reason: `Data Received: ${JSON.stringify(
+            updateData
+          )}\n\t ... FAILURE: update could not be made to the DB: ${err}`,
+        });
       }
     } catch (err) {
-      console.log(err);
-      res.send(
-        `Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
+      console.log(
+        `Data Received: ${JSON.stringify(
+          data
+        )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
       );
+
+      res.json({
+        success: false,
+        reason: `Data Received: ${JSON.stringify(
+          data
+        )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
+      });
     }
   }
 );
