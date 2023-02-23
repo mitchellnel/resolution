@@ -219,7 +219,7 @@ router.post(
           reason: `Data Received: ${JSON.stringify(
             updateData
           )}\n\t ... FAILURE: update could not be made to the DB: ${err}`,
-        });
+        } as APIUpdateResolutionReturn);
       }
     } catch (err) {
       console.log(
@@ -233,7 +233,7 @@ router.post(
         reason: `Data Received: ${JSON.stringify(
           data
         )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
-      });
+      } as APIUpdateResolutionReturn);
     }
   }
 );
