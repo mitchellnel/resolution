@@ -113,7 +113,7 @@ Arguments:
 - `title` (string)
 - `description` (string)
 
-Returns: a Boolean indicating creation success.
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
 
 The argument object is interfaced as `APICreateResolutionArguments`, and the return object is interfaces as `APICreateResolutionReturn`.
 
@@ -129,7 +129,7 @@ Arguments:
 
 - `user_id` (string)
 
-Returns: a JSON object containing what is essentially a map of RTDB keys to Resolution objects -- objects that have a title and description field representing the fields of a resolution.
+Returns: a JSON object with a Boolean field indicating read success. If the read failed, then a `reason` field will be defined with an error message. If the read succeeded, then a `resolutions` field will be populated with what is essentially map of Firebase RTDB keys to resolution objects -- objects that have a title and description field representing the fields of a resolution.
 
 If the the request has _extra_ query parameters than those defined above, an error **will not** be thrown. If the request lacks any of the query parameters defined above, an error **will** be thrown.
 
@@ -146,7 +146,7 @@ Arguments:
 - `new_title` (string)
 - `new_description` (string)
 
-Returns: a Boolean indicating update success.
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
 
 The argument object is interfaced as `APIUpdateResolutionArguments`, and the return object is interfaces as `APIUpdateResolutionReturn`.
 
@@ -165,7 +165,7 @@ Arguments:
 - `user_id` (string)
 - `firebase_key` (string)
 
-Returns: a Boolean indicating delete success.
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
 
 The argument object is interfaced as `APIDeleteResolutionArguments`, and the return object is interfaces as `APIDeleteResolutionReturn`.
 
