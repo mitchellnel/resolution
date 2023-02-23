@@ -1,12 +1,7 @@
-import { Card, CardContent, CardHeader, Grid, IconButton } from "@mui/material";
+import { Card, CardContent, CardHeader, Grid, IconButton, Typography } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import GoalProgress from "./GoalProgress/GoalProgress";
-
-interface Resolution {
-  title: string,
-  goals_completed: number,
-  goal_count: number
-}
+import { Resolution } from "../contexts/ResolutionContext";
 
 interface ResolutionCardProps {
   resolution: Resolution
@@ -22,7 +17,8 @@ const ResolutionCard = ({resolution}: ResolutionCardProps) => {
             <MoreVertIcon />
           </IconButton>
         }/>
-        <CardContent>
+        <CardContent sx={{paddingTop: '0px'}}>
+          <Typography gutterBottom>{resolution.description}</Typography>
           <GoalProgress goalsCompleted={resolution.goals_completed} goalCount={resolution.goal_count}/>
         </CardContent>
       </Card>
