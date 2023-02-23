@@ -63,37 +63,38 @@ router.post(
       try {
         await set(newResolutionRef, dataToAdd);
 
-        console.log(
-          `Data Received: ${JSON.stringify(
-            createData
-          )}\n\t ... SUCCESS: ${JSON.stringify(
-            dataToAdd
-          )} added to the RTDB at ${RTDB_RESOLUTIONS_PATH + user_id}`
-        );
+        const logMessage = `Data Received: ${JSON.stringify(
+          createData
+        )}\n\t ... SUCCESS: ${JSON.stringify(dataToAdd)} added to the RTDB at ${
+          RTDB_RESOLUTIONS_PATH + user_id
+        }`;
+
+        console.log(logMessage);
 
         res.json({ success: true } as APICreateResolutionReturn);
       } catch (err) {
-        console.log(
-          `Data Received: ${JSON.stringify(
-            createData
-          )}\n\t ... FAILURE: data could not be added to the DB: ${err}`
-        );
+        const logMessage = `Data Received: ${JSON.stringify(
+          createData
+        )}\n\t ... FAILURE: data could not be added to the DB: ${err}`;
 
-        res.json({ success: false, reason: err } as APICreateResolutionReturn);
+        console.log(logMessage);
+
+        res.json({
+          success: false,
+          reason: logMessage,
+        } as APICreateResolutionReturn);
       }
     } catch (err) {
-      console.log(
-        `Data Received: ${JSON.stringify(
-          data
-        )}\n\t ... FAILURE: Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
-      );
+      const logMessage = `Data Received: ${JSON.stringify(
+        data
+      )}\n\t ... FAILURE: Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
+
+      console.log(logMessage);
 
       res.json({
         success: false,
-        reason: `Data Received: ${JSON.stringify(
-          data
-        )}\n\t ... FAILURE: Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
-      });
+        reason: logMessage,
+      } as APICreateResolutionReturn);
     }
   }
 );
@@ -123,11 +124,13 @@ router.get(
 
         // data may not be available at path
         if (!snapshot.exists()) {
+          const logMessage = `FAILURE: No data available at ${
+            RTDB_RESOLUTIONS_PATH + user_id
+          }`;
+
           res.json({
             success: false,
-            reason: `FAILURE: No data available at ${
-              RTDB_RESOLUTIONS_PATH + user_id
-            }`,
+            reason: logMessage,
           } as APIReadResolutionReturn);
 
           return;
@@ -138,25 +141,25 @@ router.get(
           resolutions: snapshot.val(),
         } as APIReadResolutionReturn);
       } catch (err) {
-        console.log(err);
+        const logMessage = `FAILURE: Call to /api/read-resolution was unsuccessful: ${err}`;
+
+        console.log(logMessage);
 
         res.json({
           success: false,
-          reason: `FAILURE: Call to /api/read-resolution was unsuccessful: ${err}`,
+          reason: logMessage,
         } as APIReadResolutionReturn);
       }
     } catch (err) {
-      console.log(
-        `Queury Params Received: ${JSON.stringify(
-          params
-        )}\n\t ... FAILURE: Body of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
-      );
+      const logMessage = `Queury Params Received: ${JSON.stringify(
+        params
+      )}\n\t ... FAILURE: Body of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
+
+      console.log(logMessage);
 
       res.json({
         success: false,
-        reason: `Data Received: ${JSON.stringify(
-          params
-        )}\n\t ... FAILURE: Body of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
+        reason: logMessage,
       });
     }
   }
@@ -197,43 +200,39 @@ router.post(
       try {
         await update(databaseRef, updates);
 
-        console.log(
-          `Data Received: ${JSON.stringify(
-            updateData
-          )}\n\t ... SUCCESS: ${JSON.stringify(
-            dataToUpdate
-          )} updated to the RTDB at ${
-            RTDB_RESOLUTIONS_PATH + user_id
-          }/${firebase_key}`
-        );
+        const logMessage = `Data Received: ${JSON.stringify(
+          updateData
+        )}\n\t ... SUCCESS: ${JSON.stringify(
+          dataToUpdate
+        )} updated to the RTDB at ${
+          RTDB_RESOLUTIONS_PATH + user_id
+        }/${firebase_key}`;
+
+        console.log(logMessage);
 
         res.json({ success: true } as APIUpdateResolutionReturn);
       } catch (err) {
-        console.log(
-          `Data Received: ${JSON.stringify(
-            updateData
-          )}\n\t ... FAILURE: update could not be made to the DB: ${err}`
-        );
+        const logMessage = `Data Received: ${JSON.stringify(
+          updateData
+        )}\n\t ... FAILURE: update could not be made to the DB: ${err}`;
+
+        console.log(logMessage);
 
         res.json({
           success: false,
-          reason: `Data Received: ${JSON.stringify(
-            updateData
-          )}\n\t ... FAILURE: update could not be made to the DB: ${err}`,
+          reason: logMessage,
         } as APIUpdateResolutionReturn);
       }
     } catch (err) {
-      console.log(
-        `Data Received: ${JSON.stringify(
-          data
-        )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
-      );
+      const logMessage = `Data Received: ${JSON.stringify(
+        data
+      )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
+
+      console.log(logMessage);
 
       res.json({
         success: false,
-        reason: `Data Received: ${JSON.stringify(
-          data
-        )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
+        reason: logMessage,
       } as APIUpdateResolutionReturn);
     }
   }
@@ -269,39 +268,35 @@ router.post(
       try {
         await remove(deleteRef);
 
-        console.log(
-          `Data Received: ${JSON.stringify(
-            deleteData
-          )}\n\t ... data at ${deletePath} successfully deleted`
-        );
+        const logMessage = `Data Received: ${JSON.stringify(
+          deleteData
+        )}\n\t ... data at ${deletePath} successfully deleted`;
+
+        console.log(logMessage);
 
         res.json({ success: true } as APIDeleteResolutionReturn);
       } catch (err) {
-        console.log(
-          `Data Received: ${JSON.stringify(
-            deleteData
-          )}\n\t ... delete could not be made on the DB: ${err}`
-        );
+        const logMessage = `Data Received: ${JSON.stringify(
+          deleteData
+        )}\n\t ... delete could not be made on the DB: ${err}`;
+
+        console.log(logMessage);
 
         res.json({
           success: false,
-          reason: `Data Received: ${JSON.stringify(
-            deleteData
-          )}\n\t ... delete could not be made on the DB: ${err}`,
+          reason: logMessage,
         } as APIDeleteResolutionReturn);
       }
     } catch (err) {
-      console.log(
-        `Data Received: ${JSON.stringify(
-          data
-        )}\n\t ... FAILURE: Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
-      );
+      const logMessage = `Data Received: ${JSON.stringify(
+        data
+      )}\n\t ... FAILURE: Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
+
+      console.log(logMessage);
 
       res.json({
         success: false,
-        reason: `Data Received: ${JSON.stringify(
-          data
-        )}\n\t ... FAILURE: Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
+        reason: logMessage,
       } as APIDeleteResolutionReturn);
     }
   }
