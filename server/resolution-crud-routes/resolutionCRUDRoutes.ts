@@ -71,6 +71,7 @@ router.post(
 
         console.log(logMessage);
 
+        res.sendStatus(200);
         res.json({ success: true } as APICreateResolutionReturn);
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
@@ -79,6 +80,7 @@ router.post(
 
         console.log(logMessage);
 
+        res.sendStatus(500);
         res.json({
           success: false,
           reason: logMessage,
@@ -91,6 +93,7 @@ router.post(
 
       console.log(logMessage);
 
+      res.sendStatus(400);
       res.json({
         success: false,
         reason: logMessage,
@@ -128,6 +131,7 @@ router.get(
             RTDB_RESOLUTIONS_PATH + user_id
           }`;
 
+          res.sendStatus(404);
           res.json({
             success: false,
             reason: logMessage,
@@ -136,6 +140,7 @@ router.get(
           return;
         }
 
+        res.sendStatus(200);
         res.json({
           success: true,
           resolutions: snapshot.val(),
@@ -145,6 +150,7 @@ router.get(
 
         console.log(logMessage);
 
+        res.sendStatus(500);
         res.json({
           success: false,
           reason: logMessage,
@@ -157,6 +163,7 @@ router.get(
 
       console.log(logMessage);
 
+      res.sendStatus(400);
       res.json({
         success: false,
         reason: logMessage,
@@ -210,6 +217,7 @@ router.post(
 
         console.log(logMessage);
 
+        res.sendStatus(200);
         res.json({ success: true } as APIUpdateResolutionReturn);
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
@@ -218,6 +226,7 @@ router.post(
 
         console.log(logMessage);
 
+        res.sendStatus(500);
         res.json({
           success: false,
           reason: logMessage,
@@ -230,6 +239,7 @@ router.post(
 
       console.log(logMessage);
 
+      res.sendStatus(400);
       res.json({
         success: false,
         reason: logMessage,
@@ -274,6 +284,7 @@ router.post(
 
         console.log(logMessage);
 
+        res.sendStatus(200);
         res.json({ success: true } as APIDeleteResolutionReturn);
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
@@ -282,6 +293,7 @@ router.post(
 
         console.log(logMessage);
 
+        res.sendStatus(500);
         res.json({
           success: false,
           reason: logMessage,
@@ -294,6 +306,7 @@ router.post(
 
       console.log(logMessage);
 
+      res.sendStatus(400);
       res.json({
         success: false,
         reason: logMessage,
