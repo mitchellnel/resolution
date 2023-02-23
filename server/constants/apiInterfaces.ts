@@ -26,10 +26,11 @@ const apiCreateResolutionArgumentsSchema: ObjectSchema<APICreateResolutionArgume
 
 interface APICreateResolutionReturn {
   success: boolean;
+  reason?: string;
 }
 
 const apiCreateResolutionReturnSchema: ObjectSchema<APICreateResolutionReturn> =
-  object({ success: boolean().required() });
+  object({ success: boolean().required(), reason: string().optional() });
 
 // /api/read-resolution
 interface APIReadResolutionArguments {
@@ -60,7 +61,7 @@ interface APIUpdateResolutionReturn {
   success: boolean;
 }
 
-const apiUpdateResolutionReturnSchema: ObjectSchema<APICreateResolutionReturn> =
+const apiUpdateResolutionReturnSchema: ObjectSchema<APIUpdateResolutionReturn> =
   object({ success: boolean().required() });
 
 // /api/delete-resolution

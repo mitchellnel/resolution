@@ -11,6 +11,7 @@ import {
   Resolution,
   APICreateResolutionArguments,
   apiCreateResolutionArgumentsSchema,
+  APICreateResolutionReturn,
   APIUpdateResolutionArguments,
   apiUpdateResolutionArgumentsSchema,
   APIDeleteResolutionArguments,
@@ -57,27 +58,39 @@ router.post(
       try {
         await set(newResolutionRef, dataToAdd);
 
-        res.send(
+        console.log(
           `Data Received: ${JSON.stringify(
             createData
-          )}\n\t ... ${JSON.stringify(dataToAdd)} added to the RTDB at ${
-            RTDB_RESOLUTIONS_PATH + user_id
-          }`
+          )}\n\t ... SUCCESS: ${JSON.stringify(
+            dataToAdd
+          )} added to the RTDB at ${RTDB_RESOLUTIONS_PATH + user_id}`
         );
-      } catch (err) {
-        console.log(err);
 
-        res.send(
+        res.json({ success: true } as APICreateResolutionReturn);
+      } catch (err) {
+        console.log(
           `Data Received: ${JSON.stringify(
             createData
-          )}\n\t ... data could not be added to the DB: ${err}`
+          )}\n\t ... FAILURE: data could not be added to the DB: ${err}`
         );
+
+        res.json({ success: false, reason: err } as APICreateResolutionReturn);
       }
     } catch (err) {
       console.log(err);
-      res.send(
-        `Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
+
+      console.log(
+        `Data Received: ${JSON.stringify(
+          data
+        )}\n\t ... FAILURE: Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`
       );
+
+      res.json({
+        success: false,
+        reason: `Data Received: ${JSON.stringify(
+          data
+        )}\n\t ... FAILURE: Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`,
+      });
     }
   }
 );
