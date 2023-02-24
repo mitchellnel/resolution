@@ -34,12 +34,12 @@ export interface Resolution {
 
 export interface ResolutionContextInterface {
     resolutions: Resolution[],
-    setResolutions: React.Dispatch<React.SetStateAction<Resolution[]>>
+    addResolution: (title: string, description: string) => void
 }
 
 export const ResolutionContext = createContext<ResolutionContextInterface>({
     resolutions: [],
-    setResolutions: () => null
+    addResolution: () => null
 });
 
 interface ResolutionProviderProps {
@@ -50,7 +50,19 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
 
     const [resolutions, setResolutions] = useState<Resolution[]>(initialResolutions);
 
-    const value = { resolutions, setResolutions };
+    const addResolution = (title: string, description: string) => {
+        setResolutions(currentResolutions => [...currentResolutions, 
+            {
+                id: Math.random().toString(),
+                title: title,
+                description: description,
+                goals_completed: 0,
+                goal_count: 1
+            }
+        ])
+    }
+
+    const value = { resolutions, addResolution };
 
     return <ResolutionContext.Provider value={value}>{children}</ResolutionContext.Provider>
 }
