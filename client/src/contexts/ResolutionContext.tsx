@@ -1,28 +1,6 @@
-import { createContext, useState } from 'react';
-
-let initialResolutions = [
-    {
-        id: "1",
-        title: "Eat Healthy",
-        description: "Trying to eat more greens.",
-        goals_completed: 3,
-        goal_count: 5
-    },
-    {
-        id: "2",
-        title: "Exercise More",
-        description: "Trying to gain muscle.",
-        goals_completed: 1,
-        goal_count: 5
-    },
-    {
-        id: "3",
-        title: "Rest More",
-        description: "Trying to sleep 8 hours a night.",
-        goals_completed: 1,
-        goal_count: 1
-    }
-]
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { UserContext } from './UserContext';
 
 export interface Resolution {
     id: string,
@@ -50,18 +28,52 @@ interface ResolutionProviderProps {
 
 export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
 
-    const [resolutions, setResolutions] = useState<Resolution[]>(initialResolutions);
+    const { currentUser } = useContext(UserContext);
 
-    const addResolution = (title: string, description: string) => {
-        setResolutions(currentResolutions => [...currentResolutions, 
-            {
-                id: Math.random().toString(),
-                title: title,
-                description: description,
-                goals_completed: 0,
-                goal_count: 1
+    const [resolutions, setResolutions] = useState<Resolution[]>([]);
+
+    // fix type of APIData from any type
+    // converts APIData, which is an object with ids as keys to an array of resolution objects, which each have an id property
+    const convertAPIDataToResolutions = (APIData : any): Resolution[] => {
+        const resolutions = []
+        for (const resolutionId in APIData) {
+            resolutions.push({...APIData[resolutionId], id: resolutionId, goals_completed: 0, goal_count: 0})
+        }
+        return resolutions
+    }
+
+    const fetchAPI = useCallback(() => {
+        if (currentUser) {
+            axios.get(`/api/read-resolution?user_id=${currentUser.uid}`)
+            .then(res => {
+                setResolutions(convertAPIDataToResolutions(res.data.resolutions));
+            }).catch(err => {
+                console.log('Fetch Error:', err);
+            })
+        }
+    }, [currentUser])
+
+    const callAPICreateResolution = async (title: string, description: string) => {
+        try {
+            if (currentUser) {
+                await axios.post('/api/create-resolution', {
+                    'user_id': currentUser.uid,
+                    'title': title,
+                    'description': description
+                })
             }
-        ])
+        } catch (err) {
+            console.log('Create Error:', err);
+        }
+    }
+
+    useEffect(() => {
+        fetchAPI();
+    }, [currentUser, fetchAPI])
+
+    const addResolution = async (title: string, description: string) => {
+        await callAPICreateResolution(title, description);
+        fetchAPI();
     }
 
     // returns a Resolution if a Resolution with the id exists, otherwise return undefined

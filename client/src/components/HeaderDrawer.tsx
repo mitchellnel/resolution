@@ -21,7 +21,7 @@ import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ProfileIcon from './ProfileIcon';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 

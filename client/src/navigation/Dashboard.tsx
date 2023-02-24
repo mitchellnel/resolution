@@ -12,7 +12,7 @@ const Dashboard = () => {
     <Container>
         <Grid container spacing={3}>
             {resolutions.map(resolution => {
-                return <ResolutionCard resolution={resolution}/>
+                return <ResolutionCard key={resolution.id} resolution={resolution}/>
             })}
             <CreateResolutionCard />
         </Grid>
