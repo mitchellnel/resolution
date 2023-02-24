@@ -21,6 +21,7 @@ import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ProfileIcon from './ProfileIcon';
+import { Link, useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -82,6 +83,8 @@ export default function HeaderDrawer({children}: HeaderDrawerProps) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const navigate = useNavigate();
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -132,16 +135,16 @@ export default function HeaderDrawer({children}: HeaderDrawerProps) {
         </DrawerHeader>
         <Divider />
         <List>
-          {[{text: 'Dashboard', icon: <DashboardCustomizeIcon />}, 
-          {text: 'Feed', icon: <DynamicFeedIcon />}, 
-          {text: 'Settings', icon: <SettingsIcon />}].map(({text, icon}) => (
+          {[{text: 'Dashboard', icon: <DashboardCustomizeIcon />, route: '/'}, 
+          {text: 'Feed', icon: <DynamicFeedIcon />, route: '/feed'}, 
+          {text: 'Settings', icon: <SettingsIcon />, route: '/settings'}].map(({text, icon, route}) => (
             <ListItem key={text} disablePadding>
-              <ListItemButton sx={text === 'Dashboard' ? {backgroundColor: '#eeeded'} : null}>
-                <ListItemIcon>
-                  {icon}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
+                <ListItemButton onClick={() => navigate(route)}>
+                  <ListItemIcon>
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
             </ListItem>
           ))}
         </List>

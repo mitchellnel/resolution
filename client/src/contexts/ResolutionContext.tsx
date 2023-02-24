@@ -35,11 +35,13 @@ export interface Resolution {
 export interface ResolutionContextInterface {
     resolutions: Resolution[],
     addResolution: (title: string, description: string) => void
+    getResolutionById: (id: string | undefined) => Resolution | undefined
 }
 
 export const ResolutionContext = createContext<ResolutionContextInterface>({
     resolutions: [],
-    addResolution: () => null
+    addResolution: () => null,
+    getResolutionById: () => undefined
 });
 
 interface ResolutionProviderProps {
@@ -62,7 +64,12 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         ])
     }
 
-    const value = { resolutions, addResolution };
+    // returns a Resolution if a Resolution with the id exists, otherwise return undefined
+    const getResolutionById = (id: string | undefined) => {
+        return resolutions.find(resolution => resolution.id === id)
+    }
+
+    const value = { resolutions, addResolution, getResolutionById };
 
     return <ResolutionContext.Provider value={value}>{children}</ResolutionContext.Provider>
 }
