@@ -1,8 +1,6 @@
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import CreateResolutionCard from '../components/CreateResolutionCard';
-import ResolutionCard from '../components/ResolutionCard'
 import { ResolutionContext } from '../contexts/ResolutionContext';
 
 const ResolutionInfo = () => {
