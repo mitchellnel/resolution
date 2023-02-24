@@ -71,8 +71,7 @@ router.post(
 
         console.log(logMessage);
 
-        res.sendStatus(200);
-        res.json({ success: true } as APICreateResolutionReturn);
+        res.status(200).json({ success: true } as APICreateResolutionReturn);
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
           createData
@@ -80,8 +79,7 @@ router.post(
 
         console.log(logMessage);
 
-        res.sendStatus(500);
-        res.json({
+        res.status(500).json({
           success: false,
           reason: logMessage,
         } as APICreateResolutionReturn);
@@ -93,8 +91,7 @@ router.post(
 
       console.log(logMessage);
 
-      res.sendStatus(400);
-      res.json({
+      res.status(400).json({
         success: false,
         reason: logMessage,
       } as APICreateResolutionReturn);
@@ -131,8 +128,7 @@ router.get(
             RTDB_RESOLUTIONS_PATH + user_id
           }`;
 
-          res.sendStatus(404);
-          res.json({
+          res.status(404).json({
             success: false,
             reason: logMessage,
           } as APIReadResolutionReturn);
@@ -140,8 +136,7 @@ router.get(
           return;
         }
 
-        res.sendStatus(200);
-        res.json({
+        res.status(200).json({
           success: true,
           resolutions: snapshot.val(),
         } as APIReadResolutionReturn);
@@ -150,8 +145,7 @@ router.get(
 
         console.log(logMessage);
 
-        res.sendStatus(500);
-        res.json({
+        res.status(500).json({
           success: false,
           reason: logMessage,
         } as APIReadResolutionReturn);
@@ -163,8 +157,7 @@ router.get(
 
       console.log(logMessage);
 
-      res.sendStatus(400);
-      res.json({
+      res.status(400).json({
         success: false,
         reason: logMessage,
       });
@@ -217,8 +210,7 @@ router.post(
 
         console.log(logMessage);
 
-        res.sendStatus(200);
-        res.json({ success: true } as APIUpdateResolutionReturn);
+        res.status(200).json({ success: true } as APIUpdateResolutionReturn);
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
           updateData
@@ -226,8 +218,7 @@ router.post(
 
         console.log(logMessage);
 
-        res.sendStatus(500);
-        res.json({
+        res.status(500).json({
           success: false,
           reason: logMessage,
         } as APIUpdateResolutionReturn);
@@ -239,8 +230,7 @@ router.post(
 
       console.log(logMessage);
 
-      res.sendStatus(400);
-      res.json({
+      res.status(400).json({
         success: false,
         reason: logMessage,
       } as APIUpdateResolutionReturn);
@@ -284,8 +274,7 @@ router.post(
 
         console.log(logMessage);
 
-        res.sendStatus(200);
-        res.json({ success: true } as APIDeleteResolutionReturn);
+        res.status(200).json({ success: true } as APIDeleteResolutionReturn);
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
           deleteData
@@ -293,8 +282,7 @@ router.post(
 
         console.log(logMessage);
 
-        res.sendStatus(500);
-        res.json({
+        res.status(500).json({
           success: false,
           reason: logMessage,
         } as APIDeleteResolutionReturn);
@@ -306,8 +294,7 @@ router.post(
 
       console.log(logMessage);
 
-      res.sendStatus(400);
-      res.json({
+      res.status(400).json({
         success: false,
         reason: logMessage,
       } as APIDeleteResolutionReturn);
