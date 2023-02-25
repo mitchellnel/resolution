@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { Button, Container, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { ResolutionContext } from '../contexts/ResolutionContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
-const CreateResolutionForm = () => {
+const UpdateResolutionForm = () => {
 
     const navigate = useNavigate();
-    const { addResolution } = useContext(ResolutionContext);
+    const {updateResolution } = useContext(ResolutionContext);
 
     const fieldStyle = {
       marginTop: 3,
@@ -21,6 +21,9 @@ const CreateResolutionForm = () => {
     const [ titleError, setTitleError ] = useState(false);
     const [ descriptionError, setDescriptionError ] = useState(false);
 
+    const location = useLocation();
+    // console.log(location)
+
     const handleSubmit = (event : React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       setTitleError(false);
@@ -32,7 +35,7 @@ const CreateResolutionForm = () => {
         setDescriptionError(true);
       }
       if (title && description) {
-        addResolution(title, description);
+        updateResolution(location.state.id, title, description);
         navigate('/');
       }
     }
@@ -45,7 +48,7 @@ const CreateResolutionForm = () => {
               component="h2"
               gutterBottom
             >
-              Create a New Resolution
+              Edit Your Resolution
             </Typography>
             <form noValidate autoComplete="off" onSubmit={handleSubmit}>
               <TextField
@@ -77,11 +80,11 @@ const CreateResolutionForm = () => {
                 color="secondary"
                 variant="contained"
               >
-                Create
+                Update
               </Button>
             </form>
         </Container>
   );
 }
 
-export default CreateResolutionForm;
+export default UpdateResolutionForm;

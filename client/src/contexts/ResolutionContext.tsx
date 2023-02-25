@@ -14,6 +14,7 @@ export interface ResolutionContextInterface {
     resolutions: Resolution[],
     addResolution: (title: string, description: string) => void
     deleteResolution: (key: string) => void
+    updateResolution: (key: string, new_title: string, new_description: string) => void
     getResolutionById: (id: string | undefined) => Resolution | undefined
 }
 
@@ -21,6 +22,7 @@ export const ResolutionContext = createContext<ResolutionContextInterface>({
     resolutions: [],
     addResolution: () => null,
     deleteResolution: () => null, 
+    updateResolution: () => null,
     getResolutionById: () => undefined
 });
 
@@ -55,6 +57,12 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         }
     }, [currentUser])
 
+    useEffect(() => {
+        fetchAPI();
+    }, [currentUser, fetchAPI])
+
+
+    //create functionality:
     const callAPICreateResolution = async (title: string, description: string) => {
         try {
             if (currentUser) {
@@ -69,6 +77,12 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         }
     }
 
+    const addResolution = async (title: string, description: string) => {
+        await callAPICreateResolution(title, description);
+        fetchAPI();
+    }
+
+    //delete functionality:
     const callAPIDeleteResolution = async (key: string) => {
         try {
             if (currentUser) {
@@ -83,17 +97,29 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         }
     }
 
-    useEffect(() => {
-        fetchAPI();
-    }, [currentUser, fetchAPI])
-
-    const addResolution = async (title: string, description: string) => {
-        await callAPICreateResolution(title, description);
+    const deleteResolution = async (key: string) => {
+        await callAPIDeleteResolution(key);
         fetchAPI();
     }
 
-    const deleteResolution = async (key: string) => {
-        await callAPIDeleteResolution(key);
+    const callAPIUpdateResolution = async (key: string, new_title: string, new_description: string) => {
+        try {
+            if (currentUser) {
+                await axios.post('/api/update-resolution', {
+                    'user_id': currentUser.uid,
+                    'firebase_key': key,
+                    'new_title': new_title,
+                    'new_description': new_description
+                })
+            }
+        } catch (err) {
+            console.log('Create Error:', err);
+        }
+    }
+
+
+    const updateResolution = async (key: string, new_title: string, new_description: string) => {
+        await callAPIUpdateResolution(key, new_title, new_description);
         fetchAPI();
     }
 
@@ -102,7 +128,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         return resolutions.find(resolution => resolution.id === id)
     }
 
-    const value = { resolutions, addResolution, deleteResolution, getResolutionById };
+    const value = { resolutions, addResolution, deleteResolution, updateResolution, getResolutionById };
 
     return <ResolutionContext.Provider value={value}>{children}</ResolutionContext.Provider>
 }

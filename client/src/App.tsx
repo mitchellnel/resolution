@@ -8,6 +8,7 @@ import CreateResolutionForm from "./navigation/CreateResolutionForm";
 import Dashboard from "./navigation/Dashboard";
 import ErrorPage from "./navigation/ErrorPage";
 import ResolutionInfo from "./navigation/ResolutionInfo";
+import UpdateResolutionForm from "./navigation/UpdateResolutionForm";
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
               <Route path='*' element={<ErrorPage />} />
               <Route path='/' element={<Dashboard />} />
               <Route path='/create' element={<CreateResolutionForm />} />
+              <Route path='/update' element={<UpdateResolutionForm />} />
               <Route path='/resolution/:id' element={<ResolutionInfo />} />
             </Routes>
           </HeaderDrawer>
