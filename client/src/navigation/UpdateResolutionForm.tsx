@@ -16,13 +16,14 @@ const UpdateResolutionForm = () => {
       display: 'block'
     }
 
-    const [ title, setTitle ] = useState('');
-    const [ description, setDescription ] = useState('');
+    const location = useLocation();
+
+    const [ title, setTitle ] = useState(location.state.old_title);
+    const [ description, setDescription ] = useState(location.state.old_description);
     const [ titleError, setTitleError ] = useState(false);
     const [ descriptionError, setDescriptionError ] = useState(false);
 
-    const location = useLocation();
-    // console.log(location)
+    
 
     const handleSubmit = (event : React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
