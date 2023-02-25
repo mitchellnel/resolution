@@ -1,12 +1,8 @@
-import { Card, CardContent, CardHeader, Grid, IconButton } from "@mui/material";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import GoalProgress from "./GoalProgress/GoalProgress";
-
-interface Resolution {
-  title: string,
-  goals_completed: number,
-  goal_count: number
-}
+import { Resolution } from "../contexts/ResolutionContext";
+import { Link} from "react-router-dom";
+import ResolutionOptions from "./ResolutionOptions";
 
 interface ResolutionCardProps {
   resolution: Resolution
@@ -14,18 +10,19 @@ interface ResolutionCardProps {
 
 const ResolutionCard = ({resolution}: ResolutionCardProps) => {
 
+
   return (
     <Grid item xs={4}>
-      <Card sx={{height: '10em', boxShadow: 3}}>
-        <CardHeader title={resolution.title} titleTypographyProps={{fontWeight: 'medium'}} action={
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
-        }/>
-        <CardContent>
-          <GoalProgress goalsCompleted={resolution.goals_completed} goalCount={resolution.goal_count}/>
-        </CardContent>
-      </Card>
+      <Link to={`/resolution/${resolution.id}`} style={{textDecoration: 'none'}}>
+        <Card sx={{height: '10em', boxShadow: 3}}>
+          <CardHeader title={resolution.title} titleTypographyProps={{fontWeight: 'medium'}} action={<ResolutionOptions resolution={resolution}/>}/>
+          <CardContent sx={{paddingTop: '0px'}}>
+            <Typography gutterBottom>{resolution.description}</Typography>
+            <GoalProgress goalsCompleted={resolution.goals_completed} goalCount={resolution.goal_count}/>
+          </CardContent>
+          
+        </Card>
+      </Link>
     </Grid>
   );
 }

@@ -25,25 +25,25 @@ const ProfileIcon = () => {
     <>
         {currentUser ?
             <div style={{ display: "flex", alignItems: "center" }}>
-            <Typography>{(currentUser as UserInfo).displayName}</Typography>
-            <IconButton>
+                <Typography>{(currentUser as UserInfo).displayName}</Typography>
                 <Box
                 sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
                 >
-                <Tooltip title="Account settings">
-                    <IconButton
-                    onClick={handleClick}
-                    size="small"
-                    aria-controls={menuOpen ? "account-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={menuOpen ? "true" : undefined}
-                    >
-                    <Avatar
-                        src={(currentUser as UserInfo).photoURL}
-                        alt={(currentUser as UserInfo).displayName}
-                        />
-                    </IconButton>
-                </Tooltip>
+                    <Tooltip title="Account settings">
+                        <IconButton
+                        onClick={handleClick}
+                        size="small"
+                        aria-controls={menuOpen ? "account-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={menuOpen ? "true" : undefined}
+                        >
+                        <Avatar
+                            src={(currentUser as UserInfo).photoURL}
+                            alt={(currentUser as UserInfo).displayName}
+                            imgProps={{ referrerPolicy: 'no-referrer'}}
+                            />
+                        </IconButton>
+                    </Tooltip>
                 </Box>
                 <Menu
                 anchorEl={anchorEl}
@@ -80,11 +80,10 @@ const ProfileIcon = () => {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
-                <MenuItem onClick={handleClose}>
-                    <GoogleSignOutButton setAuthenticatedFlag={setAuthenticated} />
-                </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                        <GoogleSignOutButton setAuthenticatedFlag={setAuthenticated} />
+                    </MenuItem>
                 </Menu>
-            </IconButton>
             </div>
         :
         <Typography>
