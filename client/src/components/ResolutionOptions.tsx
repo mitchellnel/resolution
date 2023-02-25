@@ -1,9 +1,10 @@
 import { Box, IconButton, Menu, MenuItem, Tooltip, } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Resolution } from "../contexts/ResolutionContext";
-import { useState } from "react";
+import { Resolution, ResolutionContext} from "../contexts/ResolutionContext";
+import { useState, useContext } from "react";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
 
 interface ResolutionOptionsProps {
   resolution: Resolution
@@ -20,6 +21,23 @@ const ResolutionOptions = ({resolution}: ResolutionOptionsProps) => {
   const handleClose = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setAnchorEl(null);
+  };
+
+  const navigate = useNavigate();
+
+
+  const handleEdit = () => {
+    
+  };
+
+  
+
+  const {deleteResolution} = useContext(ResolutionContext);
+
+  const handleDelete = () => {
+    deleteResolution(resolution.id)
+    navigate('/');
+    
   };
 
   return (
@@ -72,11 +90,11 @@ const ResolutionOptions = ({resolution}: ResolutionOptionsProps) => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-            <MenuItem onClick={handleClose} sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <MenuItem onClick={handleEdit} sx={{display: 'flex', justifyContent: 'space-between'}}>
                 Edit
                 <EditIcon />
             </MenuItem>
-            <MenuItem onClick={handleClose} sx={{color: 'red', display: 'flex', justifyContent: 'space-between'}}>
+            <MenuItem onClick={handleDelete} sx={{color: 'red', display: 'flex', justifyContent: 'space-between'}}>
                 Delete
                 <DeleteOutlineIcon />
             </MenuItem>

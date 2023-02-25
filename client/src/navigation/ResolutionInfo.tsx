@@ -1,13 +1,19 @@
 import { Container, Typography } from '@mui/material';
 import { useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ResolutionContext } from '../contexts/ResolutionContext';
+import Button from "@mui/material/Button";
+
+//page that opens w
 
 const ResolutionInfo = () => {
 
     const { getResolutionById } = useContext(ResolutionContext);
     const { id } = useParams();
     const resolution = getResolutionById(id);
+
+
+    const navigate = useNavigate();
 
   return (
     <>
@@ -26,7 +32,11 @@ const ResolutionInfo = () => {
             >
                 {resolution.description}
             </Typography>
+
+            <Button onClick={() => navigate('/')}> Back to dashboard </Button>
         </Container>
+
+        
         :
         <Typography
             variant="h4"

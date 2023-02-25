@@ -13,12 +13,14 @@ export interface Resolution {
 export interface ResolutionContextInterface {
     resolutions: Resolution[],
     addResolution: (title: string, description: string) => void
+    deleteResolution: (key: string) => void
     getResolutionById: (id: string | undefined) => Resolution | undefined
 }
 
 export const ResolutionContext = createContext<ResolutionContextInterface>({
     resolutions: [],
     addResolution: () => null,
+    deleteResolution: () => null, 
     getResolutionById: () => undefined
 });
 
@@ -67,6 +69,20 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         }
     }
 
+    const callAPIDeleteResolution = async (key: string) => {
+        try {
+            if (currentUser) {
+                await axios.post('/api/delete-resolution', {
+                    'user_id': currentUser.uid,
+                    'firebase_key': key,
+                    // 'description': description
+                })
+            }
+        } catch (err) {
+            console.log('Create Error:', err);
+        }
+    }
+
     useEffect(() => {
         fetchAPI();
     }, [currentUser, fetchAPI])
@@ -76,12 +92,17 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         fetchAPI();
     }
 
+    const deleteResolution = async (key: string) => {
+        await callAPIDeleteResolution(key);
+        fetchAPI();
+    }
+
     // returns a Resolution if a Resolution with the id exists, otherwise return undefined
     const getResolutionById = (id: string | undefined) => {
         return resolutions.find(resolution => resolution.id === id)
     }
 
-    const value = { resolutions, addResolution, getResolutionById };
+    const value = { resolutions, addResolution, deleteResolution, getResolutionById };
 
     return <ResolutionContext.Provider value={value}>{children}</ResolutionContext.Provider>
 }

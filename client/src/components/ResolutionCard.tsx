@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import GoalProgress from "./GoalProgress/GoalProgress";
 import { Resolution } from "../contexts/ResolutionContext";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import ResolutionOptions from "./ResolutionOptions";
 
 interface ResolutionCardProps {
@@ -9,6 +9,7 @@ interface ResolutionCardProps {
 }
 
 const ResolutionCard = ({resolution}: ResolutionCardProps) => {
+
 
   return (
     <Grid item xs={4}>
@@ -19,6 +20,7 @@ const ResolutionCard = ({resolution}: ResolutionCardProps) => {
             <Typography gutterBottom>{resolution.description}</Typography>
             <GoalProgress goalsCompleted={resolution.goals_completed} goalCount={resolution.goal_count}/>
           </CardContent>
+          
         </Card>
       </Link>
     </Grid>
