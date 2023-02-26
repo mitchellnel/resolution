@@ -8,7 +8,7 @@ orbs:
   coveralls: coveralls/coveralls@1.0.6
 
 jobs:
-  backend_build:
+  backend_build_and_test:
     executor: node/default
     working_directory: ~/resolution
     steps:
@@ -22,23 +22,11 @@ jobs:
           app-dir: ~/resolution/server
           cache-path: node_modules
           override-ci-command: npm i
-      # save workspace for subsequent jobs (i.e. test)
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-
-  backend_test:
-    executor: node/default
-    working_directory: ~/resolution
-    steps:
-      - attach_workspace:
-          at: .
+      # run the test suites
       - run:
           name: "Run jest and collect coverage reports"
           command: cd server && npm test
-      - store_artifacts:
-          path: ~/resolution/server/coverage
+      # upload coverage results to coveralls
       - coveralls/upload:
           path_to_lcov: ~/resolution/server/coverage/lcov.info
           verbose: true
@@ -48,7 +36,4 @@ jobs:
 workflows:
   backend_ci:
     jobs:
-      - backend_build
-      - backend_test:
-          requires:
-            - backend_build
+      - backend_build_and_test
