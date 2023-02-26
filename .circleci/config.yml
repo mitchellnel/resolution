@@ -1,0 +1,50 @@
+# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
+version: 2.1
+
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/2.0/orb-intro/
+orbs:
+  node: circleci/node@5.1.0
+
+jobs:
+  backend_build:
+    executor: node/default
+    working_directory: ~/resolution
+    steps:
+      # get code from repo
+      - checkout
+      # install node@18.10.0
+      - node/install:
+          node-version: 18.10.0
+      # install the npm packages for server
+      - node/install-packages:
+          app-dir: ~/resolution/server
+          cache-path: node_modules
+          override-ci-command: npm i
+      # save workspace for subsequent jobs (i.e. test)
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  backend_test:
+    executor: node/default
+    working_directory: ~/resolution
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Run jest and collect coverage reports"
+          command: cd server && npm test -- --coverage
+      - store_artifacts:
+          path: ~/resolution/server/coverage
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  backend_ci:
+    jobs:
+      - backend_build
+      - backend_test:
+          requires:
+            - backend_build
