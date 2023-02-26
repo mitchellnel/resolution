@@ -5,9 +5,10 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/orb-intro/
 orbs:
   node: circleci/node@5.1.0
+  coveralls: coveralls/coveralls@1.0.6
 
 jobs:
-  backend_build:
+  backend_build_and_test:
     executor: node/default
     working_directory: ~/resolution
     steps:
@@ -21,30 +22,19 @@ jobs:
           app-dir: ~/resolution/server
           cache-path: node_modules
           override-ci-command: npm i
-      # save workspace for subsequent jobs (i.e. test)
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-
-  backend_test:
-    executor: node/default
-    working_directory: ~/resolution
-    steps:
-      - attach_workspace:
-          at: .
+      # run the test suites
       - run:
           name: "Run jest and collect coverage reports"
-          command: cd server && npm test -- --coverage
-      - store_artifacts:
-          path: ~/resolution/server/coverage
+          command: cd server && npm test
+      # upload coverage results to coveralls **using `npx coveralls`***
+      # (the orb doesn't seem to be working for me)
+      - run:
+          name: "Upload coverage results to coveralls"
+          command: cat ~/resolution/server/coverage/lcov.info | npx coveralls --verbose ~/resolution/server
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   backend_ci:
     jobs:
-      - backend_build
-      - backend_test:
-          requires:
-            - backend_build
+      - backend_build_and_test

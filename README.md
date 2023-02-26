@@ -15,6 +15,8 @@ https://drive.google.com/drive/folders/1GCe9TgQowahJrPfd_S_L7c2iRKytozyB
 # Repository Template
 
 [![CircleCI](https://circleci.com/gh/mitchellnel/resolution.svg?style=svg&circle-token=4e703b3e44a7959f7bb2adc6f71ca66fc881f5bc)](https://circleci.com/gh/mitchellnel/resolution)
+[![Coverage Status](https://coveralls.io/repos/github/mitchellnel/resolution/badge.svg?branch=release-prep&t=McYqbM)](https://coveralls.io/github/mitchellnel/resolution?branch=release-prep)
+
 [![Release](https://img.shields.io/github/v/release/mitchellnel/resolution?label=release)](https://github.com/mitchellnel/resolution/releases/latest)
 
 This repo serves as a template for repositories in this organization. The following information describes how the native features/workflows of Github can be customized to work in a scrum development process.
