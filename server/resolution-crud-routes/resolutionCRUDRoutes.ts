@@ -36,15 +36,9 @@ router.post(
     // try to unwrap data into APICreateResolutionArguments type
     try {
       // use yup ObjectSchema cast method to validate the request arguments
+      // use validate to ensure that title is a required field
       const createData: APICreateResolutionArguments =
-        apiCreateResolutionArgumentsSchema.cast(data);
-
-      // MARK: cast is used instead of validate
-      // - cast will just make sure that the defined schema fields exist, and throw away any extra
-      //     fields
-      // - whereas validate will raise an error if extra fields exist
-      // for now, I've decided we won't care if extra data is sent, as long as the required data
-      //   is there
+        await apiCreateResolutionArgumentsSchema.validate(data);
 
       const user_id = createData.user_id;
 
@@ -108,7 +102,7 @@ router.get(
     // try to unwrap query params into APIReadResolutionArguments type
     try {
       const readData: APIReadResolutionArguments =
-        apiReadResolutionArgumentsSchema.cast(req.query);
+        await apiReadResolutionArgumentsSchema.validate(req.query);
 
       // user_id will help us path the read request
       const user_id = readData.user_id;
@@ -174,7 +168,7 @@ router.post(
     try {
       // use yup ObjectSchema cast method to validate the request arguments
       const updateData: APIUpdateResolutionArguments =
-        apiUpdateResolutionArgumentsSchema.cast(data);
+        await apiUpdateResolutionArgumentsSchema.validate(data);
 
       // get the parameters for the path to update on
       // this will be resolution/user_id/firebase_key
