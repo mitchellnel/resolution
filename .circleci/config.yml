@@ -26,10 +26,11 @@ jobs:
       - run:
           name: "Run jest and collect coverage reports"
           command: cd server && npm test
-      # upload coverage results to coveralls
-      - coveralls/upload:
-          path_to_lcov: ~/resolution/server/coverage/lcov.info
-          verbose: true
+      # upload coverage results to coveralls **using `npx coveralls`***
+      # (the orb doesn't seem to be working for me)
+      - run:
+          name: "Upload coverage results to coveralls"
+          command: cat ~/resolution/server/coverage/lcov.info | npx coveralls --verbose
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
