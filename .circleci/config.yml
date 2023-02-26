@@ -35,7 +35,7 @@ jobs:
           at: .
       - run:
           name: "Run jest and collect coverage reports"
-          command: cd server && npm test -- --coverage
+          command: cd server && npm test
       - store_artifacts:
           path: ~/resolution/server/coverage
 
