@@ -41,6 +41,7 @@ jobs:
           path: ~/resolution/server/coverage
       - coveralls/upload:
           path_to_lcov: ~/resolution/server/coverage/lcov.info
+          verbose: true
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
