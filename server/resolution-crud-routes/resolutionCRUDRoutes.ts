@@ -153,7 +153,7 @@ router.get(
     } catch (err) {
       const logMessage = `Queury Params Received: ${JSON.stringify(
         params
-      )}\n\t ... FAILURE: Body of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
+      )}\n\t ... FAILURE: Query Parameters of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
 
       console.log(logMessage);
 
