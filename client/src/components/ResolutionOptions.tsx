@@ -29,7 +29,7 @@ const ResolutionOptions = ({resolution}: ResolutionOptionsProps) => {
 
   //edit functionality
   const handleEdit = () => {
-    navigate("/update", {state: {id: resolution.id}});
+    navigate("/update", {state: {id: resolution.id, old_title: resolution.title, old_description: resolution.description}});
   };
 
   
