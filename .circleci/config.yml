@@ -30,7 +30,7 @@ jobs:
       # (the orb doesn't seem to be working for me)
       - run:
           name: "Upload coverage results to coveralls"
-          command: cat ~/resolution/server/coverage/lcov.info | npx coveralls --verbose
+          command: cat ~/resolution/server/coverage/lcov.info | npx coveralls --verbose ~/resolution/server
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
