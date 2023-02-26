@@ -1,46 +1,34 @@
-import React, { useState, useEffect } from "react";
-import logo from "./logo.svg";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-
-import { API_TIME_ENDPOINT } from "./constants";
+import HeaderDrawer from "./components/HeaderDrawer";
+import LogInModal from "./components/LogInModal";
+import { ResolutionProvider } from "./contexts/ResolutionContext";
+import { UserProvider } from "./contexts/UserContext";
+import CreateResolutionForm from "./navigation/CreateResolutionForm";
+import Dashboard from "./navigation/Dashboard";
+import ErrorPage from "./navigation/ErrorPage";
+import ResolutionInfo from "./navigation/ResolutionInfo";
+import UpdateResolutionForm from "./navigation/UpdateResolutionForm";
 
 function App() {
-  const [time, setTime] = useState<string>("");
-
-  // use API call to get time from server and set state when it has been received
-  const getTime = async () => {
-    try {
-      const res = await fetch(API_TIME_ENDPOINT);
-      const json = await res.json();
-
-      const time = json.message;
-
-      setTime(time);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // useEffect to call getTime every second
-  useEffect(() => {
-    // call getTime() every 1000ms = 1s
-    const intervalCall = setInterval(() => {
-      getTime();
-    }, 1000);
-
-    return () => {
-      // clean up
-      clearInterval(intervalCall);
-    };
-  }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>The current time is {time}</p>
-      </header>
-    </div>
+    <BrowserRouter>
+      <UserProvider>
+        <ResolutionProvider>
+          <LogInModal />
+          <HeaderDrawer>
+            <Routes>
+              <Route path='*' element={<ErrorPage />} />
+              <Route path='/' element={<Dashboard />} />
+              <Route path='/create' element={<CreateResolutionForm />} />
+              <Route path='/update' element={<UpdateResolutionForm />} />
+              <Route path='/resolution/:id' element={<ResolutionInfo />} />
+            </Routes>
+          </HeaderDrawer>
+        </ResolutionProvider>
+      </UserProvider>
+    </BrowserRouter>
   );
 }
 
