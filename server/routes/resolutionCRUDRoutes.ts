@@ -8,6 +8,7 @@ import {
   API_UPDATE_RESOLUTION_ENDPOINT,
 } from "../constants/apiEndpoints";
 import {
+  // Resolution CRUD
   Resolution,
   APICreateResolutionArguments,
   apiCreateResolutionArgumentsSchema,
@@ -21,6 +22,9 @@ import {
   APIDeleteResolutionArguments,
   apiDeleteResolutionArgumentsSchema,
   APIDeleteResolutionReturn,
+
+  // Goal-related
+  Goal,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -46,6 +50,7 @@ router.post(
       const dataToAdd: Resolution = {
         title: createData.title,
         description: createData.description,
+        goals: {}, // we will push an actual object later, TypeScript mandates we put this here
       };
 
       // get reference to the database at the specified path
@@ -57,15 +62,40 @@ router.post(
       try {
         await set(newResolutionRef, dataToAdd);
 
-        const logMessage = `Data Received: ${JSON.stringify(
-          createData
-        )}\n\t ... SUCCESS: ${JSON.stringify(dataToAdd)} added to the RTDB at ${
-          RTDB_RESOLUTIONS_PATH + user_id
-        }`;
+        // now add a sample goal to the resolution
+        const goalToAdd: Goal = {
+          description: "Your goal here!",
+          complete: false,
+        };
 
-        console.log(logMessage);
+        // get the key of the newly created resolution
+        const newResolutionKey = newResolutionRef.key;
 
-        res.status(200).json({ success: true } as APICreateResolutionReturn);
+        // get reference to the database at the specified path
+        const newResolutionGoalsRef = ref(
+          database,
+          RTDB_RESOLUTIONS_PATH + user_id + "/" + newResolutionKey + "/goals"
+        );
+
+        // push a new goal to the resolution
+        const newGoalRef = push(newResolutionGoalsRef);
+
+        try {
+          await set(newGoalRef, goalToAdd);
+
+          const logMessage = `Data Received: ${JSON.stringify(
+            createData
+          )}\n\t ... SUCCESS: ${JSON.stringify(
+            dataToAdd
+          )} added to the RTDB at ${RTDB_RESOLUTIONS_PATH + user_id}`;
+
+          console.log(logMessage);
+
+          res.status(200).json({ success: true } as APICreateResolutionReturn);
+        } catch (err) {
+          // just throw the error to the catch block below
+          throw err;
+        }
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
           createData
