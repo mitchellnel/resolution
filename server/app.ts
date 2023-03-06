@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 
-import resolutionCRUDAPI from "./resolution-crud-routes/resolutionCRUDRoutes";
+import resolutionCRUDAPI from "./routes/resolutionCRUDRoutes";
 
 dotenv.config({ path: "./.env.development.local" });
 
