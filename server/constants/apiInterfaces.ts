@@ -1,13 +1,16 @@
 import { object, string, boolean, ObjectSchema } from "yup";
 
+// Resolution
 interface Resolution {
   title: string;
   description: string;
+  goals: { [key: string]: Goal | undefined };
 }
 
 const resolutionSchema: ObjectSchema<Resolution> = object({
   title: string().required(),
   description: string().defined(),
+  goals: object().defined(),
 });
 
 // /api/create-resolution
@@ -52,6 +55,7 @@ interface APIUpdateResolutionArguments {
   firebase_key: string;
   new_title: string;
   new_description: string;
+  goals: { [key: string]: Goal | undefined };
 }
 
 const apiUpdateResolutionArgumentsSchema: ObjectSchema<APIUpdateResolutionArguments> =
@@ -60,6 +64,7 @@ const apiUpdateResolutionArgumentsSchema: ObjectSchema<APIUpdateResolutionArgume
     firebase_key: string().required(),
     new_title: string().required(),
     new_description: string().defined(),
+    goals: object().required(),
   }).noUnknown(true);
 
 interface APIUpdateResolutionReturn {
@@ -90,7 +95,19 @@ interface APIDeleteResolutionReturn {
 const apiDeleteResolutionReturnSchema: ObjectSchema<APIDeleteResolutionReturn> =
   object({ success: boolean().required(), reason: string().optional() });
 
+// Goal
+interface Goal {
+  description: string;
+  complete: boolean;
+}
+
+const goalSchema: ObjectSchema<Goal> = object({
+  description: string().required(),
+  complete: boolean().required(),
+});
+
 export {
+  // Resolution CRUD
   Resolution,
   resolutionSchema,
   APICreateResolutionArguments,
@@ -108,4 +125,8 @@ export {
   apiDeleteResolutionArgumentsSchema,
   APIDeleteResolutionReturn,
   apiDeleteResolutionReturnSchema,
+
+  // Goal CRUD
+  Goal,
+  goalSchema,
 };
