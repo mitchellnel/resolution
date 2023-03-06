@@ -1,7 +1,10 @@
 import { Router, Request, Response } from "express";
 import { ref, push, set, get } from "firebase/database";
 
-import { API_CREATE_GOAL_ENDPOINT } from "../constants/apiEndpoints";
+import {
+  API_CREATE_GOAL_ENDPOINT,
+  API_READ_GOAL_ENDPOINT,
+} from "../constants/apiEndpoints";
 import {
   Goal,
   APICreateGoalArguments,
@@ -13,6 +16,33 @@ import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 import { database } from "../utils/firebase";
 
 const router: Router = Router();
+
+interface ResolutionExistence {
+  exists: boolean;
+  error?: string;
+}
+
+const doesResolutionExist = async (
+  user_id: string,
+  resolution_key: string
+): Promise<ResolutionExistence> => {
+  // check that the Resolution pertaining to resolution_key actually exists
+  const userRef = ref(database, RTDB_RESOLUTIONS_PATH + user_id);
+  const userResolutions = await get(userRef);
+  if (!userResolutions.exists()) {
+    return {
+      exists: false,
+      error: `User with id ${user_id} has no resolutions`,
+    };
+  } else if (resolution_key in userResolutions.val() === false) {
+    return {
+      exists: false,
+      error: `Resolution with key ${resolution_key} does not exist`,
+    };
+  }
+
+  return { exists: true };
+};
 
 router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   const data = req.body;
@@ -27,13 +57,9 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     const user_id = createData.user_id;
     const resolution_key = createData.resolution_key;
 
-    // check that the resolution pertaining to resolution_key actually exists
-    const userRef = ref(database, RTDB_RESOLUTIONS_PATH + user_id);
-    const userResolutions = await get(userRef);
-    if (!userResolutions.exists()) {
-      throw new Error(`User with id ${user_id} has no resolutions`);
-    } else if (resolution_key in userResolutions.val() === false) {
-      throw new Error(`Resolution with key ${resolution_key} does not exist`);
+    const resolutionExists = await doesResolutionExist(user_id, resolution_key);
+    if (resolutionExists.exists === false) {
+      throw resolutionExists.error;
     }
 
     // create the object to add to the database
@@ -75,7 +101,7 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   }
 });
 
-// router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {});
+router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {});
 
 // router.post(
 //   API_UPDATE_GOAL_ENDPOINT,
