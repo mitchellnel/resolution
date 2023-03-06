@@ -106,6 +106,34 @@ const goalSchema: ObjectSchema<Goal> = object({
   complete: boolean().required(),
 });
 
+// /api/create-goal
+interface APICreateGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  description: string;
+}
+
+const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    description: string().required(),
+  }).noUnknown(true);
+
+interface APICreateGoalReturn {
+  success: boolean;
+  reason?: string;
+}
+
+const apiCreateGoalReturnSchema: ObjectSchema<APICreateResolutionReturn> =
+  object({ success: boolean().required(), reason: string().optional() });
+
+// /api/read-goal
+
+// /api/update-goal
+
+// /api/delete-goal
+
 export {
   // Resolution CRUD
   Resolution,
@@ -129,4 +157,8 @@ export {
   // Goal CRUD
   Goal,
   goalSchema,
+  APICreateGoalArguments,
+  apiCreateGoalArgumentsSchema,
+  APICreateGoalReturn,
+  apiCreateGoalReturnSchema,
 };
