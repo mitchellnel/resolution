@@ -49,12 +49,12 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     );
 
     // we use push to basically append to a list, and add to the new ref
-    const newGoalRef = push(userGoalsRef);
+    const newGoalRef = await push(userGoalsRef);
 
     try {
       await set(newGoalRef, dataToAdd);
 
-      res.status(200).send({ success: true } as APICreateGoalReturn);
+      res.status(200).json({ success: true } as APICreateGoalReturn);
     } catch (err) {
       const logMessage = `Data Received: ${JSON.stringify(
         data
