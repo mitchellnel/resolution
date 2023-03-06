@@ -57,7 +57,7 @@ router.post(
       const userResolutionsRef = ref(database, RTDB_RESOLUTIONS_PATH + user_id);
 
       // we use push to basically append to a list
-      const newResolutionRef = push(userResolutionsRef);
+      const newResolutionRef = await push(userResolutionsRef);
 
       try {
         await set(newResolutionRef, dataToAdd);
@@ -78,18 +78,19 @@ router.post(
         );
 
         // push a new goal to the resolution
-        const newGoalRef = push(newResolutionGoalsRef);
+        const newGoalRef = await push(newResolutionGoalsRef);
 
         try {
           await set(newGoalRef, goalToAdd);
 
+          // @ts-ignore
           const logMessage = `Data Received: ${JSON.stringify(
             createData
           )}\n\t ... SUCCESS: ${JSON.stringify(
             dataToAdd
           )} added to the RTDB at ${RTDB_RESOLUTIONS_PATH + user_id}`;
 
-          console.log(logMessage);
+          // console.log(logMessage);
 
           res.status(200).json({ success: true } as APICreateResolutionReturn);
         } catch (err) {
@@ -101,7 +102,7 @@ router.post(
           createData
         )}\n\t ... FAILURE: data could not be added to the DB: ${err}`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -113,7 +114,7 @@ router.post(
         data
       )}\n\t ... FAILURE: Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
 
-      console.log(logMessage);
+      // console.log(logMessage);
 
       res.status(400).json({
         success: false,
@@ -167,7 +168,7 @@ router.get(
       } catch (err) {
         const logMessage = `FAILURE: Call to /api/read-resolution was unsuccessful: ${err}`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -179,7 +180,7 @@ router.get(
         params
       )}\n\t ... FAILURE: Query Parameters of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
 
-      console.log(logMessage);
+      // console.log(logMessage);
 
       res.status(400).json({
         success: false,
@@ -225,6 +226,7 @@ router.post(
       try {
         await update(databaseRef, updates);
 
+        // @ts-ignore
         const logMessage = `Data Received: ${JSON.stringify(
           updateData
         )}\n\t ... SUCCESS: ${JSON.stringify(
@@ -233,7 +235,7 @@ router.post(
           RTDB_RESOLUTIONS_PATH + user_id
         }/${firebase_key}`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(200).json({ success: true } as APIUpdateResolutionReturn);
       } catch (err) {
@@ -241,7 +243,7 @@ router.post(
           updateData
         )}\n\t ... FAILURE: update could not be made to the DB: ${err}`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -253,7 +255,7 @@ router.post(
         data
       )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
 
-      console.log(logMessage);
+      // console.log(logMessage);
 
       res.status(400).json({
         success: false,
@@ -293,11 +295,12 @@ router.post(
       try {
         await remove(deleteRef);
 
+        // @ts-ignore
         const logMessage = `Data Received: ${JSON.stringify(
           deleteData
         )}\n\t ... data at ${deletePath} successfully deleted`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(200).json({ success: true } as APIDeleteResolutionReturn);
       } catch (err) {
@@ -305,7 +308,7 @@ router.post(
           deleteData
         )}\n\t ... delete could not be made on the DB: ${err}`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -317,7 +320,7 @@ router.post(
         data
       )}\n\t ... FAILURE: Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
 
-      console.log(logMessage);
+      // console.log(logMessage);
 
       res.status(400).json({
         success: false,
