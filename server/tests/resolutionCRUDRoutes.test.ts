@@ -14,12 +14,25 @@ import {
   APIUpdateResolutionArguments,
 } from "../constants/apiInterfaces";
 
+import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
+import { database } from "../utils/firebase";
+import { ref, remove } from "@firebase/database";
+
 describe("Test ResolutionDB CRUD API", () => {
   const test_user_id = "test_user_21";
   const test_title = "Test Resolution Title 21";
   const test_description = "Test Resolution Description 21";
 
   const test_updated_description = "Test Resolution Description 21.21";
+
+  beforeAll(async () => {
+    // just make sure data for test_user_id doesn't exist
+    //  or some of the tests will fail
+    const test_user_id_path = RTDB_RESOLUTIONS_PATH + test_user_id;
+    const test_user_id_db_ref = ref(database, test_user_id_path);
+
+    await remove(test_user_id_db_ref);
+  });
 
   describe(`GET ${API_READ_RESOLUTION_ENDPOINT}`, () => {
     describe("Proper Functionality", () => {
@@ -212,6 +225,7 @@ describe("Test ResolutionDB CRUD API", () => {
           firebase_key: readResResolutionKey,
           new_title: test_title,
           new_description: test_updated_description,
+          goals: readResolutions![readResResolutionKey]!["goals"],
         };
 
         // update that resolution
@@ -247,7 +261,6 @@ describe("Test ResolutionDB CRUD API", () => {
           user_id: test_user_id,
           firebase_key: readResResolutionKey,
         };
-
         await request(app)
           .post(`${API_DELETE_RESOLUTION_ENDPOINT}`)
           .send(deletePostBody);
