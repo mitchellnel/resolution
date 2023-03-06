@@ -209,6 +209,7 @@ router.post(
       const dataToUpdate: Resolution = {
         title: updateData.new_title,
         description: updateData.new_description,
+        goals: updateData.goals, // pass from the frontend - this shouldn't change for an call to /api/update-resolution
       };
 
       // get a reference to the database
