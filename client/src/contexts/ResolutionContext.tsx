@@ -6,6 +6,7 @@ export interface Resolution {
     id: string,
     title: string,
     description: string,
+    goals: Goal[],
     goals_completed: number,
     goal_count: number
 }
@@ -18,8 +19,6 @@ export interface Goal {
 
 export interface ResolutionContextInterface {
     resolutions: Resolution[],
-    focusedResolution: Resolution | null,
-    focusedResolutionGoals: Goal[],
     addResolution: (title: string, description: string) => void
     deleteResolution: (key: string) => void
     updateResolution: (key: string, new_title: string, new_description: string) => void
@@ -28,26 +27,11 @@ export interface ResolutionContextInterface {
 
 export const ResolutionContext = createContext<ResolutionContextInterface>({
     resolutions: [],
-    focusedResolution: null,
-    focusedResolutionGoals: [],
     addResolution: () => null,
     deleteResolution: () => null, 
     updateResolution: () => null,
     getResolutionById: () => undefined
 });
-
-const testGoals = [
-    {
-        id: '1',
-        description: 'first goal',
-        completed: true
-    },
-    {
-        id: '2',
-        description: 'second goal',
-        completed: false
-    }
-]
 
 interface ResolutionProviderProps {
     children: React.ReactNode
@@ -55,30 +39,20 @@ interface ResolutionProviderProps {
 
 interface ResolutionsReducerState {
     resolutions : Resolution[],
-    focusedResolution: Resolution | null,
-    focusedResolutionGoals: Goal[]
 }
 
 enum RESOLUTIONS_ACTION_TYPES {
     SET_RESOLUTIONS = 'SET_RESOLUTIONS',
-    SET_FOCUS = 'SET_FOCUS'
-}
-
-interface SetFocusPayload {
-    focusedResolution: Resolution,
-    focusedResolutionGoals: Goal[]
 }
 
 //fix payload type
 interface ResolutionsReducerAction {
     type: RESOLUTIONS_ACTION_TYPES,
-    payload: Resolution[] | SetFocusPayload
+    payload: Resolution[]
 }
 
 const INITIAL_STATE : ResolutionsReducerState = {
     resolutions : [],
-    focusedResolution : null,
-    focusedResolutionGoals : testGoals
 }
 
 const resolutionsReducer = (state : ResolutionsReducerState, action : ResolutionsReducerAction) => {
@@ -91,13 +65,6 @@ const resolutionsReducer = (state : ResolutionsReducerState, action : Resolution
                 ...state,
                 resolutions: (payload as Resolution[])
             }
-        //payload = { focusedResolution: ..., focusedResolutionGoals: ...}
-        case RESOLUTIONS_ACTION_TYPES.SET_FOCUS:
-            return {
-                ...state,
-                focusedResolution: (payload as SetFocusPayload).focusedResolution,
-                focusedResolutionGoals: (payload as SetFocusPayload).focusedResolutionGoals
-            }
         default:
             throw new Error(`unhandled type of ${type} in resolutionsReducer`);
     }
@@ -107,7 +74,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
 
     const { currentUser } = useContext(UserContext);
 
-    const [ { resolutions, focusedResolution, focusedResolutionGoals }, dispatch ] = useReducer(resolutionsReducer, INITIAL_STATE);
+    const [ { resolutions }, dispatch ] = useReducer(resolutionsReducer, INITIAL_STATE);
 
     const setResolutions = (new_resolutions : Resolution[]) => {
         dispatch({ type: RESOLUTIONS_ACTION_TYPES.SET_RESOLUTIONS, payload: new_resolutions });
@@ -118,15 +85,26 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
     const convertAPIDataToResolutions = (APIData : any): Resolution[] => {
         const resolutions = []
         for (const resolutionId in APIData) {
-            resolutions.push({...APIData[resolutionId], id: resolutionId, goals_completed: 0, goal_count: 0})
+            resolutions.push({...APIData[resolutionId], id: resolutionId, goals: convertAPIDataToGoals(APIData[resolutionId].goals), goals_completed: 0, goal_count: 0})
         }
         return resolutions
+    }
+
+    // fix type of APIData from any type
+    // converts APIData, which is an object with ids as keys to an array of goal objects, which each have an id property
+    const convertAPIDataToGoals = (APIData : any): Goal[] => {
+        const goals = []
+        for (const goalId in APIData) {
+            goals.push({...APIData[goalId], id: goalId})
+        }
+        return goals
     }
 
     const fetchAPI = useCallback(() => {
         if (currentUser) {
             axios.get(`/api/read-resolution?user_id=${currentUser.uid}`)
             .then(res => {
+                console.log(convertAPIDataToResolutions(res.data.resolutions));
                 setResolutions(convertAPIDataToResolutions(res.data.resolutions));
             }).catch(err => {
                 console.log('Fetch Error:', err);
@@ -166,11 +144,10 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
                 await axios.post('/api/delete-resolution', {
                     'user_id': currentUser.uid,
                     'firebase_key': key,
-                    // 'description': description
                 })
             }
         } catch (err) {
-            console.log('Create Error:', err);
+            console.log('Delete Error:', err);
         }
     }
 
@@ -190,7 +167,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
                 })
             }
         } catch (err) {
-            console.log('Create Error:', err);
+            console.log('Update Error:', err);
         }
     }
 
@@ -204,7 +181,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         return resolutions.find(resolution => resolution.id === id)
     }
 
-    const value = { resolutions, focusedResolution, focusedResolutionGoals, addResolution, deleteResolution, updateResolution, getResolutionById };
+    const value = { resolutions, addResolution, deleteResolution, updateResolution, getResolutionById };
 
     return <ResolutionContext.Provider value={value}>{children}</ResolutionContext.Provider>
 }

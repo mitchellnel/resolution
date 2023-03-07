@@ -9,7 +9,7 @@ import GoalCard from '../components/GoalCard';
 
 const ResolutionInfo = () => {
 
-    const { focusedResolutionGoals : goals, getResolutionById } = useContext(ResolutionContext);
+    const { getResolutionById } = useContext(ResolutionContext);
     const { id } = useParams();
     const resolution = getResolutionById(id);
 
@@ -34,7 +34,7 @@ const ResolutionInfo = () => {
                 {resolution.description}
             </Typography>
             <div>
-                {goals.map(goal => <GoalCard goal={goal} />)}
+                {resolution.goals.map(goal => <GoalCard goal={goal} />)}
             </div>
             <Button onClick={() => navigate('/')}> Back to dashboard </Button>
         </Container>
