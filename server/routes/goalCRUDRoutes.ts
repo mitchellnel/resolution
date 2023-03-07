@@ -18,6 +18,9 @@ import {
   APICompleteGoalArguments,
   apiCompleteGoalArgumentsSchema,
   APICompleteGoalReturn,
+  APIUpdateGoalDescriptionArguments,
+  apiUpdateGoalDescriptionArgumentsSchema,
+  APIUpdateGoalDescriptionReturn,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -249,7 +252,69 @@ router.post(API_COMPLETE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
 
 router.post(
   API_UPDATE_GOAL_DESCRIPTION_ENDPOINT,
-  async (req: Request, res: Response) => {}
+  async (req: Request, res: Response) => {
+    const data = req.body;
+
+    // try to unwrap data into APIUpdateGoalDescriptionArguments type
+    try {
+      // use yup ObjectSchema cast method to validate the request arguments
+      const updateData: APIUpdateGoalDescriptionArguments =
+        await apiUpdateGoalDescriptionArgumentsSchema.validate(data);
+
+      const user_id = updateData.user_id;
+      const resolution_key = updateData.resolution_key;
+      const goal_key = updateData.goal_key;
+      const new_description = updateData.new_description;
+
+      const goalExists = await doesGoalExist(user_id, resolution_key, goal_key);
+      if (goalExists.exists === false) {
+        throw goalExists.error;
+      }
+
+      // get path to the description field of the goal we want to update
+      const goalDescriptionPath =
+        RTDB_RESOLUTIONS_PATH +
+        user_id +
+        "/" +
+        resolution_key +
+        "/goals/" +
+        goal_key +
+        "/description";
+
+      const updates: any = {};
+      updates[goalDescriptionPath] = new_description;
+
+      // get a reference to the database
+      const databaseRef = ref(database);
+
+      // make the update
+      try {
+        await update(databaseRef, updates);
+
+        res
+          .status(200)
+          .json({ success: true } as APIUpdateGoalDescriptionReturn);
+      } catch (err) {
+        const logMessage = `Data Received: ${JSON.stringify(
+          updateData
+        )}\n\t ... FAILURE: update could not be made to the DB: ${err}`;
+
+        res.status(500).json({
+          success: false,
+          reason: logMessage,
+        } as APIUpdateGoalDescriptionReturn);
+      }
+    } catch (err) {
+      const logMessage = `Data Received: ${JSON.stringify(
+        data
+      )}\n\t ... FAILURE:  Body of POST to ${API_UPDATE_GOAL_DESCRIPTION_ENDPOINT} is not in correct format: ${err}`;
+
+      res.status(400).json({
+        success: false,
+        reason: logMessage,
+      } as APIUpdateGoalDescriptionReturn);
+    }
+  }
 );
 
 // router.post(

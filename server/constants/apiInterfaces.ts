@@ -167,6 +167,25 @@ interface APICompleteGoalReturn {
 }
 
 // /api/update-goal-description
+interface APIUpdateGoalDescriptionArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+  new_description: string;
+}
+
+const apiUpdateGoalDescriptionArgumentsSchema: ObjectSchema<APIUpdateGoalDescriptionArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+    new_description: string().required(),
+  }).noUnknown(true);
+
+interface APIUpdateGoalDescriptionReturn {
+  success: boolean;
+  reason?: string;
+}
 
 // /api/delete-goal
 
@@ -200,4 +219,10 @@ export {
   APIReadGoalArguments,
   apiReadGoalArgumentsSchema,
   APIReadGoalReturn,
+  APICompleteGoalArguments,
+  apiCompleteGoalArgumentsSchema,
+  APICompleteGoalReturn,
+  APIUpdateGoalDescriptionArguments,
+  apiUpdateGoalDescriptionArgumentsSchema,
+  APIUpdateGoalDescriptionReturn,
 };
