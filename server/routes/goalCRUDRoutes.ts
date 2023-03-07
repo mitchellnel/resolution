@@ -2,8 +2,10 @@ import { Router, Request, Response } from "express";
 import { ref, push, set, get } from "firebase/database";
 
 import {
+  API_COMPLETE_GOAL_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
   API_READ_GOAL_ENDPOINT,
+  API_UPDATE_GOAL_DESCRIPTION_ENDPOINT,
 } from "../constants/apiEndpoints";
 import {
   Goal,
@@ -151,10 +153,15 @@ router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   }
 });
 
-// router.post(
-//   API_UPDATE_GOAL_ENDPOINT,
-//   async (req: Request, res: Response) => {}
-// );
+router.post(
+  API_COMPLETE_GOAL_ENDPOINT,
+  async (req: Request, res: Response) => {}
+);
+
+router.post(
+  API_UPDATE_GOAL_DESCRIPTION_ENDPOINT,
+  async (req: Request, res: Response) => {}
+);
 
 // router.post(
 //   API_DELETE_GOAL_ENDPOINT,

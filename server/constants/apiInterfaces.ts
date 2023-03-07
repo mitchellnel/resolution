@@ -145,7 +145,9 @@ interface APIReadGoalReturn {
   reason?: string;
 }
 
-// /api/update-goal
+// /api/complete-goal
+
+// /api/update-goal-description
 
 // /api/delete-goal
 
