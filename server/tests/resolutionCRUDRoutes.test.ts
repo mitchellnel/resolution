@@ -225,7 +225,6 @@ describe("Test ResolutionDB CRUD API", () => {
           firebase_key: readResResolutionKey,
           new_title: test_title,
           new_description: test_updated_description,
-          goals: readResolutions![readResResolutionKey]!["goals"],
         };
 
         // update that resolution

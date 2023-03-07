@@ -55,7 +55,6 @@ interface APIUpdateResolutionArguments {
   firebase_key: string;
   new_title: string;
   new_description: string;
-  goals: { [key: string]: Goal | undefined };
 }
 
 const apiUpdateResolutionArgumentsSchema: ObjectSchema<APIUpdateResolutionArguments> =
@@ -64,7 +63,6 @@ const apiUpdateResolutionArgumentsSchema: ObjectSchema<APIUpdateResolutionArgume
     firebase_key: string().required(),
     new_title: string().required(),
     new_description: string().defined(),
-    goals: object().required(),
   }).noUnknown(true);
 
 interface APIUpdateResolutionReturn {

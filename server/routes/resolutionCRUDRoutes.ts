@@ -206,12 +206,12 @@ router.post(
       const user_id = updateData.user_id;
       const firebase_key = updateData.firebase_key;
 
-      // create new object for the actual update to make
-      const dataToUpdate: Resolution = {
-        title: updateData.new_title,
-        description: updateData.new_description,
-        goals: updateData.goals, // pass from the frontend - this shouldn't change for an call to /api/update-resolution
-      };
+      const new_title = updateData.new_title;
+      const new_description = updateData.new_description;
+
+      // get paths for title and description on the Resolution
+      const titlePath = `${RTDB_RESOLUTIONS_PATH}${user_id}/${firebase_key}/title`;
+      const descriptionPath = `${RTDB_RESOLUTIONS_PATH}${user_id}/${firebase_key}/description`;
 
       // get a reference to the database
       const databaseRef = ref(database);
@@ -219,31 +219,18 @@ router.post(
       // NOTE: you can simultaneously push multiple updates just by adding another field to
       //   the updates object
       const updates: any = {};
-      updates[`${RTDB_RESOLUTIONS_PATH}${user_id}/${firebase_key}`] =
-        dataToUpdate;
+      updates[titlePath] = new_title;
+      updates[descriptionPath] = new_description;
 
       // make the update
       try {
         await update(databaseRef, updates);
-
-        // @ts-ignore
-        const logMessage = `Data Received: ${JSON.stringify(
-          updateData
-        )}\n\t ... SUCCESS: ${JSON.stringify(
-          dataToUpdate
-        )} updated to the RTDB at ${
-          RTDB_RESOLUTIONS_PATH + user_id
-        }/${firebase_key}`;
-
-        // console.log(logMessage);
 
         res.status(200).json({ success: true } as APIUpdateResolutionReturn);
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
           updateData
         )}\n\t ... FAILURE: update could not be made to the DB: ${err}`;
-
-        // console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -254,8 +241,6 @@ router.post(
       const logMessage = `Data Received: ${JSON.stringify(
         data
       )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
-
-      // console.log(logMessage);
 
       res.status(400).json({
         success: false,
