@@ -1,9 +1,10 @@
 import { Router, Request, Response } from "express";
-import { ref, push, set, get, update } from "firebase/database";
+import { ref, push, set, get, update, remove } from "firebase/database";
 
 import {
   API_COMPLETE_GOAL_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
+  API_DELETE_GOAL_ENDPOINT,
   API_READ_GOAL_ENDPOINT,
   API_UPDATE_GOAL_DESCRIPTION_ENDPOINT,
 } from "../constants/apiEndpoints";
@@ -21,6 +22,9 @@ import {
   APIUpdateGoalDescriptionArguments,
   apiUpdateGoalDescriptionArgumentsSchema,
   APIUpdateGoalDescriptionReturn,
+  APIDeleteGoalArguments,
+  apiDeleteGoalArgumentsSchema,
+  APIDeleteGoalReturn,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -317,9 +321,61 @@ router.post(
   }
 );
 
-// router.post(
-//   API_DELETE_GOAL_ENDPOINT,
-//   async (req: Request, res: Response) => {}
-// );
+router.post(API_DELETE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
+  const data = req.body;
+
+  // try to unwrap data into APIDeleteGoalArguments type
+  try {
+    // use yup ObjectSchema cast method to validate the request arguments
+    const deleteData: APIDeleteGoalArguments =
+      await apiDeleteGoalArgumentsSchema.validate(data);
+
+    const user_id = deleteData.user_id;
+    const resolution_key = deleteData.resolution_key;
+    const goal_key = deleteData.goal_key;
+
+    const resolutionExists = await doesResolutionExist(user_id, resolution_key);
+    if (resolutionExists.exists === false) {
+      throw resolutionExists.error;
+    }
+
+    // get path to the goal we want to delete
+    const goalPath =
+      RTDB_RESOLUTIONS_PATH +
+      user_id +
+      "/" +
+      resolution_key +
+      "/goals/" +
+      goal_key;
+
+    // get a reference to the Goal object to delete
+    const goalToDeleteRef = ref(database, goalPath);
+
+    // delete the Goal object
+    try {
+      await remove(goalToDeleteRef);
+
+      res.status(200).json({ success: true } as APIDeleteGoalReturn);
+    } catch (err) {
+      const logMessage = `Data Received: ${JSON.stringify(
+        deleteData
+      )}\n\t ... FAILURE: update could not be made to the DB: ${err}`;
+
+      res.status(500).json({
+        success: false,
+        reason: logMessage,
+      } as APIDeleteGoalReturn);
+    }
+  } catch (err) {
+    const logMessage = `Data Received: ${JSON.stringify(
+      data
+    )}\n\t ... FAILURE:  Body of POST to ${API_DELETE_GOAL_ENDPOINT} is not in correct format: ${err}`;
+
+    res.status(400).json({
+      success: false,
+      reason: logMessage,
+    } as APIDeleteGoalReturn);
+  }
+});
 
 export default router;

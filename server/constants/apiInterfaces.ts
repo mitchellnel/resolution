@@ -188,6 +188,23 @@ interface APIUpdateGoalDescriptionReturn {
 }
 
 // /api/delete-goal
+interface APIDeleteGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+}
+
+const apiDeleteGoalArgumentsSchema: ObjectSchema<APIDeleteGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+  }).noUnknown(true);
+
+interface APIDeleteGoalReturn {
+  success: boolean;
+  reason?: string;
+}
 
 export {
   // Resolution CRUD
@@ -225,4 +242,7 @@ export {
   APIUpdateGoalDescriptionArguments,
   apiUpdateGoalDescriptionArgumentsSchema,
   APIUpdateGoalDescriptionReturn,
+  APIDeleteGoalArguments,
+  apiDeleteGoalArgumentsSchema,
+  APIDeleteGoalReturn,
 };
