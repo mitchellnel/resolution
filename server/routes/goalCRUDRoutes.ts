@@ -131,21 +131,9 @@ router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     try {
       const goalsSnapshot = await get(userGoalsRef);
 
-      if (!goalsSnapshot.exists()) {
-        const logMessage = `FAILURE: No data available at ${
-          RTDB_RESOLUTIONS_PATH + user_id + "/" + resolution_key + "/goals"
-        }`;
-
-        res
-          .status(404)
-          .json({ success: false, reason: logMessage } as APIReadGoalReturn);
-
-        return;
-      }
-
       res.status(200).json({
         success: true,
-        goals: goalsSnapshot.val(),
+        goals: goalsSnapshot.val() ?? {}, // there may not be any goals, so null coalesce to empty object
       } as APIReadGoalReturn);
     } catch (err) {
       const logMessage = `FAILURE: Call to ${API_READ_GOAL_ENDPOINT} was unsuccessful: ${err}`;
