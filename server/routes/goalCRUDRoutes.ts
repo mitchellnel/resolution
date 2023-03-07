@@ -10,6 +10,9 @@ import {
   APICreateGoalArguments,
   apiCreateGoalArgumentsSchema,
   APICreateGoalReturn,
+  APIReadGoalArguments,
+  apiReadGoalArgumentsSchema,
+  APIReadGoalReturn,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -101,7 +104,64 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   }
 });
 
-router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {});
+router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {
+  const params = req.query;
+
+  // try to unwrap data into APICreateGoalArguments type
+  try {
+    const readData: APIReadGoalArguments =
+      await apiReadGoalArgumentsSchema.validate(req.query);
+
+    // user_id and resolution_key help us path the read request
+    const user_id = readData.user_id;
+    const resolution_key = readData.resolution_key;
+
+    const resolutionExists = await doesResolutionExist(user_id, resolution_key);
+    if (resolutionExists.exists === false) {
+      throw resolutionExists.error;
+    }
+
+    // get a reference to the goals for the user's Resolution
+    const userGoalsRef = ref(
+      database,
+      RTDB_RESOLUTIONS_PATH + user_id + "/" + resolution_key + "/goals"
+    );
+
+    // get a snapshot of the goals currently at userGoalsRef
+    try {
+      const goalsSnapshot = await get(userGoalsRef);
+
+      if (!goalsSnapshot.exists()) {
+        const logMessage = `FAILURE: No data available at ${
+          RTDB_RESOLUTIONS_PATH + user_id + "/" + resolution_key + "/goals"
+        }`;
+
+        res
+          .status(404)
+          .json({ success: false, reason: logMessage } as APIReadGoalReturn);
+
+        return;
+      }
+
+      res.status(200).json({
+        success: true,
+        goals: goalsSnapshot.val(),
+      } as APIReadGoalReturn);
+    } catch (err) {
+      const logMessage = `FAILURE: Call to ${API_READ_GOAL_ENDPOINT} was unsuccessful: ${err}`;
+
+      res
+        .status(500)
+        .json({ success: false, reason: logMessage } as APIReadGoalReturn);
+    }
+  } catch (err) {
+    const logMessage = `Query Paramgs Received: ${JSON.stringify(
+      params
+    )}\n\t ... FAILURE: Query params of GET to ${API_READ_GOAL_ENDPOINT} is not in correct format: ${err}`;
+
+    res.status(400).json({ success: false, reason: logMessage });
+  }
+});
 
 // router.post(
 //   API_UPDATE_GOAL_ENDPOINT,

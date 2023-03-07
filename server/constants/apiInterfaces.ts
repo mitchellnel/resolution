@@ -129,6 +129,21 @@ const apiCreateGoalReturnSchema: ObjectSchema<APICreateResolutionReturn> =
   object({ success: boolean().required(), reason: string().optional() });
 
 // /api/read-goal
+interface APIReadGoalArguments {
+  user_id: string;
+  resolution_key: string;
+}
+
+const apiReadGoalArgumentsSchema: ObjectSchema<APIReadGoalArguments> = object({
+  user_id: string().required(),
+  resolution_key: string().required(),
+}).noUnknown(true);
+
+interface APIReadGoalReturn {
+  success: boolean;
+  goals?: { [key: string]: Goal | undefined };
+  reason?: string;
+}
 
 // /api/update-goal
 
@@ -161,4 +176,7 @@ export {
   apiCreateGoalArgumentsSchema,
   APICreateGoalReturn,
   apiCreateGoalReturnSchema,
+  APIReadGoalArguments,
+  apiReadGoalArgumentsSchema,
+  APIReadGoalReturn,
 };
