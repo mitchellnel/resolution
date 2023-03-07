@@ -23,6 +23,8 @@ export interface ResolutionContextInterface {
     deleteResolution: (key: string) => void
     updateResolution: (key: string, new_title: string, new_description: string) => void
     getResolutionById: (id: string | undefined) => Resolution | undefined
+    addGoal: (resolution_key: string, description: string) => void
+    setGoalCompleted: (resolution_key: string, goal_key: string, complete: boolean) => void
 }
 
 export const ResolutionContext = createContext<ResolutionContextInterface>({
@@ -30,7 +32,9 @@ export const ResolutionContext = createContext<ResolutionContextInterface>({
     addResolution: () => null,
     deleteResolution: () => null, 
     updateResolution: () => null,
-    getResolutionById: () => undefined
+    getResolutionById: () => undefined,
+    addGoal: () => null,
+    setGoalCompleted: () => null
 });
 
 interface ResolutionProviderProps {
@@ -85,7 +89,9 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
     const convertAPIDataToResolutions = (APIData : any): Resolution[] => {
         const resolutions = []
         for (const resolutionId in APIData) {
-            resolutions.push({...APIData[resolutionId], id: resolutionId, goals: convertAPIDataToGoals(APIData[resolutionId].goals), goals_completed: 0, goal_count: 0})
+            const goals = convertAPIDataToGoals(APIData[resolutionId].goals);
+            const goals_completed = goals.reduce((accum, goal) => goal.completed ? accum += 1 : accum, 0);
+            resolutions.push({...APIData[resolutionId], id: resolutionId, goals: goals, goals_completed: goals_completed, goal_count: goals.length})
         }
         return resolutions
     }
@@ -117,7 +123,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
     }, [currentUser, fetchAPI])
 
 
-    //create functionality:
+    //create resolution functionality:
     const callAPICreateResolution = async (title: string, description: string) => {
         try {
             if (currentUser) {
@@ -128,7 +134,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
                 })
             }
         } catch (err) {
-            console.log('Create Error:', err);
+            console.log('Create Resolution Error:', err);
         }
     }
 
@@ -137,7 +143,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         fetchAPI();
     }
 
-    //delete functionality:
+    //delete resolution functionality:
     const callAPIDeleteResolution = async (key: string) => {
         try {
             if (currentUser) {
@@ -147,7 +153,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
                 })
             }
         } catch (err) {
-            console.log('Delete Error:', err);
+            console.log('Delete Resolution Error:', err);
         }
     }
 
@@ -156,6 +162,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         fetchAPI();
     }
 
+    //update resolution functionality:
     const callAPIUpdateResolution = async (key: string, new_title: string, new_description: string) => {
         try {
             if (currentUser) {
@@ -167,7 +174,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
                 })
             }
         } catch (err) {
-            console.log('Update Error:', err);
+            console.log('Update Resolution Error:', err);
         }
     }
 
@@ -181,7 +188,50 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         return resolutions.find(resolution => resolution.id === id)
     }
 
-    const value = { resolutions, addResolution, deleteResolution, updateResolution, getResolutionById };
+    //GOAL CRUD
+
+    //create goal functionality:
+    const callAPICreateGoal = async (resolution_key: string, description: string) => {
+        try {
+            if (currentUser) {
+                await axios.post('/api/create-goal', {
+                    'user_id': currentUser.uid,
+                    'resolution_key': resolution_key,
+                    'description': description
+                })
+            }
+        } catch (err) {
+            console.log('Create Goal Error:', err);
+        }
+    }
+
+    const addGoal = async (resolution_key: string, description: string) => {
+        await callAPICreateGoal(resolution_key, description);
+        fetchAPI();
+    }
+
+    //complete goal functionality:
+    const callAPICompleteGoal = async (resolution_key: string, goal_key: string, completed: boolean) => {
+        try {
+            if (currentUser) {
+                await axios.post('/api/complete-goal', {
+                    'user_id': currentUser.uid,
+                    'resolution_key': resolution_key,
+                    'goal_key': goal_key,
+                    'completed': completed
+                })
+            }
+        } catch (err) {
+            console.log('Complete Goal Error:', err);
+        }
+    }
+
+    const setGoalCompleted = async (resolution_key: string, goal_key: string, completed: boolean) => {
+        await callAPICompleteGoal(resolution_key, goal_key, completed);
+        fetchAPI();
+    }
+
+    const value = { resolutions, addResolution, deleteResolution, updateResolution, getResolutionById, addGoal, setGoalCompleted };
 
     return <ResolutionContext.Provider value={value}>{children}</ResolutionContext.Provider>
 }
