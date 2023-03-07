@@ -101,11 +101,77 @@ describe("Test Goal CRUD API", () => {
 
         // Assert
         it("Should return an HTTP Response Status of 400", () => {
-          expect(res.statusCode).toBe(400);
+          expect(res.statusCode).toEqual(400);
         });
 
         it("Should indicate failure", () => {
-          expect(resBody["success"]).toBe(false);
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+
+      describe("Non-existent User", () => {
+        let res: any, resBody: any;
+
+        // Arrange
+        beforeAll(async () => {
+          const badPostBody: APICreateGoalArguments = {
+            user_id: "non_existent_user",
+            resolution_key: test_resolution_key,
+            description: test_goal_description_1,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_CREATE_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+
+      describe("Non-existent Resolution", () => {
+        let res: any, resBody: any;
+
+        // Arrange
+        beforeAll(async () => {
+          const badPostBody: APICreateGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: "non_existent_resolution",
+            description: test_goal_description_1,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_CREATE_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
         });
 
         it("Should have a defined failure reason", () => {
