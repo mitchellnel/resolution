@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { ref, push, set, get } from "firebase/database";
+import { ref, push, set, get, update } from "firebase/database";
 
 import {
   API_COMPLETE_GOAL_ENDPOINT,
@@ -15,6 +15,9 @@ import {
   APIReadGoalArguments,
   apiReadGoalArgumentsSchema,
   APIReadGoalReturn,
+  APICompleteGoalArguments,
+  apiCompleteGoalArgumentsSchema,
+  APICompleteGoalReturn,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -22,7 +25,7 @@ import { database } from "../utils/firebase";
 
 const router: Router = Router();
 
-interface ResolutionExistence {
+interface RTDBObjectExistence {
   exists: boolean;
   error?: string;
 }
@@ -30,7 +33,7 @@ interface ResolutionExistence {
 const doesResolutionExist = async (
   user_id: string,
   resolution_key: string
-): Promise<ResolutionExistence> => {
+): Promise<RTDBObjectExistence> => {
   // check that the Resolution pertaining to resolution_key actually exists
   const userRef = ref(database, RTDB_RESOLUTIONS_PATH + user_id);
   const userResolutions = await get(userRef);
@@ -43,6 +46,37 @@ const doesResolutionExist = async (
     return {
       exists: false,
       error: `Resolution with key ${resolution_key} does not exist`,
+    };
+  }
+
+  return { exists: true };
+};
+
+const doesGoalExist = async (
+  user_id: string,
+  resolution_key: string,
+  goal_key: string
+): Promise<RTDBObjectExistence> => {
+  const resolutionExists = await doesResolutionExist(user_id, resolution_key);
+  if (resolutionExists.exists === false) {
+    throw resolutionExists.error;
+  }
+
+  // check that the Goal pertaining to goal_key actually exists
+  const goalsRef = ref(
+    database,
+    RTDB_RESOLUTIONS_PATH + user_id + "/" + resolution_key + "/goals"
+  );
+  const resolutionGoals = await get(goalsRef);
+  if (!resolutionGoals.exists()) {
+    return {
+      exists: false,
+      error: `Resolution with key ${resolution_key} has no goals`,
+    };
+  } else if (goal_key in resolutionGoals.val() === false) {
+    return {
+      exists: false,
+      error: `Goal with key ${goal_key} does not exist`,
     };
   }
 
@@ -109,7 +143,7 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
 router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   const params = req.query;
 
-  // try to unwrap data into APICreateGoalArguments type
+  // try to unwrap data into APIReadGoalArguments type
   try {
     const readData: APIReadGoalArguments =
       await apiReadGoalArgumentsSchema.validate(req.query);
@@ -153,10 +187,65 @@ router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   }
 });
 
-router.post(
-  API_COMPLETE_GOAL_ENDPOINT,
-  async (req: Request, res: Response) => {}
-);
+router.post(API_COMPLETE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
+  const data = req.body;
+
+  // try to unwrap data into APICompleteGoalArguments type
+  try {
+    // use yup ObjectSchema cast method to validate the request arguments
+    const completeData: APICompleteGoalArguments =
+      await apiCompleteGoalArgumentsSchema.validate(data);
+
+    const user_id = completeData.user_id;
+    const resolution_key = completeData.resolution_key;
+    const goal_key = completeData.goal_key;
+    const complete = completeData.complete;
+
+    const goalExists = await doesGoalExist(user_id, resolution_key, goal_key);
+    if (goalExists.exists === false) {
+      throw goalExists.error;
+    }
+
+    // get path to the complete field of the goal we want to mark as completed
+    const goalCompletePath =
+      RTDB_RESOLUTIONS_PATH +
+      user_id +
+      "/" +
+      resolution_key +
+      "/goals/" +
+      goal_key +
+      "/complete";
+
+    const updates: any = {};
+    updates[goalCompletePath] = complete;
+
+    // get a reference to the database
+    const databaseRef = ref(database);
+
+    // make the update
+    try {
+      await update(databaseRef, updates);
+
+      res.status(200).json({ success: true } as APICompleteGoalReturn);
+    } catch (err) {
+      const logMessage = `Data Received: ${JSON.stringify(
+        completeData
+      )}\n\t ... FAILURE: update could not be made to the DB: ${err}`;
+
+      res
+        .status(500)
+        .json({ success: false, reason: logMessage } as APICompleteGoalReturn);
+    }
+  } catch (err) {
+    const logMessage = `Data Received: ${JSON.stringify(
+      data
+    )}\n\t ... FAILURE:  Body of POST to ${API_COMPLETE_GOAL_ENDPOINT} is not in correct format: ${err}`;
+
+    res
+      .status(400)
+      .json({ success: false, reason: logMessage } as APICreateGoalReturn);
+  }
+});
 
 router.post(
   API_UPDATE_GOAL_DESCRIPTION_ENDPOINT,

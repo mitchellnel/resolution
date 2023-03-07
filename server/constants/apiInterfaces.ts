@@ -146,6 +146,25 @@ interface APIReadGoalReturn {
 }
 
 // /api/complete-goal
+interface APICompleteGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+  complete: boolean;
+}
+
+const apiCompleteGoalArgumentsSchema: ObjectSchema<APICompleteGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+    complete: boolean().required(),
+  }).noUnknown(true);
+
+interface APICompleteGoalReturn {
+  success: boolean;
+  reason?: string;
+}
 
 // /api/update-goal-description
 
