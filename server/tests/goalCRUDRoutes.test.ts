@@ -2,10 +2,12 @@ import request from "supertest";
 
 import app from "../app";
 import {
+  API_COMPLETE_GOAL_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
   API_READ_GOAL_ENDPOINT,
 } from "../constants/apiEndpoints";
 import {
+  APICompleteGoalArguments,
   APICreateGoalArguments,
   Goal,
   Resolution,
@@ -50,6 +52,30 @@ describe("Test Goal CRUD API", () => {
 
     await remove(test_user_id_db_ref);
   });
+
+  const createSampleGoals = async () => {
+    // create sample goals for the test user for their test resolution
+    const test_user_resolution_path =
+      RTDB_RESOLUTIONS_PATH + test_user_id + "/" + test_resolution_key;
+    const test_resolution_goals_path = test_user_resolution_path + "/goals";
+    const test_resolution_goals_ref = ref(database, test_resolution_goals_path);
+
+    const goal1: Goal = {
+      description: test_goal_description_1,
+      complete: false,
+    };
+
+    const goal2: Goal = {
+      description: test_goal_description_2,
+      complete: false,
+    };
+
+    // use determinstic keys for the goals
+    await set(test_resolution_goals_ref, {
+      [test_goal_key_1]: goal1,
+      [test_goal_key_2]: goal2,
+    });
+  };
 
   describe(`POST ${API_CREATE_GOAL_ENDPOINT}`, () => {
     describe("Proper Functionality", () => {
@@ -193,30 +219,7 @@ describe("Test Goal CRUD API", () => {
   describe(`GET ${API_READ_GOAL_ENDPOINT}`, () => {
     beforeAll(async () => {
       // Arrange
-      // create sample goals for the test user for their test resolution
-      const test_user_resolution_path =
-        RTDB_RESOLUTIONS_PATH + test_user_id + "/" + test_resolution_key;
-      const test_resolution_goals_path = test_user_resolution_path + "/goals";
-      const test_resolution_goals_ref = ref(
-        database,
-        test_resolution_goals_path
-      );
-
-      const goal1: Goal = {
-        description: test_goal_description_1,
-        complete: false,
-      };
-
-      const goal2: Goal = {
-        description: test_goal_description_2,
-        complete: false,
-      };
-
-      // use determinstic keys for the goals
-      await set(test_resolution_goals_ref, {
-        [test_goal_key_1]: goal1,
-        [test_goal_key_2]: goal2,
-      });
+      await createSampleGoals();
     });
 
     describe("Proper Functionality", () => {
@@ -315,6 +318,183 @@ describe("Test Goal CRUD API", () => {
         it("Should have a defined failure reason", () => {
           expect(resBody["reason"]).toBeDefined();
         });
+      });
+    });
+  });
+
+  describe(`POST ${API_COMPLETE_GOAL_ENDPOINT}`, () => {
+    describe("Proper Functionality", () => {
+      let res: any;
+      beforeAll(async () => {
+        // Arrange
+        await createSampleGoals();
+
+        const completeBody: APICompleteGoalArguments = {
+          user_id: test_user_id,
+          resolution_key: test_resolution_key,
+          goal_key: test_goal_key_1,
+          complete: true,
+        };
+
+        // Act
+        // update the goal "complete" field with the complete argument
+        res = await request(app)
+          .post(API_COMPLETE_GOAL_ENDPOINT)
+          .send(completeBody);
+      });
+
+      // Assert
+      it("Should return an HTTP Response Status of 200", () => {
+        expect(res.statusCode).toEqual(200);
+      });
+
+      it("Should have changed the goal's complete field to true", async () => {
+        const goalRef = ref(
+          database,
+          RTDB_RESOLUTIONS_PATH +
+            test_user_id +
+            "/" +
+            test_resolution_key +
+            "/goals/" +
+            test_goal_key_1
+        );
+
+        const goal: Goal = (await get(goalRef)).val();
+        expect(goal.complete).toEqual(true);
+      });
+    });
+
+    describe("Erroneous Usage", () => {
+      describe("Invalid format of POST body", () => {
+        let res: any, resBody: any;
+        beforeAll(async () => {
+          // Arrange
+          const badPostBody: APICompleteGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: test_resolution_key,
+            goal_key: "",
+            complete: false,
+          };
+
+          // Act
+          // POST with a bad body format
+          res = await request(app)
+            .post(API_COMPLETE_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+      describe("Non-existent User", () => {
+        let res: any, resBody: any;
+
+        // Arrange
+        beforeAll(async () => {
+          const badPostBody: APICompleteGoalArguments = {
+            user_id: "non_existent_user",
+            resolution_key: test_resolution_key,
+            goal_key: test_goal_key_1,
+            complete: true,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_COMPLETE_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+      describe("Non-existent Resolution", () => {
+        let res: any, resBody: any;
+
+        // Arrange
+        beforeAll(async () => {
+          const badPostBody: APICompleteGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: "non_existent_resolution",
+            goal_key: test_goal_key_1,
+            complete: true,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_COMPLETE_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+    });
+    describe("Non-existent Goal", () => {
+      let res: any, resBody: any;
+
+      // Arrange
+      beforeAll(async () => {
+        const badPostBody: APICompleteGoalArguments = {
+          user_id: test_user_id,
+          resolution_key: test_resolution_key,
+          goal_key: "non_existent_goal",
+          complete: true,
+        };
+
+        // Act
+        // POST with a non-existent user
+        res = await request(app)
+          .post(API_COMPLETE_GOAL_ENDPOINT)
+          .send(badPostBody);
+        resBody = JSON.parse(res.text);
+      });
+
+      // Assert
+      it("Should return an HTTP Response Status of 400", () => {
+        expect(res.statusCode).toEqual(400);
+      });
+
+      it("Should indicate failure", () => {
+        expect(resBody["success"]).toEqual(false);
+      });
+
+      it("Should have a defined failure reason", () => {
+        expect(resBody["reason"]).toBeDefined();
       });
     });
   });
