@@ -65,12 +65,12 @@ describe("Test Goal CRUD API", () => {
 
     const goal1: Goal = {
       description: test_goal_description_1,
-      complete: false,
+      completed: false,
     };
 
     const goal2: Goal = {
       description: test_goal_description_2,
-      complete: false,
+      completed: false,
     };
 
     // use determinstic keys for the goals
@@ -113,8 +113,8 @@ describe("Test Goal CRUD API", () => {
 
         const resolutionGoals = resolution["goals"];
         const goal: Goal = resolutionGoals[Object.keys(resolutionGoals)[0]]!;
-        expect(goal["description"]).toEqual(test_goal_description_1);
-        expect(goal["complete"]).toEqual(false);
+        expect(goal.description).toEqual(test_goal_description_1);
+        expect(goal.completed).toEqual(false);
       });
     });
 
@@ -336,11 +336,11 @@ describe("Test Goal CRUD API", () => {
           user_id: test_user_id,
           resolution_key: test_resolution_key,
           goal_key: test_goal_key_1,
-          complete: true,
+          completed: true,
         };
 
         // Act
-        // update the goal "complete" field with the complete argument
+        // update the goal "completed" field with the completed argument
         res = await request(app)
           .post(API_COMPLETE_GOAL_ENDPOINT)
           .send(completeBody);
@@ -351,7 +351,7 @@ describe("Test Goal CRUD API", () => {
         expect(res.statusCode).toEqual(200);
       });
 
-      it("Should have changed the goal's complete field to true", async () => {
+      it("Should have changed the goal's completed field to true", async () => {
         const goalRef = ref(
           database,
           RTDB_RESOLUTIONS_PATH +
@@ -363,7 +363,7 @@ describe("Test Goal CRUD API", () => {
         );
 
         const goal: Goal = (await get(goalRef)).val();
-        expect(goal.complete).toEqual(true);
+        expect(goal.completed).toEqual(true);
       });
     });
 
@@ -376,7 +376,7 @@ describe("Test Goal CRUD API", () => {
             user_id: test_user_id,
             resolution_key: test_resolution_key,
             goal_key: "",
-            complete: false,
+            completed: false,
           };
 
           // Act
@@ -409,7 +409,7 @@ describe("Test Goal CRUD API", () => {
             user_id: "non_existent_user",
             resolution_key: test_resolution_key,
             goal_key: test_goal_key_1,
-            complete: true,
+            completed: true,
           };
 
           // Act
@@ -442,7 +442,7 @@ describe("Test Goal CRUD API", () => {
             user_id: test_user_id,
             resolution_key: "non_existent_resolution",
             goal_key: test_goal_key_1,
-            complete: true,
+            completed: true,
           };
 
           // Act
@@ -476,7 +476,7 @@ describe("Test Goal CRUD API", () => {
             user_id: test_user_id,
             resolution_key: test_resolution_key,
             goal_key: "non_existent_goal",
-            complete: true,
+            completed: true,
           };
 
           // Act
@@ -518,7 +518,7 @@ describe("Test Goal CRUD API", () => {
         };
 
         // Act
-        // update the goal "complete" field with the complete argument
+        // update the goal "completed" field with the completed argument
         res = await request(app)
           .post(API_UPDATE_GOAL_DESCRIPTION_ENDPOINT)
           .send(completeBody);

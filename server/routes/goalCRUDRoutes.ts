@@ -111,7 +111,7 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     // create the object to add to the database
     const dataToAdd: Goal = {
       description: createData.description,
-      complete: false,
+      completed: false,
     };
 
     // get reference to the database at the goals for the user's Resolution
@@ -206,7 +206,7 @@ router.post(API_COMPLETE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     const user_id = completeData.user_id;
     const resolution_key = completeData.resolution_key;
     const goal_key = completeData.goal_key;
-    const complete = completeData.complete;
+    const completed = completeData.completed;
 
     const goalExists = await doesGoalExist(user_id, resolution_key, goal_key);
     if (goalExists.exists === false) {
@@ -221,10 +221,10 @@ router.post(API_COMPLETE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
       resolution_key +
       "/goals/" +
       goal_key +
-      "/complete";
+      "/completed";
 
     const updates: any = {};
-    updates[goalCompletePath] = complete;
+    updates[goalCompletePath] = completed;
 
     // get a reference to the database
     const databaseRef = ref(database);

@@ -96,12 +96,12 @@ const apiDeleteResolutionReturnSchema: ObjectSchema<APIDeleteResolutionReturn> =
 // Goal
 interface Goal {
   description: string;
-  complete: boolean;
+  completed: boolean;
 }
 
 const goalSchema: ObjectSchema<Goal> = object({
   description: string().required(),
-  complete: boolean().required(),
+  completed: boolean().required(),
 });
 
 // /api/create-goal
@@ -148,7 +148,7 @@ interface APICompleteGoalArguments {
   user_id: string;
   resolution_key: string;
   goal_key: string;
-  complete: boolean;
+  completed: boolean;
 }
 
 const apiCompleteGoalArgumentsSchema: ObjectSchema<APICompleteGoalArguments> =
@@ -156,7 +156,7 @@ const apiCompleteGoalArgumentsSchema: ObjectSchema<APICompleteGoalArguments> =
     user_id: string().required(),
     resolution_key: string().required(),
     goal_key: string().required(),
-    complete: boolean().required(),
+    completed: boolean().required(),
   }).noUnknown(true);
 
 interface APICompleteGoalReturn {
