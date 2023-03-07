@@ -4,12 +4,14 @@ import app from "../app";
 import {
   API_COMPLETE_GOAL_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
+  API_DELETE_GOAL_ENDPOINT,
   API_READ_GOAL_ENDPOINT,
   API_UPDATE_GOAL_DESCRIPTION_ENDPOINT,
 } from "../constants/apiEndpoints";
 import {
   APICompleteGoalArguments,
   APICreateGoalArguments,
+  APIDeleteGoalArguments,
   APIUpdateGoalDescriptionArguments,
   Goal,
   Resolution,
@@ -609,6 +611,7 @@ describe("Test Goal CRUD API", () => {
           expect(resBody["reason"]).toBeDefined();
         });
       });
+
       describe("Non-existent Resolution", () => {
         let res: any, resBody: any;
 
@@ -659,6 +662,147 @@ describe("Test Goal CRUD API", () => {
           // POST with a non-existent user
           res = await request(app)
             .post(API_UPDATE_GOAL_DESCRIPTION_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+    });
+  });
+
+  describe(`POST ${API_DELETE_GOAL_ENDPOINT}`, () => {
+    describe("Proper Functionality", () => {
+      let res: any;
+      beforeAll(async () => {
+        // Arrange
+        await createSampleGoals();
+
+        const deleteBody: APIDeleteGoalArguments = {
+          user_id: test_user_id,
+          resolution_key: test_resolution_key,
+          goal_key: test_goal_key_1,
+        };
+
+        // Act
+        // delete the goal with the key test_goal_key_1
+        res = await request(app)
+          .post(API_DELETE_GOAL_ENDPOINT)
+          .send(deleteBody);
+      });
+
+      // Assert
+      it("Should return an HTTP Response Status of 200", () => {
+        expect(res.statusCode).toEqual(200);
+      });
+
+      it("Should have successfully deleted the Goal (remaining count is 1)", async () => {
+        const resolutionGoalsRef = ref(
+          database,
+          RTDB_RESOLUTIONS_PATH +
+            test_user_id +
+            "/" +
+            test_resolution_key +
+            "/goals"
+        );
+
+        const resolutionGoals: { [key: string]: Goal } = (
+          await get(resolutionGoalsRef)
+        ).val();
+        expect(Object.keys(resolutionGoals).length).toEqual(1);
+      });
+    });
+
+    describe("Erroneous Usage", () => {
+      describe("Invalid format of POST body", () => {
+        let res: any, resBody: any;
+        beforeAll(async () => {
+          // Arrange
+          const badPostBody: APIDeleteGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: test_resolution_key,
+            goal_key: "",
+          };
+
+          // Act
+          // POST with a bad body format
+          res = await request(app)
+            .post(API_DELETE_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+
+      describe("Non-existent User", () => {
+        let res: any, resBody: any;
+        beforeAll(async () => {
+          // Arrange
+          const badPostBody: APIDeleteGoalArguments = {
+            user_id: "non_existent_user",
+            resolution_key: test_resolution_key,
+            goal_key: test_goal_key_1,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_DELETE_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+
+      describe("Non-existent Resolution", () => {
+        let res: any, resBody: any;
+        beforeAll(async () => {
+          // Arrange
+          const badPostBody: APIDeleteGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: "non_existent_resolution",
+            goal_key: test_goal_key_1,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_DELETE_GOAL_ENDPOINT)
             .send(badPostBody);
           resBody = JSON.parse(res.text);
         });
