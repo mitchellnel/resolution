@@ -95,11 +95,11 @@ For usage instructions, see the docs [here](https://www.npmjs.com/package/dotenv
 
 # API Documentation
 
+## Resolution CRUD
+
 Every resolution in the database is uniquely keyed by the Firebase Realtime Database service. This key is generated when the resolution is pushed to the database.
 
 These keys are received by the client when reading resolutions, and must be passed to the `/api/update-resolution` or `/api/delete-resolution` endpoints in order to utilise their functionality.
-
-## Endpoints
 
 ### `/api/create-resolution`
 
@@ -119,6 +119,8 @@ The argument object is interfaced as `APICreateResolutionArguments`, and the ret
 
 If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
 
+A sample Goal for the newly created Resolution will be created when this endpoint is called.
+
 ### `/api/read-resolution?user_id=<user_id>`
 
 Reads all of the resolutions that belong to a user -- these are located in the database under the path `resolutions/user_id`
@@ -132,6 +134,8 @@ Arguments:
 Returns: a JSON object with a Boolean field indicating read success. If the read failed, then a `reason` field will be defined with an error message. If the read succeeded, then a `resolutions` field will be populated with what is essentially map of Firebase RTDB keys to resolution objects -- objects that have a title and description field representing the fields of a resolution.
 
 If the the request has _extra_ query parameters than those defined above, an error **will not** be thrown. If the request lacks any of the query parameters defined above, an error **will** be thrown.
+
+Note that since Goals are part of a single Resolution object, calling this endpoint will also return the list of Goals associated with each Resolution.
 
 ### `/api/update-resolution`
 
@@ -168,6 +172,109 @@ Arguments:
 Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
 
 The argument object is interfaced as `APIDeleteResolutionArguments`, and the return object is interfaces as `APIDeleteResolutionReturn`.
+
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+
+## Goal CRUD
+
+Every Goal in the database is uniquely keyed by the Firebase Realtime Database service. This key is generated when the Goal is pushed to the database.
+
+These keys are received by the client when reading Goals, and must be passed to the `/api/complete-goal`, `/api/update-goal-description`, and `/api/delete-goal` endpoints in order to utilise their functionality.
+
+The Goals are located under the path `resolutions/user_id/resolution_key/goals/`.
+
+### `/api/create-goal`
+
+Creates a Goal and adds it to the database under the path `resolutions/user_id/resolution_key/goals`.
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `resolution_key` (string)
+- `description` (string)
+
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
+
+The argument object is interfaced as `APICreateGoalArguments`, and the return object is interfaces as `APICreateGoalReturn`.
+
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+
+The `description` field is required to create a Goal. It cannot be an empty string.
+
+### `/api/read-goal?user_id=<user_id>&resolution_key=<resolution_key>`
+
+Reads all of the Goals that belong to a user's Resolution -- these are located in the database under the path `resolutions/user_id/resolution_key/goals`
+
+This API must be called by making a **GET** request on this endpoint to the server (using HTTP). The arguments for the request will be sent as query parameters.
+
+Arguments:
+
+- `user_id` (string)
+- `resolution_key` (string)
+
+Returns: a JSON object with a Boolean field indicating read success. If the read failed, then a `reason` field will be defined with an error message. If the read succeeded, then a `goals` field will be populated with what is essentially map of Firebase RTDB keys to Goal objects -- objects that have a description and complete field that represent the Goal's description and whether it has been completed, respectively.
+
+If the the request has _extra_ query parameters than those defined above, an error **will not** be thrown. If the request lacks any of the query parameters defined above, an error **will** be thrown.
+
+### `/api/complete-goal`
+
+Updates the complete field on a specific Goal that belongs to a user's Resolution -- this field is located in the database under the path `resolutions/user_id/resolution_key/goals/goal_key/complete`
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `resolution_key` (string)
+- `goal_key` (string)
+- `complete` (Boolean)
+
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
+
+The argument object is interfaced as `APICompleteGoalArguments`, and the return object is interfaces as `APICompleteGoalReturn`.
+
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+
+The `complete` field must be passed to make the update. It can either be `true` or `false`. The API **will not** automatically flip the Boolean -- the desired completion state must be passed via the arguments.
+
+### `/api/update-goal-description`
+
+Updates the description field on a specific Goal that belongs to a user's Resolution -- this field is located in the database under the path `resolutions/user_id/resolution_key/goals/goal_key/description`
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `resolution_key` (string)
+- `goal_key` (string)
+- `new_description` (Boolean)
+
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
+
+The argument object is interfaced as `APIUpdateGoalDescriptionArguments`, and the return object is interfaces as `APIUpdateGoalDescriptionReturn`.
+
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+
+The `new_description` field must be passed to make the update. It cannot be an empty string.
+
+### `/api/delete-goal`
+
+Deletes a specific Goal that belongs a user's Resolution -- these are located in the database under the path `resolutions/user_id/resolution_key/goals`
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `resolution_key` (string)
+- `goal_key` (string)
+
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
+
+The argument object is interfaced as `APIDeleteGoalArguments`, and the return object is interfaces as `APIDeleteGoalReturn`.
 
 If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
 
