@@ -231,6 +231,27 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         fetchAPI();
     }
 
+    //delete goal functionality:
+    const callAPIDeleteGoal = async (resolution_key: string, goal_key: string) => {
+        try {
+            if (currentUser) {
+                await axios.post('/api/delete-goal', {
+                    'user_id': currentUser.uid,
+                    'resolution_key': resolution_key,
+                    'goal_key': goal_key,
+                })
+            }
+        } catch (err) {
+            console.log('Delete Goal Error:', err);
+        }
+    }
+
+    const deleteGoal = async (resolution_key: string, goal_key: string) => {
+        await callAPIDeleteGoal(resolution_key, goal_key);
+        fetchAPI();
+    }
+
+
     const value = { resolutions, addResolution, deleteResolution, updateResolution, getResolutionById, addGoal, setGoalCompleted };
 
     return <ResolutionContext.Provider value={value}>{children}</ResolutionContext.Provider>
