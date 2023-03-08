@@ -2,8 +2,10 @@ import { Box, IconButton, Menu, MenuItem, Tooltip, } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Goal } from "../contexts/ResolutionContext";
 import { useState } from "react";
+import { useContext } from "react";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
+import { ResolutionContext } from '../contexts/ResolutionContext';
 
 interface GoalOptionsProps {
   goal: Goal;
@@ -13,6 +15,7 @@ interface GoalOptionsProps {
 
 const GoalOptions = ({goal, resolutionKey, openEditForm}: GoalOptionsProps) => {
 
+  const { deleteGoal } = useContext(ResolutionContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -31,6 +34,7 @@ const GoalOptions = ({goal, resolutionKey, openEditForm}: GoalOptionsProps) => {
   
   //delete functionality:
   const handleDelete = () => {
+    deleteGoal(resolutionKey, goal.id);
   };
 
   return (

@@ -34,7 +34,7 @@ export const ResolutionContext = createContext<ResolutionContextInterface>({
     updateResolution: () => null,
     getResolutionById: () => undefined,
     addGoal: () => null,
-    setGoalCompleted: () => null
+    setGoalCompleted: () => null,
 });
 
 interface ResolutionProviderProps {
@@ -251,7 +251,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         fetchAPI();
     }
 
-    //delete goal functionality:
+    //update goal functionality:
     const callAPIUpdateGoal = async (resolution_key: string, goal_key: string, new_description: boolean) => {
         try {
             if (currentUser) {
