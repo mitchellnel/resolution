@@ -37,7 +37,7 @@ const ResolutionInfo = () => {
                 {resolution.description}
             </Typography>
             <div>
-                {resolution.goals.map(goal => <GoalCard key={goal.id} goal={goal} setCompleted={(completed : boolean) => setGoalCompleted(resolution.id, goal.id, completed)}/>)}
+                {resolution.goals.map(goal => <GoalCard key={goal.id} goal={goal} resolutionKey={resolution.id} setCompleted={(completed : boolean) => setGoalCompleted(resolution.id, goal.id, completed)}/>)}
                 <CreateGoalCard goalCreationHandler={(description : string) => addGoal(resolution.id, description)}/>
             </div>
             <Button onClick={() => navigate('/')}> Back to dashboard </Button>

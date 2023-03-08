@@ -7,10 +7,11 @@ import EditIcon from '@mui/icons-material/Edit';
 
 interface GoalOptionsProps {
   goal: Goal;
+  resolutionKey: string;
   openEditForm: () => void;
 }
 
-const GoalOptions = ({goal, openEditForm}: GoalOptionsProps) => {
+const GoalOptions = ({goal, resolutionKey, openEditForm}: GoalOptionsProps) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);

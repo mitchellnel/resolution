@@ -8,10 +8,11 @@ import { useState } from "react";
 
 interface GoalCardProps {
   goal: Goal;
+  resolutionKey: string;
   setCompleted: (completed: boolean) => void;
 }
 
-const GoalCard = ({goal, setCompleted}: GoalCardProps) => {
+const GoalCard = ({goal, resolutionKey, setCompleted}: GoalCardProps) => {
   
   const [ editing, setEditing ] = useState(false);
 
@@ -30,7 +31,7 @@ const GoalCard = ({goal, setCompleted}: GoalCardProps) => {
         <Card sx={{width: '30%', height: '5rem', margin: '20px', marginLeft: '0px', boxShadow: 3}}>
           <div style={{marginLeft: '5px', marginRight: '20px', boxSizing: 'border-box', paddingTop: '0px', display: 'flex', height: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
             <div style={{display: 'flex'}}>
-              <GoalOptions goal={goal} openEditForm={() => setEditing(true)}/>
+              <GoalOptions goal={goal} resolutionKey={resolutionKey} openEditForm={() => setEditing(true)}/>
               <Typography variant='h6'>{goal.description}</Typography>
             </div>
             <IconButton onClick={handleGoalToggle}>
