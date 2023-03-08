@@ -95,6 +95,25 @@ interface APIDeleteResolutionReturn {
 const apiDeleteResolutionReturnSchema: ObjectSchema<APIDeleteResolutionReturn> =
   object({ success: boolean().required(), reason: string().optional() });
 
+// /api/complete-resolution
+interface APICompleteResolutionArguments {
+  user_id: string;
+  firebase_key: string;
+  completed: boolean;
+}
+
+const apiCompleteResolutionArgumentsSchema: ObjectSchema<APICompleteResolutionArguments> =
+  object({
+    user_id: string().required(),
+    firebase_key: string().required(),
+    completed: boolean().required(),
+  }).noUnknown(true);
+
+interface APICompleteResolutionReturn {
+  success: boolean;
+  reason?: string;
+}
+
 // Goal
 interface Goal {
   description: string;
@@ -225,6 +244,9 @@ export {
   apiDeleteResolutionArgumentsSchema,
   APIDeleteResolutionReturn,
   apiDeleteResolutionReturnSchema,
+  APICompleteResolutionArguments,
+  apiCompleteResolutionArgumentsSchema,
+  APICompleteResolutionReturn,
 
   // Goal CRUD
   Goal,
