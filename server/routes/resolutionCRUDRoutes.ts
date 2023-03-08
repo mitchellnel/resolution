@@ -51,6 +51,7 @@ router.post(
         title: createData.title,
         description: createData.description,
         goals: {}, // we will push an actual object later, TypeScript mandates we put this here
+        completed: false,
       };
 
       // get reference to the database at the specified path
