@@ -33,6 +33,9 @@ describe("Test Goal CRUD API", () => {
 
   const test_goal_description_2 = "Test goal description 2";
 
+  const test_goal_nTimesToAchieve_1 = 3;
+  const test_goal_nTimesToAchieve_2 = 9;
+
   beforeAll(async () => {
     // create a Resolution to add goals to
     const test_user_id_path = RTDB_RESOLUTIONS_PATH + test_user_id;
@@ -65,11 +68,13 @@ describe("Test Goal CRUD API", () => {
 
     const goal1: Goal = {
       description: test_goal_description_1,
+      nTimesToAchieve: test_goal_nTimesToAchieve_1,
       completed: false,
     };
 
     const goal2: Goal = {
       description: test_goal_description_2,
+      nTimesToAchieve: test_goal_nTimesToAchieve_2,
       completed: false,
     };
 
@@ -90,6 +95,7 @@ describe("Test Goal CRUD API", () => {
           user_id: test_user_id,
           resolution_key: test_resolution_key,
           description: test_goal_description_1,
+          nTimesToAchieve: test_goal_nTimesToAchieve_1,
         };
 
         // Act
@@ -114,6 +120,7 @@ describe("Test Goal CRUD API", () => {
         const resolutionGoals = resolution["goals"];
         const goal: Goal = resolutionGoals[Object.keys(resolutionGoals)[0]]!;
         expect(goal.description).toEqual(test_goal_description_1);
+        expect(goal.nTimesToAchieve).toEqual(test_goal_nTimesToAchieve_1);
         expect(goal.completed).toEqual(false);
       });
     });
@@ -127,6 +134,7 @@ describe("Test Goal CRUD API", () => {
             user_id: test_user_id,
             resolution_key: test_resolution_key,
             description: "",
+            nTimesToAchieve: test_goal_nTimesToAchieve_1,
           };
 
           // Act
@@ -160,6 +168,7 @@ describe("Test Goal CRUD API", () => {
             user_id: "non_existent_user",
             resolution_key: test_resolution_key,
             description: test_goal_description_1,
+            nTimesToAchieve: test_goal_nTimesToAchieve_1,
           };
 
           // Act
@@ -193,6 +202,7 @@ describe("Test Goal CRUD API", () => {
             user_id: test_user_id,
             resolution_key: "non_existent_resolution",
             description: test_goal_description_1,
+            nTimesToAchieve: test_goal_nTimesToAchieve_1,
           };
 
           // Act
