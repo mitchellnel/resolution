@@ -25,6 +25,7 @@ export interface ResolutionContextInterface {
     getResolutionById: (id: string | undefined) => Resolution | undefined
     addGoal: (resolution_key: string, description: string) => void
     setGoalCompleted: (resolution_key: string, goal_key: string, complete: boolean) => void
+    deleteGoal: (resolution_key: string, goal_key: string) => void
 }
 
 export const ResolutionContext = createContext<ResolutionContextInterface>({
@@ -35,6 +36,7 @@ export const ResolutionContext = createContext<ResolutionContextInterface>({
     getResolutionById: () => undefined,
     addGoal: () => null,
     setGoalCompleted: () => null,
+    deleteGoal: () => null
 });
 
 interface ResolutionProviderProps {
