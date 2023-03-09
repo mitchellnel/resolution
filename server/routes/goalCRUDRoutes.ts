@@ -312,6 +312,35 @@ router.post(API_COMPLETE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
 
     // make the update
     try {
+      // but only permit goal completion to true if nTimesToAchieve is 1
+      if (completed === true) {
+        const goalNTimesToAchievePath =
+          RTDB_RESOLUTIONS_PATH +
+          user_id +
+          "/" +
+          resolution_key +
+          "/goals/" +
+          goal_key +
+          "/nTimesToAchieve";
+
+        // read current value of nTimesToAchieve
+        try {
+          const goalNTimesToAchieve = (
+            await get(ref(database, goalNTimesToAchievePath))
+          ).val();
+
+          if (goalNTimesToAchieve !== 1) {
+            res.status(400).json({
+              success: false,
+              reason: `nTimesToAchieve is not 1 -- call ${API_ACHIEVE_GOAL_ENDPOINT} instead`,
+            } as APICompleteGoalReturn);
+            return;
+          }
+        } catch (err) {
+          throw err;
+        }
+      }
+
       await update(databaseRef, updates);
 
       res.status(200).json({ success: true } as APICompleteGoalReturn);
