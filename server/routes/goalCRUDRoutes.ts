@@ -238,7 +238,7 @@ router.post(API_ACHIEVE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
       if (goalNTimesToAchieve <= 1) {
         res.status(400).json({
           success: false,
-          reason: "nTimesToAchieve is 1 -- call /api/complete-goal instead",
+          reason: `nTimesToAchieve is 1 -- call ${API_COMPLETE_GOAL_ENDPOINT} instead`,
         } as APIAchieveGoalReturn);
         return;
       }
