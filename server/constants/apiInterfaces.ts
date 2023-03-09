@@ -1,4 +1,4 @@
-import { object, string, boolean, ObjectSchema } from "yup";
+import { object, string, boolean, number, ObjectSchema } from "yup";
 
 // Resolution
 interface Resolution {
@@ -147,6 +147,25 @@ interface APIReadGoalReturn {
   reason?: string;
 }
 
+// /api/achieve-goal
+interface APIAchieveGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+}
+
+const apiAchieveGoalArgumentsSchema: ObjectSchema<APIAchieveGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+  }).noUnknown(true);
+
+interface APIAchieveGoalReturn {
+  success: boolean;
+  reason?: string;
+}
+
 // /api/complete-goal
 interface APICompleteGoalArguments {
   user_id: string;
@@ -238,6 +257,9 @@ export {
   APIReadGoalArguments,
   apiReadGoalArgumentsSchema,
   APIReadGoalReturn,
+  APIAchieveGoalArguments,
+  apiAchieveGoalArgumentsSchema,
+  APIAchieveGoalReturn,
   APICompleteGoalArguments,
   apiCompleteGoalArgumentsSchema,
   APICompleteGoalReturn,
