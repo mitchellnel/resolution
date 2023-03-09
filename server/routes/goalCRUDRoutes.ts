@@ -111,6 +111,7 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     // create the object to add to the database
     const dataToAdd: Goal = {
       description: createData.description,
+      nTimesToAchieve: createData.nTimesToAchieve,
       completed: false,
     };
 

@@ -96,11 +96,13 @@ const apiDeleteResolutionReturnSchema: ObjectSchema<APIDeleteResolutionReturn> =
 // Goal
 interface Goal {
   description: string;
+  nTimesToAchieve: number;
   completed: boolean;
 }
 
 const goalSchema: ObjectSchema<Goal> = object({
   description: string().required(),
+  nTimesToAchieve: number().required(),
   completed: boolean().required(),
 });
 
@@ -109,6 +111,7 @@ interface APICreateGoalArguments {
   user_id: string;
   resolution_key: string;
   description: string;
+  nTimesToAchieve: number;
 }
 
 const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
@@ -116,6 +119,7 @@ const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
     user_id: string().required(),
     resolution_key: string().required(),
     description: string().required(),
+    nTimesToAchieve: number().required(),
   }).noUnknown(true);
 
 interface APICreateGoalReturn {
