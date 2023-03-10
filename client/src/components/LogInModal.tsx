@@ -1,6 +1,5 @@
 import { Box, Modal, Typography } from '@mui/material';
-import { User } from 'firebase/auth';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import GoogleSignInButton from '../components/GoogleLogin/GoogleSignInButton';
 import { UserContext } from '../contexts/UserContext';
 
@@ -18,14 +17,11 @@ const style = {
 
 const LogInModal = () => {
 
-    const { authenticated, setCurrentUser, setAuthenticated } = useContext(UserContext);
-    const [ open, setOpen ] = useState(!authenticated);
-
-    useEffect(() => setOpen(!authenticated), [authenticated]);
+    const { authenticated } = useContext(UserContext);
 
   return (
     <Modal
-    open={open}
+    open={!authenticated}
     aria-labelledby="modal-modal-title"
     aria-describedby="modal-modal-description"
     >
@@ -33,8 +29,7 @@ const LogInModal = () => {
             <Typography id="modal-modal-title" variant="h6" component="h2">
             Looks like you're not signed in
             </Typography>
-            {/* Fix typing on next line. Looks pretty bad. Only got it to work with casting */}
-            <GoogleSignInButton setAuthenticatedFlag={setAuthenticated} setUser={(setCurrentUser as React.Dispatch<React.SetStateAction<User>>)}/>
+            <GoogleSignInButton/>
         </Box>
     </Modal>
   );

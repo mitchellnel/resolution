@@ -75,7 +75,7 @@ const UpdateGoalForm = ({ current_description, submitForm, closeEditForm } : Upd
                     color="secondary"
                     variant="contained"
                 >
-                    Create
+                    Edit
                 </Button>
             </form>
         </Container>
