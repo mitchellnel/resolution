@@ -1,5 +1,5 @@
 import { FirebaseApp, FirebaseOptions, initializeApp } from "firebase/app";
-import { Auth, getAuth } from "firebase/auth";
+import { Auth, getAuth, NextOrObserver, onAuthStateChanged, User } from "firebase/auth";
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: "AIzaSyDAseiGrImJilP9immR_yspzVF9LUOGZhI",
@@ -14,3 +14,5 @@ const firebaseConfig: FirebaseOptions = {
 
 export const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
 export const auth: Auth = getAuth(firebaseApp);
+
+export const onAuthStateChangedListener = (callback : NextOrObserver<User>) => onAuthStateChanged(auth, callback);

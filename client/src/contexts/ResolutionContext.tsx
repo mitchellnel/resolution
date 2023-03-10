@@ -69,7 +69,7 @@ const resolutionsReducer = (state : ResolutionsReducerState, action : Resolution
         case RESOLUTIONS_ACTION_TYPES.SET_RESOLUTIONS:
             return {
                 ...state,
-                resolutions: (payload as Resolution[])
+                resolutions: payload
             }
         default:
             throw new Error(`unhandled type of ${type} in resolutionsReducer`);
@@ -112,17 +112,22 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         if (currentUser) {
             axios.get(`/api/read-resolution?user_id=${currentUser.uid}`)
             .then(res => {
-                console.log(convertAPIDataToResolutions(res.data.resolutions));
                 setResolutions(convertAPIDataToResolutions(res.data.resolutions));
             }).catch(err => {
                 console.log('Fetch Error:', err);
             })
         }
+        else {
+            setResolutions([]);
+        }
+    // eslint-disable-next-line
     }, [currentUser])
 
+    //remove currentUser as a dependency to this useEffect
     useEffect(() => {
+        console.log(currentUser);
         fetchAPI();
-    }, [currentUser, fetchAPI])
+    }, [fetchAPI, currentUser])
 
 
     //create resolution functionality:
