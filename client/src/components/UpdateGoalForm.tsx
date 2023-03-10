@@ -73,7 +73,7 @@ const UpdateGoalForm = ({ submitForm, closeEditForm } : UpdateGoalFormProps ) =>
                     color="secondary"
                     variant="contained"
                 >
-                    Create
+                    Edit
                 </Button>
             </form>
         </Container>

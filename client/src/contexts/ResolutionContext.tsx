@@ -114,6 +114,8 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
             .then(res => {
                 setResolutions(convertAPIDataToResolutions(res.data.resolutions));
             }).catch(err => {
+                //no fetch error could mean that the user just has no resolutions since their document gets deleted
+                setResolutions([]);
                 console.log('Fetch Error:', err);
             })
         }
@@ -123,11 +125,9 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
     // eslint-disable-next-line
     }, [currentUser])
 
-    //remove currentUser as a dependency to this useEffect
     useEffect(() => {
-        console.log(currentUser);
         fetchAPI();
-    }, [fetchAPI, currentUser])
+    }, [fetchAPI])
 
 
     //create resolution functionality:
