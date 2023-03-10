@@ -3,19 +3,21 @@ import { Button, Container, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
 interface UpdateGoalFormProps {
+    current_description: string;
     submitForm: (description : string) => void;
     closeEditForm: () => void;
 }
 
-const UpdateGoalForm = ({ submitForm, closeEditForm } : UpdateGoalFormProps ) => {
+const UpdateGoalForm = ({ current_description, submitForm, closeEditForm } : UpdateGoalFormProps ) => {
 
     const fieldStyle = {
       marginTop: 3,
       marginBottom: 3,
       display: 'block'
+
     }
 
-    const [ description, setDescription ] = useState('');
+    const [ description, setDescription ] = useState(current_description);
     const [ descriptionError, setDescriptionError ] = useState(false);
 
     const handleCancel = () => {
@@ -31,7 +33,7 @@ const UpdateGoalForm = ({ submitForm, closeEditForm } : UpdateGoalFormProps ) =>
       }
       if (description) {
         submitForm(description);
-        setDescription('');
+        setDescription(description);
         setDescriptionError(false);
         closeEditForm();
       }

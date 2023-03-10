@@ -26,6 +26,7 @@ export interface ResolutionContextInterface {
     addGoal: (resolution_key: string, description: string) => void
     setGoalCompleted: (resolution_key: string, goal_key: string, complete: boolean) => void
     deleteGoal: (resolution_key: string, goal_key: string) => void
+    updateGoal: (resolution_key: string, goal_key: string, new_description: string) => void
 }
 
 export const ResolutionContext = createContext<ResolutionContextInterface>({
@@ -36,7 +37,8 @@ export const ResolutionContext = createContext<ResolutionContextInterface>({
     getResolutionById: () => undefined,
     addGoal: () => null,
     setGoalCompleted: () => null,
-    deleteGoal: () => null
+    deleteGoal: () => null,
+    updateGoal: () => null,
 });
 
 interface ResolutionProviderProps {
@@ -254,7 +256,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
     }
 
     //update goal functionality:
-    const callAPIUpdateGoal = async (resolution_key: string, goal_key: string, new_description: boolean) => {
+    const callAPIUpdateGoal = async (resolution_key: string, goal_key: string, new_description: string) => {
         try {
             if (currentUser) {
                 await axios.post('/api/update-goal-description', {
@@ -269,7 +271,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         }
     }
 
-    const updateGoal = async (resolution_key: string, goal_key: string, new_description: boolean) => {
+    const updateGoal = async (resolution_key: string, goal_key: string, new_description: string) => {
         await callAPIUpdateGoal(resolution_key, goal_key, new_description);
         fetchAPI();
     }
