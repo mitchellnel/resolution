@@ -5,14 +5,12 @@ interface Resolution {
   title: string;
   description: string;
   goals: { [key: string]: Goal | undefined };
-  completed: boolean;
 }
 
 const resolutionSchema: ObjectSchema<Resolution> = object({
   title: string().required(),
   description: string().defined(),
   goals: object().defined(),
-  completed: boolean().required(),
 });
 
 // /api/create-resolution
