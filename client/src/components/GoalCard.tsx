@@ -4,7 +4,9 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GoalOptions from "./GoalOptions";
 import UpdateGoalForm from "./UpdateGoalForm";
-import { useState } from "react";
+
+import { useState, useContext } from "react";
+import { ResolutionContext } from '../contexts/ResolutionContext';
 
 interface GoalCardProps {
   goal: Goal;
@@ -13,6 +15,8 @@ interface GoalCardProps {
 }
 
 const GoalCard = ({goal, resolutionKey, setCompleted}: GoalCardProps) => {
+  const { updateGoal} = useContext(ResolutionContext)
+  
   
   const [ editing, setEditing ] = useState(false);
 
@@ -45,7 +49,7 @@ const GoalCard = ({goal, resolutionKey, setCompleted}: GoalCardProps) => {
       </Collapse>
       <Collapse in={editing}>
         {/* TODO: Finish submitForm implementation for update */}
-        <UpdateGoalForm submitForm={() => null} closeEditForm={() => setEditing(false)}/>
+        <UpdateGoalForm current_description={goal.description} submitForm={(description) => updateGoal(resolutionKey, goal.id, description)} closeEditForm={() => setEditing(false)}/>
       </Collapse>
     </>
   );

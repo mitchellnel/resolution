@@ -25,6 +25,8 @@ export interface ResolutionContextInterface {
     getResolutionById: (id: string | undefined) => Resolution | undefined
     addGoal: (resolution_key: string, description: string) => void
     setGoalCompleted: (resolution_key: string, goal_key: string, complete: boolean) => void
+    deleteGoal: (resolution_key: string, goal_key: string) => void
+    updateGoal: (resolution_key: string, goal_key: string, new_description: string) => void
 }
 
 export const ResolutionContext = createContext<ResolutionContextInterface>({
@@ -34,7 +36,9 @@ export const ResolutionContext = createContext<ResolutionContextInterface>({
     updateResolution: () => null,
     getResolutionById: () => undefined,
     addGoal: () => null,
-    setGoalCompleted: () => null
+    setGoalCompleted: () => null,
+    deleteGoal: () => null,
+    updateGoal: () => null,
 });
 
 interface ResolutionProviderProps {
@@ -67,7 +71,7 @@ const resolutionsReducer = (state : ResolutionsReducerState, action : Resolution
         case RESOLUTIONS_ACTION_TYPES.SET_RESOLUTIONS:
             return {
                 ...state,
-                resolutions: (payload as Resolution[])
+                resolutions: payload
             }
         default:
             throw new Error(`unhandled type of ${type} in resolutionsReducer`);
@@ -113,14 +117,20 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
                 console.log(convertAPIDataToResolutions(res.data.resolutions));
                 setResolutions(convertAPIDataToResolutions(res.data.resolutions));
             }).catch(err => {
+                //no fetch error could mean that the user just has no resolutions since their document gets deleted
+                setResolutions([]);
                 console.log('Fetch Error:', err);
             })
         }
+        else {
+            setResolutions([]);
+        }
+    // eslint-disable-next-line
     }, [currentUser])
 
     useEffect(() => {
         fetchAPI();
-    }, [currentUser, fetchAPI])
+    }, [fetchAPI])
 
 
     //create resolution functionality:
@@ -230,8 +240,50 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         await callAPICompleteGoal(resolution_key, goal_key, completed);
         fetchAPI();
     }
+    
+    //delete goal functionality:
+    const callAPIDeleteGoal = async (resolution_key: string, goal_key: string) => {
+        try {
+            if (currentUser) {
+                await axios.post('/api/delete-goal', {
+                    'user_id': currentUser.uid,
+                    'resolution_key': resolution_key,
+                    'goal_key': goal_key,
+                })
+            }
+        } catch (err) {
+            console.log('Delete Goal Error:', err);
+        }
+    }
 
-    const value = { resolutions, addResolution, deleteResolution, updateResolution, getResolutionById, addGoal, setGoalCompleted };
+    const deleteGoal = async (resolution_key: string, goal_key: string) => {
+        await callAPIDeleteGoal(resolution_key, goal_key);
+        fetchAPI();
+    }
+
+    //update goal functionality:
+    const callAPIUpdateGoal = async (resolution_key: string, goal_key: string, new_description: string) => {
+        try {
+            if (currentUser) {
+                await axios.post('/api/update-goal-description', {
+                    'user_id': currentUser.uid,
+                    'resolution_key': resolution_key,
+                    'goal_key': goal_key,
+                    'new_description': new_description
+                })
+            }
+        } catch (err) {
+            console.log('Update Goal Description Error:', err);
+        }
+    }
+
+    const updateGoal = async (resolution_key: string, goal_key: string, new_description: string) => {
+        await callAPIUpdateGoal(resolution_key, goal_key, new_description);
+        fetchAPI();
+    }
+
+
+    const value = { resolutions, addResolution, deleteResolution, updateResolution, getResolutionById, addGoal, setGoalCompleted, deleteGoal, updateGoal};
 
     return <ResolutionContext.Provider value={value}>{children}</ResolutionContext.Provider>
 }

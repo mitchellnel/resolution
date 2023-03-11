@@ -1,5 +1,3 @@
-import React from "react";
-
 import Button from "@mui/material/Button";
 
 // Firebase
@@ -8,16 +6,8 @@ import { auth } from "../../utils/firebase";
 
 import GoogleButtonStyling from "./GoogleButtonStyling";
 
-interface GoogleSignOutButtonProps {
-  setAuthenticatedFlag: (flagState: boolean) => void;
-}
-
-function GoogleSignOutButton({
-  setAuthenticatedFlag,
-}: GoogleSignOutButtonProps) {
+function GoogleSignOutButton() {
   async function signOutUser() {
-    setAuthenticatedFlag(false);
-
     await signOut(auth);
   }
 
