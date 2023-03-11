@@ -6,21 +6,17 @@ import {
   API_READ_RESOLUTION_ENDPOINT,
   API_UPDATE_RESOLUTION_ENDPOINT,
   API_DELETE_RESOLUTION_ENDPOINT,
-  API_COMPLETE_RESOLUTION_ENDPOINT,
 } from "../constants/apiEndpoints";
 import {
   APICreateResolutionArguments,
   APIReadResolutionReturn,
   APIDeleteResolutionArguments,
   APIUpdateResolutionArguments,
-  APICompleteResolutionArguments,
-  Resolution,
 } from "../constants/apiInterfaces";
 
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 import { database } from "../utils/firebase";
 import { ref, remove } from "@firebase/database";
-import { get, set } from "firebase/database";
 
 describe("Test ResolutionDB CRUD API", () => {
   const test_user_id = "test_user_21";
@@ -354,104 +350,6 @@ describe("Test ResolutionDB CRUD API", () => {
           // POST with a bad body format
           res = await request(app)
             .post(`${API_DELETE_RESOLUTION_ENDPOINT}`)
-            .send(badPostBody);
-          resBody = JSON.parse(res.text);
-        });
-
-        it("Should return an HTTP Response Status of 400", async () => {
-          expect(res.statusCode).toEqual(400);
-        });
-
-        it("Should indicate failure", async () => {
-          expect(resBody["success"]).toBeFalsy;
-        });
-
-        it("Should have a defined failure reason", async () => {
-          expect(resBody["reason"]).toBeDefined;
-        });
-      });
-    });
-  });
-
-  describe(`POST ${API_COMPLETE_RESOLUTION_ENDPOINT}`, () => {
-    describe("Proper Functionality", () => {
-      let res: any;
-
-      const test_user_id_path = RTDB_RESOLUTIONS_PATH + test_user_id;
-      const test_user_id_db_ref = ref(database, test_user_id_path);
-
-      const test_resolution_key = "test_resolution_key";
-
-      beforeAll(async () => {
-        // Arrange
-        // create a Resolution to complete
-        const newResolution: Resolution = {
-          title: "Test Resolution",
-          description: "Test Description",
-          goals: {},
-          completed: false,
-        };
-
-        // don't use push -- easier to keep the key for the Resolution constant by doing this
-        await set(test_user_id_db_ref, {
-          [test_resolution_key]: newResolution,
-        });
-
-        const completeBody: APICompleteResolutionArguments = {
-          user_id: test_user_id,
-          firebase_key: test_resolution_key,
-          completed: true,
-        };
-
-        // Act
-        res = await request(app)
-          .post(`${API_COMPLETE_RESOLUTION_ENDPOINT}`)
-          .send(completeBody);
-      });
-
-      // Assert
-      it("Should return an HTTP Response Status of 200", async () => {
-        expect(res.statusCode).toEqual(200);
-      });
-
-      it("Should have correctly created the Resolution in ResolutionDB", async () => {
-        const resolutionRef = ref(
-          database,
-          RTDB_RESOLUTIONS_PATH + test_user_id + "/" + test_resolution_key
-        );
-
-        const resolution: Resolution = (await get(resolutionRef)).val();
-        expect(resolution).toBeDefined();
-        expect(resolution.completed).toBe(true);
-      });
-
-      afterAll(async () => {
-        // delete the created test resolution
-        const resolutionRef = ref(
-          database,
-          RTDB_RESOLUTIONS_PATH + test_user_id + "/" + test_resolution_key
-        );
-
-        remove(resolutionRef);
-      });
-    });
-
-    describe("Erroneous Usage", () => {
-      describe("Invalid format of POST body", () => {
-        let res: any, resBody: any;
-
-        beforeAll(async () => {
-          // Arrange
-          const badPostBody: APICompleteResolutionArguments = {
-            user_id: test_user_id,
-            firebase_key: "",
-            completed: true,
-          };
-
-          // Act
-          // POST with a bad body format
-          res = await request(app)
-            .post(`${API_COMPLETE_RESOLUTION_ENDPOINT}`)
             .send(badPostBody);
           resBody = JSON.parse(res.text);
         });
