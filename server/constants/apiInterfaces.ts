@@ -1,13 +1,16 @@
 import { object, string, boolean, ObjectSchema } from "yup";
 
+// Resolution
 interface Resolution {
   title: string;
   description: string;
+  goals: { [key: string]: Goal | undefined };
 }
 
 const resolutionSchema: ObjectSchema<Resolution> = object({
   title: string().required(),
   description: string().defined(),
+  goals: object().defined(),
 });
 
 // /api/create-resolution
@@ -90,7 +93,119 @@ interface APIDeleteResolutionReturn {
 const apiDeleteResolutionReturnSchema: ObjectSchema<APIDeleteResolutionReturn> =
   object({ success: boolean().required(), reason: string().optional() });
 
+// Goal
+interface Goal {
+  description: string;
+  completed: boolean;
+}
+
+const goalSchema: ObjectSchema<Goal> = object({
+  description: string().required(),
+  completed: boolean().required(),
+});
+
+// /api/create-goal
+interface APICreateGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  description: string;
+}
+
+const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    description: string().required(),
+  }).noUnknown(true);
+
+interface APICreateGoalReturn {
+  success: boolean;
+  reason?: string;
+}
+
+const apiCreateGoalReturnSchema: ObjectSchema<APICreateResolutionReturn> =
+  object({ success: boolean().required(), reason: string().optional() });
+
+// /api/read-goal
+interface APIReadGoalArguments {
+  user_id: string;
+  resolution_key: string;
+}
+
+const apiReadGoalArgumentsSchema: ObjectSchema<APIReadGoalArguments> = object({
+  user_id: string().required(),
+  resolution_key: string().required(),
+}).noUnknown(true);
+
+interface APIReadGoalReturn {
+  success: boolean;
+  goals?: { [key: string]: Goal | undefined };
+  reason?: string;
+}
+
+// /api/complete-goal
+interface APICompleteGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+  completed: boolean;
+}
+
+const apiCompleteGoalArgumentsSchema: ObjectSchema<APICompleteGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+    completed: boolean().required(),
+  }).noUnknown(true);
+
+interface APICompleteGoalReturn {
+  success: boolean;
+  reason?: string;
+}
+
+// /api/update-goal-description
+interface APIUpdateGoalDescriptionArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+  new_description: string;
+}
+
+const apiUpdateGoalDescriptionArgumentsSchema: ObjectSchema<APIUpdateGoalDescriptionArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+    new_description: string().required(),
+  }).noUnknown(true);
+
+interface APIUpdateGoalDescriptionReturn {
+  success: boolean;
+  reason?: string;
+}
+
+// /api/delete-goal
+interface APIDeleteGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+}
+
+const apiDeleteGoalArgumentsSchema: ObjectSchema<APIDeleteGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+  }).noUnknown(true);
+
+interface APIDeleteGoalReturn {
+  success: boolean;
+  reason?: string;
+}
+
 export {
+  // Resolution CRUD
   Resolution,
   resolutionSchema,
   APICreateResolutionArguments,
@@ -108,4 +223,24 @@ export {
   apiDeleteResolutionArgumentsSchema,
   APIDeleteResolutionReturn,
   apiDeleteResolutionReturnSchema,
+
+  // Goal CRUD
+  Goal,
+  goalSchema,
+  APICreateGoalArguments,
+  apiCreateGoalArgumentsSchema,
+  APICreateGoalReturn,
+  apiCreateGoalReturnSchema,
+  APIReadGoalArguments,
+  apiReadGoalArgumentsSchema,
+  APIReadGoalReturn,
+  APICompleteGoalArguments,
+  apiCompleteGoalArgumentsSchema,
+  APICompleteGoalReturn,
+  APIUpdateGoalDescriptionArguments,
+  apiUpdateGoalDescriptionArgumentsSchema,
+  APIUpdateGoalDescriptionReturn,
+  APIDeleteGoalArguments,
+  apiDeleteGoalArgumentsSchema,
+  APIDeleteGoalReturn,
 };

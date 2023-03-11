@@ -1,7 +1,8 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 
-import resolutionCRUDAPI from "./resolution-crud-routes/resolutionCRUDRoutes";
+import resolutionCRUDAPI from "./routes/resolutionCRUDRoutes";
+import goalCRUDAPI from "./routes/goalCRUDRoutes";
 
 dotenv.config({ path: "./.env.development.local" });
 
@@ -19,5 +20,8 @@ app.get("/", (_: Request, res: Response) => {
 
 // use resolution CRUD API endpoints
 app.use(resolutionCRUDAPI);
+
+// use goal CRUD API endpoints
+app.use(goalCRUDAPI);
 
 export default app;

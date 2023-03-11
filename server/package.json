@@ -15,7 +15,7 @@
     "build": "npx tsc",
     "start": "npx tsc && node dist/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "test": "jest --coverage --forceExit",
+    "test": "jest --coverage --forceExit --verbose --testPathIgnorePatterns 'dist/'",
     "clean": "rm -r dist"
   },
   "devDependencies": {

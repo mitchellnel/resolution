@@ -1,17 +1,21 @@
 import { Box, IconButton, Menu, MenuItem, Tooltip, } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Resolution, ResolutionContext} from "../contexts/ResolutionContext";
-import { useState, useContext } from "react";
+import { Goal } from "../contexts/ResolutionContext";
+import { useState } from "react";
+import { useContext } from "react";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
-import { useNavigate } from 'react-router-dom';
+import { ResolutionContext } from '../contexts/ResolutionContext';
 
-interface ResolutionOptionsProps {
-  resolution: Resolution
+interface GoalOptionsProps {
+  goal: Goal;
+  resolutionKey: string;
+  openEditForm: () => void;
 }
 
-const ResolutionOptions = ({resolution}: ResolutionOptionsProps) => {
+const GoalOptions = ({goal, resolutionKey, openEditForm}: GoalOptionsProps) => {
 
+  const { deleteGoal } = useContext(ResolutionContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -23,22 +27,14 @@ const ResolutionOptions = ({resolution}: ResolutionOptionsProps) => {
     setAnchorEl(null);
   };
 
-  const navigate = useNavigate();
-
-
   //edit functionality
   const handleEdit = () => {
-    navigate("/update", {state: {id: resolution.id, old_title: resolution.title, old_description: resolution.description}});
+    openEditForm();
   };
-
   
   //delete functionality:
-  const {deleteResolution} = useContext(ResolutionContext);
-
   const handleDelete = () => {
-    deleteResolution(resolution.id)
-    navigate('/');
-    
+    deleteGoal(resolutionKey, goal.id);
   };
 
   return (
@@ -104,4 +100,4 @@ const ResolutionOptions = ({resolution}: ResolutionOptionsProps) => {
   );
 }
 
-export default ResolutionOptions;
+export default GoalOptions;

@@ -10,7 +10,7 @@ const ProfileIcon = () => {
         photoURL: string
     }
 
-    const { currentUser, setAuthenticated }: UserContextInterface = useContext(UserContext);
+    const { currentUser }: UserContextInterface = useContext(UserContext);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const menuOpen = Boolean(anchorEl);
@@ -81,7 +81,7 @@ const ProfileIcon = () => {
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
                     <MenuItem onClick={handleClose}>
-                        <GoogleSignOutButton setAuthenticatedFlag={setAuthenticated} />
+                        <GoogleSignOutButton/>
                     </MenuItem>
                 </Menu>
             </div>
