@@ -4,6 +4,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GoalOptions from "./GoalOptions";
 import UpdateGoalForm from "./UpdateGoalForm";
+
 import { useState, useContext } from "react";
 import { ResolutionContext } from '../contexts/ResolutionContext';
 
@@ -14,8 +15,8 @@ interface GoalCardProps {
 }
 
 const GoalCard = ({goal, resolutionKey, setCompleted}: GoalCardProps) => {
-
-  const { updateGoal} = useContext(ResolutionContext);
+  const { updateGoal} = useContext(ResolutionContext)
+  
   
   const [ editing, setEditing ] = useState(false);
 

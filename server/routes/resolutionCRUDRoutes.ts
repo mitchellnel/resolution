@@ -6,6 +6,7 @@ import {
   API_DELETE_RESOLUTION_ENDPOINT,
   API_READ_RESOLUTION_ENDPOINT,
   API_UPDATE_RESOLUTION_ENDPOINT,
+  API_COMPLETE_RESOLUTION_ENDPOINT,
 } from "../constants/apiEndpoints";
 import {
   // Resolution CRUD
@@ -22,6 +23,9 @@ import {
   APIDeleteResolutionArguments,
   apiDeleteResolutionArgumentsSchema,
   APIDeleteResolutionReturn,
+  APICompleteResolutionArguments,
+  apiCompleteResolutionArgumentsSchema,
+  APICompleteResolutionReturn,
 
   // Goal-related
   Goal,
@@ -51,6 +55,7 @@ router.post(
         title: createData.title,
         description: createData.description,
         goals: {}, // we will push an actual object later, TypeScript mandates we put this here
+        completed: false,
       };
 
       // get reference to the database at the specified path
@@ -314,5 +319,60 @@ router.post(
     }
   }
 );
+
+router.post(API_COMPLETE_RESOLUTION_ENDPOINT, async (req, res) => {
+  const data = req.body;
+
+  // try to unwrap data into APICompleteResolutionArguments type
+  try {
+    // use yup ObjectSchema cast method to validate the request arguments
+    const completeData: APICompleteResolutionArguments =
+      await apiCompleteResolutionArgumentsSchema.validate(data, {
+        strict: true,
+      });
+
+    const completed = completeData.completed;
+
+    // get the parameters for the path to set completed
+    // this will be resolution/user_id/firebase_key/completed
+    const completePath =
+      RTDB_RESOLUTIONS_PATH +
+      completeData.user_id +
+      "/" +
+      completeData.firebase_key +
+      "/completed";
+
+    const updates: any = {};
+    updates[completePath] = completed;
+
+    // get a reference to the database
+    const databaseRef = ref(database);
+
+    // delete the object at the path
+    try {
+      await update(databaseRef, updates);
+
+      res.status(200).json({ success: true } as APICompleteResolutionReturn);
+    } catch (err) {
+      const logMessage = `Data Received: ${JSON.stringify(
+        completeData
+      )}\n\t ... complete could not be made on the DB: ${err}`;
+
+      res.status(500).json({
+        success: false,
+        reason: logMessage,
+      } as APICompleteResolutionReturn);
+    }
+  } catch (err) {
+    const logMessage = `Data Received: ${JSON.stringify(
+      data
+    )}\n\t ... FAILURE: Body of POST to ${API_COMPLETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
+
+    res.status(400).json({
+      success: false,
+      reason: logMessage,
+    } as APICompleteResolutionReturn);
+  }
+});
 
 export default router;

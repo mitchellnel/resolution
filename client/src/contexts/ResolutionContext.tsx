@@ -114,6 +114,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         if (currentUser) {
             axios.get(`/api/read-resolution?user_id=${currentUser.uid}`)
             .then(res => {
+                console.log(convertAPIDataToResolutions(res.data.resolutions));
                 setResolutions(convertAPIDataToResolutions(res.data.resolutions));
             }).catch(err => {
                 //no fetch error could mean that the user just has no resolutions since their document gets deleted
@@ -239,7 +240,7 @@ export const ResolutionProvider = ({ children } : ResolutionProviderProps) => {
         await callAPICompleteGoal(resolution_key, goal_key, completed);
         fetchAPI();
     }
-
+    
     //delete goal functionality:
     const callAPIDeleteGoal = async (resolution_key: string, goal_key: string) => {
         try {

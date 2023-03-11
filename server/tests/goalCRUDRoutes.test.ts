@@ -42,6 +42,7 @@ describe("Test Goal CRUD API", () => {
       title: "Test Resolution",
       description: "Test Description",
       goals: {},
+      completed: false,
     };
 
     // don't use push -- easier to keep the key for the Resolution constant by doing this

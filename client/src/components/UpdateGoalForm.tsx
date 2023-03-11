@@ -14,7 +14,6 @@ const UpdateGoalForm = ({ current_description, submitForm, closeEditForm } : Upd
       marginTop: 3,
       marginBottom: 3,
       display: 'block'
-
     }
 
     const [ description, setDescription ] = useState(current_description);
