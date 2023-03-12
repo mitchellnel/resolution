@@ -1,1 +1,1 @@
-export { ReminderFrequency } from "./types";
+export { ReminderFrequency, Weekday } from "./types";
