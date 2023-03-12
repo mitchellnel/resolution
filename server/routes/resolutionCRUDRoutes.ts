@@ -65,6 +65,7 @@ router.post(
         // now add a sample goal to the resolution
         const goalToAdd: Goal = {
           description: "Your goal here!",
+          nTimesToAchieve: 1,
           completed: false,
         };
 

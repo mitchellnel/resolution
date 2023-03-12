@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { ref, push, set, get, update, remove } from "firebase/database";
 
 import {
+  API_ACHIEVE_GOAL_ENDPOINT,
   API_COMPLETE_GOAL_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
   API_DELETE_GOAL_ENDPOINT,
@@ -25,6 +26,9 @@ import {
   APIDeleteGoalArguments,
   apiDeleteGoalArgumentsSchema,
   APIDeleteGoalReturn,
+  APIAchieveGoalArguments,
+  apiAchieveGoalArgumentsSchema,
+  APIAchieveGoalReturn,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -111,6 +115,7 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     // create the object to add to the database
     const dataToAdd: Goal = {
       description: createData.description,
+      nTimesToAchieve: createData.nTimesToAchieve,
       completed: false,
     };
 
@@ -194,6 +199,82 @@ router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   }
 });
 
+router.post(API_ACHIEVE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
+  const data = req.body;
+
+  // try to unwrap data into APIAchieveGoalArguments type
+  try {
+    // use yup ObjectSchema cast method to validate the request arguments
+    const achieveData: APIAchieveGoalArguments =
+      await apiAchieveGoalArgumentsSchema.validate(data);
+
+    const user_id = achieveData.user_id;
+    const resolution_key = achieveData.resolution_key;
+    const goal_key = achieveData.goal_key;
+
+    const goalExists = await doesGoalExist(user_id, resolution_key, goal_key);
+    if (goalExists.exists === false) {
+      throw goalExists.error;
+    }
+
+    // get path to the goal we want to mark as achieved (this means we decrement nTimesToAchieve by 1)
+    const goalNTimesToAchievePath =
+      RTDB_RESOLUTIONS_PATH +
+      user_id +
+      "/" +
+      resolution_key +
+      "/goals/" +
+      goal_key +
+      "/nTimesToAchieve";
+
+    // get reference to database at above path
+    const nTimesToAchieveRef = ref(database, goalNTimesToAchievePath);
+
+    try {
+      // get the current nTimesToAchieve value for the Goal
+      const goalNTimesToAchieve = (await get(nTimesToAchieveRef)).val();
+
+      // do not allow nTimesToAchieve to fall below 1 -- this would mean that /api/complete-goal should be called instead
+      if (goalNTimesToAchieve <= 1) {
+        res.status(400).json({
+          success: false,
+          reason: `nTimesToAchieve is 1 -- call ${API_COMPLETE_GOAL_ENDPOINT} instead`,
+        } as APIAchieveGoalReturn);
+        return;
+      }
+
+      const updates: any = {};
+      updates[goalNTimesToAchievePath] = goalNTimesToAchieve - 1;
+
+      // update the database with the new nTimesToAchieve value
+      try {
+        await update(ref(database), updates);
+
+        res.status(200).json({ success: true } as APIAchieveGoalReturn);
+      } catch (err) {
+        // throw to the catch block below
+        throw err;
+      }
+    } catch (err) {
+      const logMessage = `Data Received: ${JSON.stringify(
+        data
+      )}\n\t ... FAILURE:  Could not mark goal as achieved: ${err}`;
+
+      res
+        .status(500)
+        .json({ success: false, reason: logMessage } as APIAchieveGoalReturn);
+    }
+  } catch (err) {
+    const logMessage = `Data Received: ${JSON.stringify(
+      data
+    )}\n\t ... FAILURE:  Body of POST to ${API_ACHIEVE_GOAL_ENDPOINT} is not in correct format: ${err}`;
+
+    res
+      .status(400)
+      .json({ success: false, reason: logMessage } as APIAchieveGoalReturn);
+  }
+});
+
 router.post(API_COMPLETE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   const data = req.body;
 
@@ -231,6 +312,35 @@ router.post(API_COMPLETE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
 
     // make the update
     try {
+      // but only permit goal completion to true if nTimesToAchieve is 1
+      if (completed === true) {
+        const goalNTimesToAchievePath =
+          RTDB_RESOLUTIONS_PATH +
+          user_id +
+          "/" +
+          resolution_key +
+          "/goals/" +
+          goal_key +
+          "/nTimesToAchieve";
+
+        // read current value of nTimesToAchieve
+        try {
+          const goalNTimesToAchieve = (
+            await get(ref(database, goalNTimesToAchievePath))
+          ).val();
+
+          if (goalNTimesToAchieve !== 1) {
+            res.status(400).json({
+              success: false,
+              reason: `nTimesToAchieve is not 1 -- call ${API_ACHIEVE_GOAL_ENDPOINT} instead`,
+            } as APICompleteGoalReturn);
+            return;
+          }
+        } catch (err) {
+          throw err;
+        }
+      }
+
       await update(databaseRef, updates);
 
       res.status(200).json({ success: true } as APICompleteGoalReturn);

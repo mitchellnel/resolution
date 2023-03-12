@@ -1,4 +1,4 @@
-import { object, string, boolean, ObjectSchema } from "yup";
+import { object, string, boolean, number, ObjectSchema } from "yup";
 
 // Resolution
 interface Resolution {
@@ -96,11 +96,13 @@ const apiDeleteResolutionReturnSchema: ObjectSchema<APIDeleteResolutionReturn> =
 // Goal
 interface Goal {
   description: string;
+  nTimesToAchieve: number;
   completed: boolean;
 }
 
 const goalSchema: ObjectSchema<Goal> = object({
   description: string().required(),
+  nTimesToAchieve: number().required(),
   completed: boolean().required(),
 });
 
@@ -109,6 +111,7 @@ interface APICreateGoalArguments {
   user_id: string;
   resolution_key: string;
   description: string;
+  nTimesToAchieve: number;
 }
 
 const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
@@ -116,6 +119,7 @@ const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
     user_id: string().required(),
     resolution_key: string().required(),
     description: string().required(),
+    nTimesToAchieve: number().required(),
   }).noUnknown(true);
 
 interface APICreateGoalReturn {
@@ -140,6 +144,25 @@ const apiReadGoalArgumentsSchema: ObjectSchema<APIReadGoalArguments> = object({
 interface APIReadGoalReturn {
   success: boolean;
   goals?: { [key: string]: Goal | undefined };
+  reason?: string;
+}
+
+// /api/achieve-goal
+interface APIAchieveGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+}
+
+const apiAchieveGoalArgumentsSchema: ObjectSchema<APIAchieveGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+  }).noUnknown(true);
+
+interface APIAchieveGoalReturn {
+  success: boolean;
   reason?: string;
 }
 
@@ -234,6 +257,9 @@ export {
   APIReadGoalArguments,
   apiReadGoalArgumentsSchema,
   APIReadGoalReturn,
+  APIAchieveGoalArguments,
+  apiAchieveGoalArgumentsSchema,
+  APIAchieveGoalReturn,
   APICompleteGoalArguments,
   apiCompleteGoalArgumentsSchema,
   APICompleteGoalReturn,

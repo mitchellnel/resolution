@@ -2,6 +2,7 @@ import request from "supertest";
 
 import app from "../app";
 import {
+  API_ACHIEVE_GOAL_ENDPOINT,
   API_COMPLETE_GOAL_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
   API_DELETE_GOAL_ENDPOINT,
@@ -9,6 +10,7 @@ import {
   API_UPDATE_GOAL_DESCRIPTION_ENDPOINT,
 } from "../constants/apiEndpoints";
 import {
+  APIAchieveGoalArguments,
   APICompleteGoalArguments,
   APICreateGoalArguments,
   APIDeleteGoalArguments,
@@ -32,6 +34,9 @@ describe("Test Goal CRUD API", () => {
   const test_goal_key_2 = "goal_dos";
 
   const test_goal_description_2 = "Test goal description 2";
+
+  const test_goal_nTimesToAchieve_1 = 1;
+  const test_goal_nTimesToAchieve_2 = 3;
 
   beforeAll(async () => {
     // create a Resolution to add goals to
@@ -65,11 +70,13 @@ describe("Test Goal CRUD API", () => {
 
     const goal1: Goal = {
       description: test_goal_description_1,
+      nTimesToAchieve: test_goal_nTimesToAchieve_1,
       completed: false,
     };
 
     const goal2: Goal = {
       description: test_goal_description_2,
+      nTimesToAchieve: test_goal_nTimesToAchieve_2,
       completed: false,
     };
 
@@ -90,6 +97,7 @@ describe("Test Goal CRUD API", () => {
           user_id: test_user_id,
           resolution_key: test_resolution_key,
           description: test_goal_description_1,
+          nTimesToAchieve: test_goal_nTimesToAchieve_1,
         };
 
         // Act
@@ -114,6 +122,7 @@ describe("Test Goal CRUD API", () => {
         const resolutionGoals = resolution["goals"];
         const goal: Goal = resolutionGoals[Object.keys(resolutionGoals)[0]]!;
         expect(goal.description).toEqual(test_goal_description_1);
+        expect(goal.nTimesToAchieve).toEqual(test_goal_nTimesToAchieve_1);
         expect(goal.completed).toEqual(false);
       });
     });
@@ -127,6 +136,7 @@ describe("Test Goal CRUD API", () => {
             user_id: test_user_id,
             resolution_key: test_resolution_key,
             description: "",
+            nTimesToAchieve: test_goal_nTimesToAchieve_1,
           };
 
           // Act
@@ -160,6 +170,7 @@ describe("Test Goal CRUD API", () => {
             user_id: "non_existent_user",
             resolution_key: test_resolution_key,
             description: test_goal_description_1,
+            nTimesToAchieve: test_goal_nTimesToAchieve_1,
           };
 
           // Act
@@ -193,6 +204,7 @@ describe("Test Goal CRUD API", () => {
             user_id: test_user_id,
             resolution_key: "non_existent_resolution",
             description: test_goal_description_1,
+            nTimesToAchieve: test_goal_nTimesToAchieve_1,
           };
 
           // Act
@@ -325,6 +337,197 @@ describe("Test Goal CRUD API", () => {
     });
   });
 
+  describe(`POST ${API_ACHIEVE_GOAL_ENDPOINT}`, () => {
+    describe("Proper Functionality", () => {
+      let res: any;
+      beforeAll(async () => {
+        // Arrange
+        await createSampleGoals();
+
+        const achieveBody: APIAchieveGoalArguments = {
+          user_id: test_user_id,
+          resolution_key: test_resolution_key,
+          goal_key: test_goal_key_2,
+        };
+
+        // Act
+        // decrement the goal's nTimesToAchieve by 1 by calling /api/achieve-goal
+        res = await request(app)
+          .post(API_ACHIEVE_GOAL_ENDPOINT)
+          .send(achieveBody);
+      });
+
+      // Assert
+      it("Should return an HTTP Response Status of 200", () => {
+        expect(res.statusCode).toEqual(200);
+      });
+
+      it("Should have decremented nTimesToAchieve by 1", async () => {
+        const goalPath =
+          RTDB_RESOLUTIONS_PATH +
+          test_user_id +
+          "/" +
+          test_resolution_key +
+          "/goals/" +
+          test_goal_key_2;
+        const goalRef = ref(database, goalPath);
+
+        const goal = (await get(goalRef)).val();
+        expect(goal.nTimesToAchieve).toEqual(test_goal_nTimesToAchieve_2 - 1);
+      });
+    });
+
+    describe("Erroneous Usage", () => {
+      describe("nTimesToAchieve is 1", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          // Arrange
+          await createSampleGoals();
+
+          const achieveBody: APIAchieveGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: test_resolution_key,
+            goal_key: test_goal_key_1,
+          };
+
+          // Act
+          // try todecrement the goal's nTimesToAchieve by 1 by calling /api/achieve-goal
+          res = await request(app)
+            .post(API_ACHIEVE_GOAL_ENDPOINT)
+            .send(achieveBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it(`Should tell the caller to call ${API_COMPLETE_GOAL_ENDPOINT} instead`, () => {
+          expect(resBody["reason"]).toEqual(
+            `nTimesToAchieve is 1 -- call ${API_COMPLETE_GOAL_ENDPOINT} instead`
+          );
+        });
+      });
+
+      describe("Invalid format for body", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          // do not provide the necessary body parameters
+          res = await request(app).post(API_ACHIEVE_GOAL_ENDPOINT);
+          resBody = JSON.parse(res.text);
+        });
+
+        it("Should return an HTTP Response Status of 400", async () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", async () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", async () => {
+          expect(resBody["reason"]).toBeDefined;
+        });
+      });
+
+      describe("Non-existent User", () => {
+        let res: any, resBody: any;
+
+        // Arrange
+        beforeAll(async () => {
+          const badPostBody: APIAchieveGoalArguments = {
+            user_id: "non_existent_user",
+            resolution_key: test_resolution_key,
+            goal_key: test_goal_key_1,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_ACHIEVE_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+
+      describe("Non-existent Resolution", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          // Act
+          // POST with a non-existent user
+          res = await request(app).post(API_ACHIEVE_GOAL_ENDPOINT).send({
+            user_id: test_user_id,
+            resolution_key: "non_existent_resolution",
+            goal_key: test_goal_key_1,
+          });
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+
+      describe("Non-existent Goal", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          // Act
+          // POST with a non-existent user
+          res = await request(app).post(API_ACHIEVE_GOAL_ENDPOINT).send({
+            user_id: test_user_id,
+            resolution_key: test_resolution_key,
+            goal_key: "non_existent_goal",
+          });
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+    });
+  });
+
   describe(`POST ${API_COMPLETE_GOAL_ENDPOINT}`, () => {
     describe("Proper Functionality", () => {
       let res: any;
@@ -368,6 +571,44 @@ describe("Test Goal CRUD API", () => {
     });
 
     describe("Erroneous Usage", () => {
+      describe("Attempt to complete a goal that does not have nTimesToAchieve == 1", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          // Arrange
+          await createSampleGoals();
+
+          const completeBody: APICompleteGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: test_resolution_key,
+            goal_key: test_goal_key_2,
+            completed: true,
+          };
+
+          // Act
+          // try to update the goal "completed" field with the completed argument
+          res = await request(app)
+            .post(API_COMPLETE_GOAL_ENDPOINT)
+            .send(completeBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it(`Should tell the caller to call ${API_ACHIEVE_GOAL_ENDPOINT} instead`, () => {
+          expect(resBody["reason"]).toEqual(
+            `nTimesToAchieve is not 1 -- call ${API_ACHIEVE_GOAL_ENDPOINT} instead`
+          );
+        });
+      });
+
       describe("Invalid format of POST body", () => {
         let res: any, resBody: any;
         beforeAll(async () => {
@@ -400,6 +641,7 @@ describe("Test Goal CRUD API", () => {
           expect(resBody["reason"]).toBeDefined();
         });
       });
+
       describe("Non-existent User", () => {
         let res: any, resBody: any;
 
@@ -433,6 +675,7 @@ describe("Test Goal CRUD API", () => {
           expect(resBody["reason"]).toBeDefined();
         });
       });
+
       describe("Non-existent Resolution", () => {
         let res: any, resBody: any;
 
