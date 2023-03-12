@@ -11,20 +11,33 @@ import { ResolutionContext } from "../contexts/ResolutionContext";
 interface GoalCardProps {
   goal: Goal;
   resolutionKey: string;
+  achieveGoal: () => void;
   setCompleted: (completed: boolean) => void;
 }
 
-const GoalCard = ({ goal, resolutionKey, setCompleted }: GoalCardProps) => {
+const GoalCard = ({
+  goal,
+  resolutionKey,
+  setCompleted,
+  achieveGoal,
+}: GoalCardProps) => {
   const { updateGoal } = useContext(ResolutionContext);
 
   const [editing, setEditing] = useState(false);
 
   const handleGoalToggle = () => {
-    if (goal.completed) {
-      setCompleted(false);
-    } else {
-      setCompleted(true);
+    if (goal.nTimesToAchieve === 1) {
+      if (goal.completed) {
+        setCompleted(false);
+      } else {
+        setCompleted(true);
+      }
+
+      return;
     }
+
+    // otherwise achieve the goal
+    achieveGoal();
   };
 
   return (

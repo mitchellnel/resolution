@@ -11,7 +11,7 @@ import { Dayjs } from "dayjs";
 
 const ResolutionInfo = () => {
   // Pull goal CRUD functions from resolution context and pass them as props into appropriate components
-  const { getResolutionById, addGoal, setGoalCompleted } =
+  const { getResolutionById, addGoal, achieveGoal, setGoalCompleted } =
     useContext(ResolutionContext);
   const { id } = useParams();
   const resolution = getResolutionById(id);
@@ -65,6 +65,7 @@ const ResolutionInfo = () => {
                 key={goal.id}
                 goal={goal}
                 resolutionKey={resolution.id}
+                achieveGoal={() => achieveGoal(resolution.id, goal.id)}
                 setCompleted={(completed: boolean) =>
                   setGoalCompleted(resolution.id, goal.id, completed)
                 }
