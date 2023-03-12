@@ -93,7 +93,7 @@ describe("Test Goal CRUD API", () => {
 
   describe(`POST ${API_CREATE_GOAL_ENDPOINT}`, () => {
     describe("Proper Functionality", () => {
-      let res: any;
+      let res: any, resBody: any;
 
       beforeAll(async () => {
         // Arrange
@@ -107,11 +107,16 @@ describe("Test Goal CRUD API", () => {
         // Act
         // create a goal for test_user_id's Resolution that has the key testResolutionKey
         res = await request(app).post(API_CREATE_GOAL_ENDPOINT).send(postBody);
+        resBody = JSON.parse(res.text);
       });
 
       // Assert
       it("Should return an HTTP Response Status of 200", () => {
         expect(res.statusCode).toEqual(200);
+      });
+
+      it("Should return the key of the newly created Goal", () => {
+        expect(resBody.goal_key).toBeDefined();
       });
 
       it("Should have correctly created the Goal for the Test Resolution", async () => {

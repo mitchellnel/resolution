@@ -135,7 +135,12 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     try {
       await set(newGoalRef, dataToAdd);
 
-      res.status(200).json({ success: true } as APICreateGoalReturn);
+      res
+        .status(200)
+        .json({
+          success: true,
+          goal_key: newGoalRef.key,
+        } as APICreateGoalReturn);
     } catch (err) {
       const logMessage = `Data Received: ${JSON.stringify(
         data
