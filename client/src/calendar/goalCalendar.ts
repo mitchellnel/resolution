@@ -149,4 +149,15 @@ async function deleteGoalEvent(eventId: string) {
   return deleteResult;
 }
 
-export { createGoalEvent, deleteGoalEvent };
+async function updateGoalEventSummary(eventId: string, newSummary: string) {
+  const updateResult = await apiCalendar.updateEvent(
+    {
+      summary: newSummary,
+    },
+    eventId
+  );
+
+  return updateResult;
+}
+
+export { createGoalEvent, deleteGoalEvent, updateGoalEventSummary };

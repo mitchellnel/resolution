@@ -10,7 +10,11 @@ import { UserContext } from "./UserContext";
 import { ReminderFrequency, Weekday } from "../types";
 import { Dayjs } from "dayjs";
 
-import { createGoalEvent, deleteGoalEvent } from "../calendar/goalCalendar";
+import {
+  createGoalEvent,
+  deleteGoalEvent,
+  updateGoalEventSummary,
+} from "../calendar/goalCalendar";
 
 export interface Resolution {
   id: string;
@@ -62,6 +66,7 @@ export interface ResolutionContextInterface {
   updateGoal: (
     resolution_key: string,
     goal_key: string,
+    event_id: string,
     new_description: string
   ) => void;
 }
@@ -450,9 +455,15 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   const updateGoal = async (
     resolution_key: string,
     goal_key: string,
+    event_id: string,
     new_description: string
   ) => {
     await callAPIUpdateGoal(resolution_key, goal_key, new_description);
+
+    if (event_id) {
+      await updateGoalEventSummary(event_id, new_description);
+    }
+
     fetchAPI();
   };
 
