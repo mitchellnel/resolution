@@ -3,6 +3,7 @@ import request from "supertest";
 import app from "../app";
 import {
   API_ACHIEVE_GOAL_ENDPOINT,
+  API_ASSIGN_EVENT_TO_GOAL_ENDPOINT,
   API_COMPLETE_GOAL_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
   API_DELETE_GOAL_ENDPOINT,
@@ -11,6 +12,7 @@ import {
 } from "../constants/apiEndpoints";
 import {
   APIAchieveGoalArguments,
+  APIAssignEventToGoalArguments,
   APICompleteGoalArguments,
   APICreateGoalArguments,
   APIDeleteGoalArguments,
@@ -37,6 +39,8 @@ describe("Test Goal CRUD API", () => {
 
   const test_goal_nTimesToAchieve_1 = 1;
   const test_goal_nTimesToAchieve_2 = 3;
+
+  const test_event_id_1 = "test_event_id_1";
 
   beforeAll(async () => {
     // create a Resolution to add goals to
@@ -318,6 +322,174 @@ describe("Test Goal CRUD API", () => {
             user_id: test_user_id,
             resolution_key: "non_existent_resolution",
           });
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+    });
+  });
+
+  describe(`POST ${API_ASSIGN_EVENT_TO_GOAL_ENDPOINT}`, () => {
+    beforeAll(async () => {
+      // Arrange
+      await createSampleGoals();
+    });
+
+    describe("Proper Functionality", () => {
+      let res: any;
+
+      beforeAll(async () => {
+        const postBody: APIAssignEventToGoalArguments = {
+          user_id: test_user_id,
+          resolution_key: test_resolution_key,
+          goal_key: test_goal_key_1,
+          event_id: test_event_id_1,
+        };
+
+        // Act
+        res = await request(app)
+          .post(API_ASSIGN_EVENT_TO_GOAL_ENDPOINT)
+          .send(postBody);
+      });
+
+      it("Should return an HTTP Response Status of 200", () => {
+        expect(res.statusCode).toEqual(200);
+      });
+
+      it("Should have correctly set the eventID field on the Goal", async () => {
+        const eventIDRef = ref(
+          database,
+          RTDB_RESOLUTIONS_PATH +
+            test_user_id +
+            "/" +
+            test_resolution_key +
+            "/goals/" +
+            test_goal_key_1 +
+            "/eventID"
+        );
+
+        const eventID: string = (await get(eventIDRef)).val();
+        expect(eventID).toEqual(test_event_id_1);
+      });
+    });
+
+    describe("Erroneous Usage", () => {
+      describe("Invalid format for request body", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          // do not provide the necessary query parameters
+          res = await request(app).post(API_ASSIGN_EVENT_TO_GOAL_ENDPOINT);
+          resBody = JSON.parse(res.text);
+        });
+
+        it("Should return an HTTP Response Status of 400", async () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", async () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", async () => {
+          expect(resBody["reason"]).toBeDefined;
+        });
+      });
+
+      describe("Non-existent User", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          const badPostBody: APIAssignEventToGoalArguments = {
+            user_id: "non_existent_user",
+            resolution_key: test_resolution_key,
+            goal_key: test_goal_key_1,
+            event_id: test_event_id_1,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_ASSIGN_EVENT_TO_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+
+      describe("Non-existent Resolution", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          const badPostBody: APIAssignEventToGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: "non_existent_resolution",
+            goal_key: test_goal_key_1,
+            event_id: test_event_id_1,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_ASSIGN_EVENT_TO_GOAL_ENDPOINT)
+            .send(badPostBody);
+          resBody = JSON.parse(res.text);
+        });
+
+        // Assert
+        it("Should return an HTTP Response Status of 400", () => {
+          expect(res.statusCode).toEqual(400);
+        });
+
+        it("Should indicate failure", () => {
+          expect(resBody["success"]).toEqual(false);
+        });
+
+        it("Should have a defined failure reason", () => {
+          expect(resBody["reason"]).toBeDefined();
+        });
+      });
+
+      describe("Non-existent Goal", () => {
+        let res: any, resBody: any;
+
+        beforeAll(async () => {
+          const badPostBody: APIAssignEventToGoalArguments = {
+            user_id: test_user_id,
+            resolution_key: test_resolution_key,
+            goal_key: "non_existent_goal",
+            event_id: test_event_id_1,
+          };
+
+          // Act
+          // POST with a non-existent user
+          res = await request(app)
+            .post(API_ASSIGN_EVENT_TO_GOAL_ENDPOINT)
+            .send(badPostBody);
           resBody = JSON.parse(res.text);
         });
 
