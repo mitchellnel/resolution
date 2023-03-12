@@ -311,18 +311,20 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
       timesToAchieve
     );
 
-    // provided this works, we will add a reminder to the user's calendar
-    const eventID = await createGoalEvent(
-      description,
-      timesToAchieve,
-      reminderFrequency,
-      reminderTime,
-      reminderDay,
-      reminderDate
-    );
+    if (reminderFrequency !== ReminderFrequency.None) {
+      // provided this works, we will add a reminder to the user's calendar
+      const eventID = await createGoalEvent(
+        description,
+        timesToAchieve,
+        reminderFrequency,
+        reminderTime,
+        reminderDay,
+        reminderDate
+      );
 
-    // assign the event ID to the Goal in the database
-    await callAPIAssignEventIDToGoal(resolution_key, goalKey!, eventID);
+      // assign the event ID to the Goal in the database
+      await callAPIAssignEventIDToGoal(resolution_key, goalKey!, eventID);
+    }
 
     fetchAPI();
   };
