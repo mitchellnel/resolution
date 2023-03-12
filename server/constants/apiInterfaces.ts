@@ -124,11 +124,16 @@ const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
 
 interface APICreateGoalReturn {
   success: boolean;
+  goal_key?: string;
   reason?: string;
 }
 
 const apiCreateGoalReturnSchema: ObjectSchema<APICreateResolutionReturn> =
-  object({ success: boolean().required(), reason: string().optional() });
+  object({
+    success: boolean().required(),
+    goal_key: string().optional(),
+    reason: string().optional(),
+  });
 
 // /api/read-goal
 interface APIReadGoalArguments {
