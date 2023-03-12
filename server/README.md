@@ -219,6 +219,25 @@ Returns: a JSON object with a Boolean field indicating read success. If the read
 
 If the the request has _extra_ query parameters than those defined above, an error **will not** be thrown. If the request lacks any of the query parameters defined above, an error **will** be thrown.
 
+### `/api/assign-event-to-goal`
+
+Assigns a Google Calendar Event ID to a specific Goal that belongs to a user's Resolution -- this field is located in the database under the path `resolutions/user_id/resolution_key/goals/goal_key/event_id`
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `resolution_key` (string)
+- `goal_key` (string)
+- `event_id` (string)
+
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
+
+The argument object is interfaced as `APIAssignEventToGoalArguments`, and the return object is interfaces as `APIAssignEventToGoalReturn`.
+
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+
 ### `/api/achieve-goal`
 
 Decrements the `nTimesToAchieve` field on a specific Goal that belongs to a user's Resolution -- this field is located in the database under the path `resolutions/user_id/resolution_key/goals/goal_key/nTimesToAchieve`

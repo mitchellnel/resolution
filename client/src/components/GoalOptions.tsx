@@ -1,12 +1,12 @@
-import { Box, IconButton, Menu, MenuItem, Tooltip, } from "@mui/material";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Goal } from "../contexts/ResolutionContext";
 import { useState } from "react";
 
 import { useContext } from "react";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon from '@mui/icons-material/Edit';
-import { ResolutionContext } from '../contexts/ResolutionContext';
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from "@mui/icons-material/Edit";
+import { ResolutionContext } from "../contexts/ResolutionContext";
 
 interface GoalOptionsProps {
   goal: Goal;
@@ -14,7 +14,11 @@ interface GoalOptionsProps {
   openEditForm: () => void;
 }
 
-const GoalOptions = ({goal, resolutionKey, openEditForm}: GoalOptionsProps) => {
+const GoalOptions = ({
+  goal,
+  resolutionKey,
+  openEditForm,
+}: GoalOptionsProps) => {
   const { deleteGoal } = useContext(ResolutionContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
@@ -31,73 +35,83 @@ const GoalOptions = ({goal, resolutionKey, openEditForm}: GoalOptionsProps) => {
   const handleEdit = () => {
     openEditForm();
   };
-  
+
   //delete functionality:
   const handleDelete = () => {
-    deleteGoal(resolutionKey, goal.id);
+    deleteGoal(resolutionKey, goal.id, goal.eventID ?? "");
   };
 
   return (
     <>
-        <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Tooltip title="Options">
-            <IconButton
+          <IconButton
             onClick={handleClick}
             size="small"
             aria-controls={menuOpen ? "options" : undefined}
             aria-haspopup="true"
             aria-expanded={menuOpen ? "true" : undefined}
-            >
-                <MoreVertIcon />
-            </IconButton>
+          >
+            <MoreVertIcon />
+          </IconButton>
         </Tooltip>
-        </Box>
-        <Menu
+      </Box>
+      <Menu
         anchorEl={anchorEl}
         id="options"
         open={menuOpen}
         onClose={handleClose}
         onClick={handleClose}
         PaperProps={{
-            elevation: 0,
-            sx: {
+          elevation: 0,
+          sx: {
             overflow: "visible",
             filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
             "& .MuiAvatar-root": {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1,
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
             },
             "&:before": {
-                content: '""',
-                display: "block",
-                position: "absolute",
-                top: 0,
-                right: 14,
-                width: 10,
-                heizght: 10,
-                bgcolor: "background.paper",
-                transform: "translateY(-50%) rotate(45deg)",
-                zIndex: 0,
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              heizght: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
             },
-            },
+          },
         }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <MenuItem
+          onClick={handleEdit}
+          sx={{ display: "flex", justifyContent: "space-between" }}
         >
-            <MenuItem onClick={handleEdit} sx={{display: 'flex', justifyContent: 'space-between'}}>
-                Edit
-                <EditIcon />
-            </MenuItem>
-            <MenuItem onClick={handleDelete} sx={{color: 'red', display: 'flex', justifyContent: 'space-between'}}>
-                Delete
-                <DeleteOutlineIcon />
-            </MenuItem>
-        </Menu>
+          Edit
+          <EditIcon />
+        </MenuItem>
+        <MenuItem
+          onClick={handleDelete}
+          sx={{
+            color: "red",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          Delete
+          <DeleteOutlineIcon />
+        </MenuItem>
+      </Menu>
     </>
   );
-}
+};
 
 export default GoalOptions;

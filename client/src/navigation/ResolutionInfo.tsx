@@ -1,5 +1,5 @@
 import { Container, Typography } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ResolutionContext } from "../contexts/ResolutionContext";
 import Button from "@mui/material/Button";
@@ -8,6 +8,7 @@ import CreateGoalCard from "../components/CreateGoalCard";
 import GoalProgress from "../components/GoalProgress/GoalProgress";
 import { ReminderFrequency, Weekday } from "../types";
 import { Dayjs } from "dayjs";
+import apiCalendar from "../calendar/googleCalendar";
 
 const ResolutionInfo = () => {
   // Pull goal CRUD functions from resolution context and pass them as props into appropriate components
@@ -38,6 +39,13 @@ const ResolutionInfo = () => {
       );
     }
   };
+
+  // prompt user to sign-in to Google Calendar API
+  useEffect(() => {
+    if (resolution) {
+      apiCalendar.handleAuthClick();
+    }
+  }, [resolution]);
 
   return (
     <>

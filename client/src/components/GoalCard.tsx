@@ -94,7 +94,7 @@ const GoalCard = ({
         <UpdateGoalForm
           current_description={goal.description}
           submitForm={(description) =>
-            updateGoal(resolutionKey, goal.id, description)
+            updateGoal(resolutionKey, goal.id, goal.eventID ?? "", description)
           }
           closeEditForm={() => setEditing(false)}
         />

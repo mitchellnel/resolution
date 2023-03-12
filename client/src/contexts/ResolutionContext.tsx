@@ -10,7 +10,11 @@ import { UserContext } from "./UserContext";
 import { ReminderFrequency, Weekday } from "../types";
 import { Dayjs } from "dayjs";
 
-import { createGoalEvent } from "../calendar/goalCalendar";
+import {
+  createGoalEvent,
+  deleteGoalEvent,
+  updateGoalEventSummary,
+} from "../calendar/goalCalendar";
 
 export interface Resolution {
   id: string;
@@ -26,6 +30,7 @@ export interface Goal {
   description: string;
   nTimesToAchieve: number;
   completed: boolean;
+  eventID?: string;
 }
 
 export interface ResolutionContextInterface {
@@ -53,10 +58,15 @@ export interface ResolutionContextInterface {
     goal_key: string,
     complete: boolean
   ) => void;
-  deleteGoal: (resolution_key: string, goal_key: string) => void;
+  deleteGoal: (
+    resolution_key: string,
+    goal_key: string,
+    event_id: string
+  ) => void;
   updateGoal: (
     resolution_key: string,
     goal_key: string,
+    event_id: string,
     new_description: string
   ) => void;
 }
@@ -267,18 +277,22 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     resolution_key: string,
     description: string,
     timesToAchieve: number
-  ) => {
+  ): Promise<string | undefined> => {
     try {
       if (currentUser) {
-        await axios.post("/api/create-goal", {
+        const response = await axios.post("/api/create-goal", {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           description: description,
           nTimesToAchieve: timesToAchieve,
         });
+
+        return response.data.goal_key as string;
       }
     } catch (err) {
       console.log("Create Goal Error:", err);
+
+      return undefined;
     }
   };
 
@@ -291,22 +305,48 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     reminderDay: Weekday,
     reminderDate: number
   ) => {
-    await callAPICreateGoal(resolution_key, description, timesToAchieve);
-
-    // provided this works, we will add a reminder to the user's calendar
-
-    // we will store the eventID in the database at a later time
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const eventID = createGoalEvent(
+    const goalKey = await callAPICreateGoal(
+      resolution_key,
       description,
-      timesToAchieve,
-      reminderFrequency,
-      reminderTime,
-      reminderDay,
-      reminderDate
+      timesToAchieve
     );
 
+    if (reminderFrequency !== ReminderFrequency.None) {
+      // provided this works, we will add a reminder to the user's calendar
+      const eventID = await createGoalEvent(
+        description,
+        timesToAchieve,
+        reminderFrequency,
+        reminderTime,
+        reminderDay,
+        reminderDate
+      );
+
+      // assign the event ID to the Goal in the database
+      await callAPIAssignEventIDToGoal(resolution_key, goalKey!, eventID);
+    }
+
     fetchAPI();
+  };
+
+  // assign event ID to goal functionality
+  const callAPIAssignEventIDToGoal = async (
+    resolution_key: string,
+    goal_key: string,
+    eventID: string
+  ) => {
+    try {
+      if (currentUser) {
+        await axios.post("/api/assign-event-to-goal", {
+          user_id: currentUser.uid,
+          resolution_key: resolution_key,
+          goal_key: goal_key,
+          event_id: eventID,
+        });
+      }
+    } catch (err) {
+      console.log("Assign Event ID to Goal Error:", err);
+    }
   };
 
   // achieve goal functionality
@@ -379,8 +419,18 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     }
   };
 
-  const deleteGoal = async (resolution_key: string, goal_key: string) => {
+  const deleteGoal = async (
+    resolution_key: string,
+    goal_key: string,
+    event_id: string
+  ) => {
     await callAPIDeleteGoal(resolution_key, goal_key);
+
+    // delete the Goal's event from the user's calendar
+    if (event_id) {
+      await deleteGoalEvent(event_id);
+    }
+
     fetchAPI();
   };
 
@@ -407,9 +457,15 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   const updateGoal = async (
     resolution_key: string,
     goal_key: string,
+    event_id: string,
     new_description: string
   ) => {
     await callAPIUpdateGoal(resolution_key, goal_key, new_description);
+
+    if (event_id) {
+      await updateGoalEventSummary(event_id, new_description);
+    }
+
     fetchAPI();
   };
 

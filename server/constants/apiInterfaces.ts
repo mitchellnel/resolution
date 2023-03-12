@@ -124,11 +124,16 @@ const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
 
 interface APICreateGoalReturn {
   success: boolean;
+  goal_key?: string;
   reason?: string;
 }
 
 const apiCreateGoalReturnSchema: ObjectSchema<APICreateResolutionReturn> =
-  object({ success: boolean().required(), reason: string().optional() });
+  object({
+    success: boolean().required(),
+    goal_key: string().optional(),
+    reason: string().optional(),
+  });
 
 // /api/read-goal
 interface APIReadGoalArguments {
@@ -144,6 +149,27 @@ const apiReadGoalArgumentsSchema: ObjectSchema<APIReadGoalArguments> = object({
 interface APIReadGoalReturn {
   success: boolean;
   goals?: { [key: string]: Goal | undefined };
+  reason?: string;
+}
+
+// /api/assign-event-to-goal
+interface APIAssignEventToGoalArguments {
+  user_id: string;
+  resolution_key: string;
+  goal_key: string;
+  event_id: string;
+}
+
+const apiAssignEventToGoalArgumentsSchema: ObjectSchema<APIAssignEventToGoalArguments> =
+  object({
+    user_id: string().required(),
+    resolution_key: string().required(),
+    goal_key: string().required(),
+    event_id: string().required(),
+  }).noUnknown(true);
+
+interface APIAssignEventToGoalReturn {
+  success: boolean;
   reason?: string;
 }
 
@@ -257,6 +283,9 @@ export {
   APIReadGoalArguments,
   apiReadGoalArgumentsSchema,
   APIReadGoalReturn,
+  APIAssignEventToGoalArguments,
+  apiAssignEventToGoalArgumentsSchema,
+  APIAssignEventToGoalReturn,
   APIAchieveGoalArguments,
   apiAchieveGoalArgumentsSchema,
   APIAchieveGoalReturn,

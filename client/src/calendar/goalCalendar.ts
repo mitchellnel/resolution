@@ -23,21 +23,43 @@ interface GoalEvent {
   };
 }
 
-async function createGoalEvent(
-  description: string,
-  timesToAchieve: number,
+function editReminderTime(
   reminderFrequency: ReminderFrequency,
   reminderTime: Dayjs,
   reminderDay: Weekday,
   reminderDate: number
 ) {
-  // use information to set up the reminder date + time
+  // depending on the reminder frequency, we need to set the reminder time
+
   if (reminderFrequency === ReminderFrequency.Daily) {
-    // start reminders on next day
+    // start reminders on next day if Daily
     reminderTime = reminderTime.date(reminderTime.date() + 1);
+  } else if (reminderFrequency === ReminderFrequency.Weekly) {
+    // if not Sunday, just add reminderDay days, and change the day
+    if (reminderTime.day() !== (Weekday.Sunday + 1) % 7) {
+      reminderTime = reminderTime.add(reminderDay, "day");
+    } else {
+      // if Sunday, add 1, then add reminderDay days, and change the day
+      reminderTime = reminderTime.add(1, "day").add(reminderDay, "day");
+    }
+  } else if (reminderFrequency === ReminderFrequency.Monthly) {
+    // if reminderDate has already passed (or is today), add 1 month
+    if (reminderTime.date() >= reminderDate) {
+      reminderTime = reminderTime.add(1, "month");
+    } else {
+      reminderTime = reminderTime.date(reminderDate);
+    }
   }
 
-  // set up recurrence rule according to RFC 5545
+  return reminderTime;
+}
+
+function createRecurrenceRule(
+  timesToAchieve: number,
+  reminderFrequency: ReminderFrequency,
+  reminderTime: Dayjs
+) {
+  // we create the recurrence rule according to RFC 5545
   let recurrenceRule = "RRULE:FREQ=";
   let endTime = dayjs();
   if (reminderFrequency === ReminderFrequency.Daily) {
@@ -62,15 +84,41 @@ async function createGoalEvent(
     String(endTime.date())
   }T000000Z`;
 
+  return recurrenceRule;
+}
+
+async function createGoalEvent(
+  description: string,
+  timesToAchieve: number,
+  reminderFrequency: ReminderFrequency,
+  reminderTime: Dayjs,
+  reminderDay: Weekday,
+  reminderDate: number
+) {
+  // use information to set up the reminder date + time
+  const correctReminderTime: Dayjs = editReminderTime(
+    reminderFrequency,
+    reminderTime,
+    reminderDay,
+    reminderDate
+  );
+
+  // create the recurrence rule according to RFC 5545
+  const recurrenceRule: string = createRecurrenceRule(
+    timesToAchieve,
+    reminderFrequency,
+    correctReminderTime
+  );
+
   // create event object as per API docs
   const event: GoalEvent = {
     summary: `Resolution: ${description}`,
     start: {
-      dateTime: reminderTime.toISOString(),
+      dateTime: correctReminderTime.toISOString(),
       timeZone: "Europe/London",
     },
     end: {
-      dateTime: reminderTime.add(1, "hour").toISOString(),
+      dateTime: correctReminderTime.add(1, "hour").toISOString(),
       timeZone: "Europe/London",
     },
     recurrence: [recurrenceRule],
@@ -95,4 +143,21 @@ async function createGoalEvent(
   return createResult.result.id;
 }
 
-export { createGoalEvent };
+async function deleteGoalEvent(eventId: string) {
+  const deleteResult = await apiCalendar.deleteEvent(eventId);
+
+  return deleteResult;
+}
+
+async function updateGoalEventSummary(eventId: string, newSummary: string) {
+  const updateResult = await apiCalendar.updateEvent(
+    {
+      summary: newSummary,
+    },
+    eventId
+  );
+
+  return updateResult;
+}
+
+export { createGoalEvent, deleteGoalEvent, updateGoalEventSummary };
