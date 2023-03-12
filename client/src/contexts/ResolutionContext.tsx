@@ -322,7 +322,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           goal_key: goal_key,
-          eventID: eventID,
+          event_id: eventID,
         });
       }
     } catch (err) {
