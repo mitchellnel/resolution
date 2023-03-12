@@ -3,6 +3,7 @@ import { ref, push, set, get, update, remove } from "firebase/database";
 
 import {
   API_ACHIEVE_GOAL_ENDPOINT,
+  API_ASSIGN_EVENT_TO_GOAL_ENDPOINT,
   API_COMPLETE_GOAL_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
   API_DELETE_GOAL_ENDPOINT,
@@ -29,6 +30,9 @@ import {
   APIAchieveGoalArguments,
   apiAchieveGoalArgumentsSchema,
   APIAchieveGoalReturn,
+  APIAssignEventToGoalArguments,
+  apiAssignEventToGoalArgumentsSchema,
+  APIAssignEventToGoalReturn,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -198,6 +202,66 @@ router.get(API_READ_GOAL_ENDPOINT, async (req: Request, res: Response) => {
     res.status(400).json({ success: false, reason: logMessage });
   }
 });
+
+router.post(
+  API_ASSIGN_EVENT_TO_GOAL_ENDPOINT,
+  async (req: Request, res: Response) => {
+    const data = req.body;
+
+    // try to unwrap data into APIAssignEventToGoalArguments type
+    try {
+      // use yup ObjectSchema cast method to validate the request arguments
+      const assignData: APIAssignEventToGoalArguments =
+        await apiAssignEventToGoalArgumentsSchema.validate(data);
+
+      const user_id = assignData.user_id;
+      const resolution_key = assignData.resolution_key;
+      const goal_key = assignData.goal_key;
+      const event_id = assignData.event_id;
+
+      const goalExists = await doesGoalExist(user_id, resolution_key, goal_key);
+      if (goalExists.exists === false) {
+        throw goalExists.error;
+      }
+
+      // get reference to the database at the goals for the user's Resolution
+      const eventIDGoalRef = ref(
+        database,
+        RTDB_RESOLUTIONS_PATH +
+          user_id +
+          "/" +
+          resolution_key +
+          "/goals/" +
+          goal_key +
+          "/eventID"
+      );
+
+      try {
+        await set(eventIDGoalRef, event_id);
+
+        res.status(200).json({ success: true } as APIAssignEventToGoalReturn);
+      } catch (err) {
+        const logMessage = `Data Received: ${JSON.stringify(
+          data
+        )}\n\t ... FAILURE:  Could not add eventID to goal in database: ${err}`;
+
+        res.status(500).json({
+          success: false,
+          reason: logMessage,
+        } as APIAssignEventToGoalReturn);
+      }
+    } catch (err) {
+      const logMessage = `Data Received: ${JSON.stringify(
+        data
+      )}\n\t ... FAILURE:  Body of POST to ${API_ASSIGN_EVENT_TO_GOAL_ENDPOINT} is not in correct format: ${err}`;
+
+      res.status(400).json({
+        success: false,
+        reason: logMessage,
+      } as APIAssignEventToGoalReturn);
+    }
+  }
+);
 
 router.post(API_ACHIEVE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   const data = req.body;
