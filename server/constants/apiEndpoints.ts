@@ -5,6 +5,7 @@ const API_DELETE_RESOLUTION_ENDPOINT = "/api/delete-resolution";
 
 const API_CREATE_GOAL_ENDPOINT = "/api/create-goal";
 const API_READ_GOAL_ENDPOINT = "/api/read-goal";
+const API_ASSIGN_EVENT_TO_GOAL_ENDPOINT = "/api/assign-event-to-goal";
 const API_ACHIEVE_GOAL_ENDPOINT = "/api/achieve-goal";
 const API_COMPLETE_GOAL_ENDPOINT = "/api/complete-goal";
 const API_UPDATE_GOAL_DESCRIPTION_ENDPOINT = "/api/update-goal-description";
@@ -17,6 +18,7 @@ export {
   API_DELETE_RESOLUTION_ENDPOINT,
   API_CREATE_GOAL_ENDPOINT,
   API_READ_GOAL_ENDPOINT,
+  API_ASSIGN_EVENT_TO_GOAL_ENDPOINT,
   API_COMPLETE_GOAL_ENDPOINT,
   API_ACHIEVE_GOAL_ENDPOINT,
   API_UPDATE_GOAL_DESCRIPTION_ENDPOINT,
