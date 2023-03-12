@@ -22,6 +22,7 @@ export interface Resolution {
 export interface Goal {
   id: string;
   description: string;
+  nTimesToAchieve: number;
   completed: boolean;
 }
 
