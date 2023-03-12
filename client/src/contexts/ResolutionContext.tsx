@@ -155,6 +155,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     for (const goalId in APIData) {
       goals.push({ ...APIData[goalId], id: goalId });
     }
+    
     return goals;
   };
 
