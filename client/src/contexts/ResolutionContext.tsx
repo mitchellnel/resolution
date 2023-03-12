@@ -26,6 +26,7 @@ export interface Goal {
   description: string;
   nTimesToAchieve: number;
   completed: boolean;
+  eventID?: string;
 }
 
 export interface ResolutionContextInterface {
