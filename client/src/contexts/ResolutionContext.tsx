@@ -294,10 +294,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     await callAPICreateGoal(resolution_key, description, timesToAchieve);
 
     // provided this works, we will add a reminder to the user's calendar
-
-    // we will store the eventID in the database at a later time
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const eventID = createGoalEvent(
+    const eventID = await createGoalEvent(
       description,
       timesToAchieve,
       reminderFrequency,
@@ -306,7 +303,30 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
       reminderDate
     );
 
+    // assign the event ID to the Goal in the database
+    await callAPIAssignEventIDToGoal(resolution_key, description, eventID);
+
     fetchAPI();
+  };
+
+  // assign event ID to goal functionality
+  const callAPIAssignEventIDToGoal = async (
+    resolution_key: string,
+    goal_key: string,
+    eventID: string
+  ) => {
+    try {
+      if (currentUser) {
+        await axios.post("/api/assign-event-to-goal", {
+          user_id: currentUser.uid,
+          resolution_key: resolution_key,
+          goal_key: goal_key,
+          eventID: eventID,
+        });
+      }
+    } catch (err) {
+      console.log("Assign Event ID to Goal Error:", err);
+    }
   };
 
   // achieve goal functionality
