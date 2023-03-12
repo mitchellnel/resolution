@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { ReminderFrequency } from "../types";
+import { ReminderFrequency, Weekday } from "../types";
 import { LocalizationProvider, MobileTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
@@ -21,7 +21,9 @@ interface CreateGoalFormProps {
   submitForm: (
     description: string,
     reminderFrequency: ReminderFrequency,
-    reminderTime: Dayjs
+    reminderTime: Dayjs,
+    reminderDay: Weekday,
+    reminderDate: number
   ) => void;
   closeForm: () => void;
 }
@@ -43,6 +45,9 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
     dayjs("2023-03-12T00:00")
   );
 
+  const [reminderDay, setReminderDay] = useState(0);
+  const [reminderDate, setReminderDate] = useState(1);
+
   const handleCancel = () => {
     closeForm();
     setDescriptionError(false);
@@ -62,12 +67,20 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
     }
 
     // send form data
-    if (description && reminderFrequency && reminderTime) {
+    if (
+      description &&
+      reminderFrequency &&
+      reminderTime &&
+      reminderDay &&
+      reminderDate
+    ) {
       console.log(reminderTime);
       submitForm(
         description,
         reminderFrequency as ReminderFrequency,
-        reminderTime
+        reminderTime,
+        reminderDay as Weekday,
+        reminderDate
       );
 
       setDescription("");
@@ -76,9 +89,19 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
       setReminderFrequency("");
       setReminderFrequencyError(false);
 
+      setReminderTime(dayjs("2023-03-12T00:00"));
+
+      setReminderDay(0);
+      setReminderDate(1);
+
       closeForm();
     }
   };
+
+  const dateMenuItems = [];
+  for (let i = 1; i <= 31; i++) {
+    dateMenuItems.push(<MenuItem value={i}>{i}</MenuItem>);
+  }
 
   return (
     <Container>
@@ -148,6 +171,57 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
                 }}
               />
             </LocalizationProvider>
+          </FormControl>
+        ) : null}
+
+        <br />
+
+        {reminderFrequency === ReminderFrequency.Weekly ||
+        reminderFrequency === ReminderFrequency.Monthly ? (
+          <FormControl
+            required
+            sx={{ minWidth: 120, margin: "20px 0 0 0" }}
+            error={reminderFrequencyError}
+          >
+            {reminderFrequency === ReminderFrequency.Weekly ? (
+              <>
+                <InputLabel id="select-reminder-day">Reminder Day</InputLabel>
+                <Select
+                  labelId="select-reminder-day"
+                  id="select-reminder-day"
+                  value={String(reminderDay)}
+                  label="Reminder Day *"
+                  onChange={(event: SelectChangeEvent) => {
+                    setReminderDay(Number(event.target.value));
+                  }}
+                >
+                  <MenuItem value={Weekday.Monday}>Monday</MenuItem>
+                  <MenuItem value={Weekday.Tuesday}>Tuesday</MenuItem>
+                  <MenuItem value={Weekday.Wednesday}>Wednesday</MenuItem>
+                  <MenuItem value={Weekday.Thursday}>Thursday</MenuItem>
+                  <MenuItem value={Weekday.Friday}>Friday</MenuItem>
+                  <MenuItem value={Weekday.Saturday}>Saturday</MenuItem>
+                  <MenuItem value={Weekday.Sunday}>Sunday</MenuItem>
+                </Select>
+              </>
+            ) : (
+              <>
+                <InputLabel id="select-reminder-date">Reminder Date</InputLabel>
+                <Select
+                  autoWidth={true}
+                  labelId="select-reminder-date"
+                  id="select-reminder-date"
+                  value={String(reminderDate)}
+                  label="Reminder Date *"
+                  onChange={(event: SelectChangeEvent) => {
+                    setReminderDate(Number(event.target.value));
+                  }}
+                >
+                  {dateMenuItems}
+                </Select>
+              </>
+            )}
+            <FormHelperText>Required</FormHelperText>
           </FormControl>
         ) : null}
 

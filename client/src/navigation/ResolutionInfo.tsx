@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import GoalCard from "../components/GoalCard";
 import CreateGoalCard from "../components/CreateGoalCard";
 import GoalProgress from "../components/GoalProgress/GoalProgress";
-import { ReminderFrequency } from "../types";
+import { ReminderFrequency, Weekday } from "../types";
 import { Dayjs } from "dayjs";
 
 const ResolutionInfo = () => {
@@ -21,10 +21,19 @@ const ResolutionInfo = () => {
   const goalCreationHandler = (
     description: string,
     reminderFrequency: ReminderFrequency,
-    reminderTime: Dayjs
+    reminderTime: Dayjs,
+    reminderDay: Weekday,
+    reminderDate: number
   ) => {
     if (resolution) {
-      addGoal(resolution.id, description, reminderFrequency, reminderTime);
+      addGoal(
+        resolution.id,
+        description,
+        reminderFrequency,
+        reminderTime,
+        reminderDay,
+        reminderDate
+      );
     }
   };
 
