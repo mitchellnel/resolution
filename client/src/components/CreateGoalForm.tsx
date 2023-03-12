@@ -16,7 +16,6 @@ import { ReminderFrequency, Weekday } from "../types";
 import { LocalizationProvider, MobileTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import apiCalendar from "../calendar/googleCalendar";
 
 interface CreateGoalFormProps {
   submitForm: (
@@ -50,21 +49,6 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
 
   const [reminderDay, setReminderDay] = useState(0);
   const [reminderDate, setReminderDate] = useState(1);
-
-  const handleReminderFrequencyChange = (event: SelectChangeEvent) => {
-    const newReminderFrequency = event.target.value as string;
-
-    if (newReminderFrequency === ReminderFrequency.None) {
-      setReminderFrequency(newReminderFrequency);
-
-      return;
-    }
-
-    apiCalendar.handleAuthClick();
-    apiCalendar.onLoad(() => {
-      setReminderFrequency(newReminderFrequency);
-    });
-  };
 
   const handleTimesToAchieveChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -193,7 +177,9 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
             id="select-reminder-frequency"
             value={reminderFrequency}
             label="Reminder Frequency *"
-            onChange={handleReminderFrequencyChange}
+            onChange={(event: SelectChangeEvent) => {
+              setReminderFrequency(event.target.value as string);
+            }}
           >
             <MenuItem value={ReminderFrequency.None}>
               <em>None</em>
