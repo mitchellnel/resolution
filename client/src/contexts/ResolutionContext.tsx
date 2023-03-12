@@ -259,7 +259,8 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   //create goal functionality:
   const callAPICreateGoal = async (
     resolution_key: string,
-    description: string
+    description: string,
+    timesToAchieve: number
   ) => {
     try {
       if (currentUser) {
@@ -267,6 +268,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           description: description,
+          nTimesToAchieve: timesToAchieve,
         });
       }
     } catch (err) {
@@ -283,7 +285,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     reminderDay: Weekday,
     reminderDate: number
   ) => {
-    await callAPICreateGoal(resolution_key, description);
+    await callAPICreateGoal(resolution_key, description, timesToAchieve);
 
     // provided this works, we will add a reminder to the user's calendar
     // TODO: add reminder to calendar

@@ -91,14 +91,7 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
     }
 
     // send form data
-    if (
-      description &&
-      timesToAchieve &&
-      reminderFrequency &&
-      reminderTime &&
-      reminderDay &&
-      reminderDate
-    ) {
+    if (description && timesToAchieve && reminderFrequency && reminderTime) {
       submitForm(
         description,
         timesToAchieve,
