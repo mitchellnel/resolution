@@ -1,58 +1,78 @@
-import { Container, Typography } from '@mui/material';
-import { useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ResolutionContext } from '../contexts/ResolutionContext';
+import { Container, Typography } from "@mui/material";
+import { useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ResolutionContext } from "../contexts/ResolutionContext";
 import Button from "@mui/material/Button";
-import GoalCard from '../components/GoalCard';
-import CreateGoalCard from '../components/CreateGoalCard';
-import GoalProgress from '../components/GoalProgress/GoalProgress';
+import GoalCard from "../components/GoalCard";
+import CreateGoalCard from "../components/CreateGoalCard";
+import GoalProgress from "../components/GoalProgress/GoalProgress";
+import { ReminderFrequency } from "../types";
 
 const ResolutionInfo = () => {
+  // Pull goal CRUD functions from resolution context and pass them as props into appropriate components
+  const { getResolutionById, addGoal, setGoalCompleted } =
+    useContext(ResolutionContext);
+  const { id } = useParams();
+  const resolution = getResolutionById(id);
 
-    //Pull goal CRUD functions from resolution context and pass them as props into appropriate components
-    const { getResolutionById, addGoal, setGoalCompleted } = useContext(ResolutionContext);
-    const { id } = useParams();
-    const resolution = getResolutionById(id);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const goalCreationHandler = (
+    description: string,
+    reminderFrequency: ReminderFrequency
+  ) => {
+    if (resolution) {
+      addGoal(resolution.id, description, reminderFrequency);
+    }
+  };
 
   return (
     <>
-        { resolution ? 
+      {resolution ? (
         <Container>
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <Typography
-                variant="h4"
-                color="textSecondary"
-                component="h2"
-                gutterBottom
-                >
-                    {resolution.title}
-                </Typography>
-                <GoalProgress style={{width: '30%'}} goalsCompleted={resolution.goals_completed} goalCount={resolution.goal_count}/>
-            </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Typography
-            gutterBottom
+              variant="h4"
+              color="textSecondary"
+              component="h2"
+              gutterBottom
             >
-                {resolution.description}
+              {resolution.title}
             </Typography>
-            <div>
-                {resolution.goals.map(goal => <GoalCard key={goal.id} goal={goal} resolutionKey={resolution.id} setCompleted={(completed : boolean) => setGoalCompleted(resolution.id, goal.id, completed)}/>)}
-                <CreateGoalCard goalCreationHandler={(description : string) => addGoal(resolution.id, description)}/>
-            </div>
-            <Button onClick={() => navigate('/')}> Back to dashboard </Button>
+            <GoalProgress
+              style={{ width: "30%" }}
+              goalsCompleted={resolution.goals_completed}
+              goalCount={resolution.goal_count}
+            />
+          </div>
+          <Typography gutterBottom>{resolution.description}</Typography>
+          <div style={{ margin: "auto auto 40px auto" }}>
+            {resolution.goals.map((goal) => (
+              <GoalCard
+                key={goal.id}
+                goal={goal}
+                resolutionKey={resolution.id}
+                setCompleted={(completed: boolean) =>
+                  setGoalCompleted(resolution.id, goal.id, completed)
+                }
+              />
+            ))}
+            <CreateGoalCard goalCreationHandler={goalCreationHandler} />
+          </div>
+          <Button onClick={() => navigate("/")}> Back to dashboard </Button>
         </Container>
-        :
+      ) : (
         <Typography
-            variant="h4"
-            color="textSecondary"
-            component="h2"
-            gutterBottom
+          variant="h4"
+          color="textSecondary"
+          component="h2"
+          gutterBottom
         >
-            Resolution not found
-        </Typography> }
+          Resolution not found
+        </Typography>
+      )}
     </>
   );
-}
+};
 
 export default ResolutionInfo;
