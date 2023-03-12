@@ -38,6 +38,8 @@ describe("Test Goal CRUD API", () => {
   const test_goal_nTimesToAchieve_1 = 1;
   const test_goal_nTimesToAchieve_2 = 3;
 
+  const test_calendar_event_id = "test_calendar_event_id";
+
   beforeAll(async () => {
     // create a Resolution to add goals to
     const test_user_id_path = RTDB_RESOLUTIONS_PATH + test_user_id;
@@ -98,6 +100,7 @@ describe("Test Goal CRUD API", () => {
           resolution_key: test_resolution_key,
           description: test_goal_description_1,
           nTimesToAchieve: test_goal_nTimesToAchieve_1,
+          calendarEventID: test_calendar_event_id,
         };
 
         // Act
@@ -124,6 +127,7 @@ describe("Test Goal CRUD API", () => {
         expect(goal.description).toEqual(test_goal_description_1);
         expect(goal.nTimesToAchieve).toEqual(test_goal_nTimesToAchieve_1);
         expect(goal.completed).toEqual(false);
+        expect(goal.calendarEventID).toEqual(test_calendar_event_id);
       });
     });
 

@@ -119,6 +119,11 @@ router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
       completed: false,
     };
 
+    // if a calendar event ID was passed, add it to the object
+    if (createData.calendarEventID) {
+      dataToAdd.calendarEventID = createData.calendarEventID;
+    }
+
     // get reference to the database at the goals for the user's Resolution
     const userGoalsRef = ref(
       database,

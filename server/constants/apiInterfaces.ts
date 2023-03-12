@@ -98,12 +98,14 @@ interface Goal {
   description: string;
   nTimesToAchieve: number;
   completed: boolean;
+  calendarEventID?: string;
 }
 
 const goalSchema: ObjectSchema<Goal> = object({
   description: string().required(),
   nTimesToAchieve: number().required(),
   completed: boolean().required(),
+  calendarEventID: string().optional(),
 });
 
 // /api/create-goal
@@ -112,6 +114,7 @@ interface APICreateGoalArguments {
   resolution_key: string;
   description: string;
   nTimesToAchieve: number;
+  calendarEventID?: string;
 }
 
 const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
@@ -120,6 +123,7 @@ const apiCreateGoalArgumentsSchema: ObjectSchema<APICreateGoalArguments> =
     resolution_key: string().required(),
     description: string().required(),
     nTimesToAchieve: number().required(),
+    calendarEventID: string().optional(),
   }).noUnknown(true);
 
 interface APICreateGoalReturn {
