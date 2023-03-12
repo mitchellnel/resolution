@@ -194,6 +194,7 @@ Arguments:
 - `user_id` (string)
 - `resolution_key` (string)
 - `description` (string)
+- `nTimesToAchieve` (integer)
 
 Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
 
