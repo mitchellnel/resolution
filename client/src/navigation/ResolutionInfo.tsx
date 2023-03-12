@@ -20,6 +20,7 @@ const ResolutionInfo = () => {
 
   const goalCreationHandler = (
     description: string,
+    timesToAchieve: number,
     reminderFrequency: ReminderFrequency,
     reminderTime: Dayjs,
     reminderDay: Weekday,
@@ -29,6 +30,7 @@ const ResolutionInfo = () => {
       addGoal(
         resolution.id,
         description,
+        timesToAchieve,
         reminderFrequency,
         reminderTime,
         reminderDay,

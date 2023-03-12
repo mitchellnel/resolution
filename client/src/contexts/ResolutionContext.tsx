@@ -38,6 +38,7 @@ export interface ResolutionContextInterface {
   addGoal: (
     resolution_key: string,
     description: string,
+    timesToAchieve: number,
     reminderFrequency: ReminderFrequency,
     reminderTime: Dayjs,
     reminderDay: Weekday,
@@ -276,6 +277,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   const addGoal = async (
     resolution_key: string,
     description: string,
+    timesToAchieve: number,
     reminderFrequency: ReminderFrequency,
     reminderTime: Dayjs,
     reminderDay: Weekday,

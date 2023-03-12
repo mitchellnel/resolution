@@ -8,6 +8,7 @@ import { Dayjs } from "dayjs";
 interface CreateGoalCardProps {
   goalCreationHandler: (
     description: string,
+    timesToAchieve: number,
     reminderFrequency: ReminderFrequency,
     reminderTime: Dayjs,
     reminderDay: Weekday,

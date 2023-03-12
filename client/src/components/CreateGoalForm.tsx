@@ -20,6 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 interface CreateGoalFormProps {
   submitForm: (
     description: string,
+    timesToAchieve: number,
     reminderFrequency: ReminderFrequency,
     reminderTime: Dayjs,
     reminderDay: Weekday,
@@ -38,6 +39,9 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState(false);
 
+  const [timesToAchieve, setTimesToAchieve] = useState(1);
+  const [timesToAchieveError, setTimesToAchieveError] = useState(false);
+
   const [reminderFrequency, setReminderFrequency] = useState("");
   const [reminderFrequencyError, setReminderFrequencyError] = useState(false);
 
@@ -47,6 +51,26 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
 
   const [reminderDay, setReminderDay] = useState(0);
   const [reminderDate, setReminderDate] = useState(1);
+
+  const handleTimesToAchieveChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setTimesToAchieve(event.target.value as any);
+
+    if (Number(event.target.value)) {
+      const value: Number = Number(event.target.value);
+
+      if (value <= 0) {
+        setTimesToAchieveError(true);
+      } else {
+        setTimesToAchieveError(false);
+      }
+    } else if (event.target.value !== "") {
+      setTimesToAchieveError(true);
+    } else {
+      setTimesToAchieveError(false);
+    }
+  };
 
   const handleCancel = () => {
     closeForm();
@@ -69,14 +93,15 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
     // send form data
     if (
       description &&
+      timesToAchieve &&
       reminderFrequency &&
       reminderTime &&
       reminderDay &&
       reminderDate
     ) {
-      console.log(reminderTime);
       submitForm(
         description,
+        timesToAchieve,
         reminderFrequency as ReminderFrequency,
         reminderTime,
         reminderDay as Weekday,
@@ -85,6 +110,9 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
 
       setDescription("");
       setDescriptionError(false);
+
+      setTimesToAchieve(1);
+      setTimesToAchieveError(false);
 
       setReminderFrequency("");
       setReminderFrequencyError(false);
@@ -126,6 +154,19 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
           fullWidth
           required
           error={descriptionError}
+        />
+
+        <TextField
+          value={timesToAchieve}
+          sx={fieldStyle}
+          onChange={handleTimesToAchieveChange}
+          label="Number of times to achieve this goal"
+          variant="outlined"
+          color="secondary"
+          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          fullWidth
+          required
+          error={timesToAchieveError}
         />
 
         <FormControl
