@@ -219,9 +219,31 @@ Returns: a JSON object with a Boolean field indicating read success. If the read
 
 If the the request has _extra_ query parameters than those defined above, an error **will not** be thrown. If the request lacks any of the query parameters defined above, an error **will** be thrown.
 
+### `/api/achieve-goal`
+
+Decrements the `nTimesToAchieve` field on a specific Goal that belongs to a user's Resolution -- this field is located in the database under the path `resolutions/user_id/resolution_key/goals/goal_key/nTimesToAchieve`
+
+This endpoint is only designed to reduce `nTimesToAchieve` by 1. If the `nTimesToAchieve` field is already 1, then the endpoint will return an error.
+
+This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
+
+Arguments:
+
+- `user_id` (string)
+- `resolution_key` (string)
+- `goal_key` (string)
+
+Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a `reason` field will be defined with an error message. If the read succeeded, then this field will not exist.
+
+The argument object is interfaced as `APIAchieveGoalArguments`, and the return object is interfaces as `APIAchieveGoalReturn`.
+
+If the body of the request has _extra_ fields than those defined above, an error **will not** be thrown. If the body of the request lacks any of the fields defined above, an error **will** be thrown.
+
 ### `/api/complete-goal`
 
 Updates the complete field on a specific Goal that belongs to a user's Resolution -- this field is located in the database under the path `resolutions/user_id/resolution_key/goals/goal_key/completed`
+
+This endpoint will only work when the `nTimesToAchieve` field is 1. If the `nTimesToAchieve` field is not 1, then the endpoint will return an error.
 
 This API must be called by making a **POST** request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.
 
