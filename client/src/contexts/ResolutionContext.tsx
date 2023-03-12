@@ -10,6 +10,8 @@ import { UserContext } from "./UserContext";
 import { ReminderFrequency, Weekday } from "../types";
 import { Dayjs } from "dayjs";
 
+import { createGoalEvent } from "../calendar/goalCalendar";
+
 export interface Resolution {
   id: string;
   title: string;
@@ -155,7 +157,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     for (const goalId in APIData) {
       goals.push({ ...APIData[goalId], id: goalId });
     }
-    
+
     return goals;
   };
 
@@ -292,7 +294,17 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     await callAPICreateGoal(resolution_key, description, timesToAchieve);
 
     // provided this works, we will add a reminder to the user's calendar
-    // TODO: add reminder to calendar
+
+    // we will store the eventID in the database at a later time
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const eventID = createGoalEvent(
+      description,
+      timesToAchieve,
+      reminderFrequency,
+      reminderTime,
+      reminderDay,
+      reminderDate
+    );
 
     fetchAPI();
   };
