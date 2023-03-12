@@ -134,11 +134,7 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
 
         {reminderFrequency !== "" &&
         reminderFrequency !== (ReminderFrequency.None as string) ? (
-          <FormControl
-            required
-            sx={{ minWidth: 120, margin: "0 0 0 10px" }}
-            disabled={reminderFrequency !== ReminderFrequency.None}
-          >
+          <FormControl required sx={{ minWidth: 120, margin: "0 0 0 10px" }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <MobileTimePicker
                 label="Reminder Time*"
@@ -147,6 +143,7 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
                   setReminderTime(newValue);
                 }}
               />
+              <FormHelperText>Required</FormHelperText>
             </LocalizationProvider>
           </FormControl>
         ) : null}
