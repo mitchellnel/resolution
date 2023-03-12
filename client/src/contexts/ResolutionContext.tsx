@@ -45,6 +45,7 @@ export interface ResolutionContextInterface {
     reminderDay: Weekday,
     reminderDate: number
   ) => void;
+  achieveGoal: (resolution_key: string, goal_key: string) => void;
   setGoalCompleted: (
     resolution_key: string,
     goal_key: string,
@@ -65,6 +66,7 @@ export const ResolutionContext = createContext<ResolutionContextInterface>({
   updateResolution: () => null,
   getResolutionById: () => undefined,
   addGoal: () => null,
+  achieveGoal: () => null,
   setGoalCompleted: () => null,
   deleteGoal: () => null,
   updateGoal: () => null,
@@ -294,6 +296,29 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     fetchAPI();
   };
 
+  // achieve goal functionality
+  const callAPIAchieveGoal = async (
+    resolution_key: string,
+    goal_key: string
+  ) => {
+    try {
+      if (currentUser) {
+        await axios.post("/api/achieve-goal", {
+          user_id: currentUser.uid,
+          resolution_key: resolution_key,
+          goal_key: goal_key,
+        });
+      }
+    } catch (err) {
+      console.log("Achieve Goal Error:", err);
+    }
+  };
+
+  const achieveGoal = async (resolution_key: string, goal_key: string) => {
+    await callAPIAchieveGoal(resolution_key, goal_key);
+    fetchAPI();
+  };
+
   //complete goal functionality:
   const callAPICompleteGoal = async (
     resolution_key: string,
@@ -382,6 +407,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
     updateResolution,
     getResolutionById,
     addGoal,
+    achieveGoal,
     setGoalCompleted,
     deleteGoal,
     updateGoal,
