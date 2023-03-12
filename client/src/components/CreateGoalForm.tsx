@@ -128,7 +128,11 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
 
   const dateMenuItems = [];
   for (let i = 1; i <= 31; i++) {
-    dateMenuItems.push(<MenuItem value={i}>{i}</MenuItem>);
+    dateMenuItems.push(
+      <MenuItem key={i} value={i}>
+        {i}
+      </MenuItem>
+    );
   }
 
   return (
