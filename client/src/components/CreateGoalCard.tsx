@@ -3,11 +3,13 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CreateGoalForm from "./CreateGoalForm";
 import { useState } from "react";
 import { ReminderFrequency } from "../types";
+import { Dayjs } from "dayjs";
 
 interface CreateGoalCardProps {
   goalCreationHandler: (
     description: string,
-    reminderFrequency: ReminderFrequency
+    reminderFrequency: ReminderFrequency,
+    reminderTime: Dayjs
   ) => void;
 }
 

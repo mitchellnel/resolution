@@ -13,11 +13,15 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { ReminderFrequency } from "../types";
+import { LocalizationProvider, MobileTimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface CreateGoalFormProps {
   submitForm: (
     description: string,
-    reminderFrequency: ReminderFrequency
+    reminderFrequency: ReminderFrequency,
+    reminderTime: Dayjs
   ) => void;
   closeForm: () => void;
 }
@@ -35,9 +39,9 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
   const [reminderFrequency, setReminderFrequency] = useState("");
   const [reminderFrequencyError, setReminderFrequencyError] = useState(false);
 
-  const handleReminderFrequencySelectChange = (event: SelectChangeEvent) => {
-    setReminderFrequency(event.target.value as string);
-  };
+  const [reminderTime, setReminderTime] = useState<Dayjs | null>(
+    dayjs("2023-03-12T00:00")
+  );
 
   const handleCancel = () => {
     closeForm();
@@ -58,8 +62,13 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
     }
 
     // send form data
-    if (description && reminderFrequency) {
-      submitForm(description, reminderFrequency as ReminderFrequency);
+    if (description && reminderFrequency && reminderTime) {
+      console.log(reminderTime);
+      submitForm(
+        description,
+        reminderFrequency as ReminderFrequency,
+        reminderTime
+      );
 
       setDescription("");
       setDescriptionError(false);
@@ -109,7 +118,9 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
             id="select-reminder-frequency"
             value={reminderFrequency}
             label="Reminder Frequency *"
-            onChange={handleReminderFrequencySelectChange}
+            onChange={(event: SelectChangeEvent) => {
+              setReminderFrequency(event.target.value as string);
+            }}
           >
             <MenuItem value={ReminderFrequency.None}>
               <em>None</em>
@@ -120,6 +131,25 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
           </Select>
           <FormHelperText>Required</FormHelperText>
         </FormControl>
+
+        {reminderFrequency !== "" &&
+        reminderFrequency !== (ReminderFrequency.None as string) ? (
+          <FormControl
+            required
+            sx={{ minWidth: 120, margin: "0 0 0 10px" }}
+            disabled={reminderFrequency !== ReminderFrequency.None}
+          >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <MobileTimePicker
+                label="Reminder Time*"
+                value={reminderTime}
+                onChange={(newValue) => {
+                  setReminderTime(newValue);
+                }}
+              />
+            </LocalizationProvider>
+          </FormControl>
+        ) : null}
 
         <br />
 

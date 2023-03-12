@@ -7,6 +7,7 @@ import GoalCard from "../components/GoalCard";
 import CreateGoalCard from "../components/CreateGoalCard";
 import GoalProgress from "../components/GoalProgress/GoalProgress";
 import { ReminderFrequency } from "../types";
+import { Dayjs } from "dayjs";
 
 const ResolutionInfo = () => {
   // Pull goal CRUD functions from resolution context and pass them as props into appropriate components
@@ -19,10 +20,11 @@ const ResolutionInfo = () => {
 
   const goalCreationHandler = (
     description: string,
-    reminderFrequency: ReminderFrequency
+    reminderFrequency: ReminderFrequency,
+    reminderTime: Dayjs
   ) => {
     if (resolution) {
-      addGoal(resolution.id, description, reminderFrequency);
+      addGoal(resolution.id, description, reminderFrequency, reminderTime);
     }
   };
 

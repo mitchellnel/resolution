@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import { UserContext } from "./UserContext";
 import { ReminderFrequency } from "../types";
+import { Dayjs } from "dayjs";
 
 export interface Resolution {
   id: string;
@@ -37,7 +38,8 @@ export interface ResolutionContextInterface {
   addGoal: (
     resolution_key: string,
     description: string,
-    reminderFrequency: ReminderFrequency
+    reminderFrequency: ReminderFrequency,
+    reminderTime: Dayjs
   ) => void;
   setGoalCompleted: (
     resolution_key: string,
@@ -272,7 +274,8 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   const addGoal = async (
     resolution_key: string,
     description: string,
-    reminderFrequency: ReminderFrequency
+    reminderFrequency: ReminderFrequency,
+    reminderTime: Dayjs
   ) => {
     await callAPICreateGoal(resolution_key, description);
 
