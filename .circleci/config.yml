@@ -59,6 +59,9 @@ jobs:
     executor: node/default
     working_directory: ~/resolution
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "c8:ee:ea:6b:1e:34:92:e2:64:95:e0:c5:b0:cd:da:68"
       - checkout
       - attach_workspace:
           at: ~/resolution/client
