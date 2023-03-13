@@ -35,7 +35,7 @@ jobs:
       - run:
           name: "Upload coverage results to coveralls"
           command: cat ~/resolution/server/coverage/lcov.info | npx coveralls --verbose ~/resolution/server
-  
+
   frontend_build_and_test:
     executor: node/default
     working_directory: ~/resolution
@@ -54,7 +54,7 @@ jobs:
       - persist_to_workspace:
           root: ~/resolution/client
           paths: [build]
-  
+
   frontend_deploy:
     executor: node/default
     working_directory: ~/resolution
@@ -65,13 +65,12 @@ jobs:
       - run:
           name: "Install and configure gh-pages package"
           command: |
-            npm install -g gh-pages
+            npm install gh-pages
             git config user.name "mitchellnel"
             git config user.email "mitchellmclin@gmail.com"
       - run:
           name: "Deploy React application to gh-pages branch"
           command: gh-pages --dist ~/resolution/client/build
-
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -89,4 +88,3 @@ workflows:
             branches:
               only:
                 - main
-
