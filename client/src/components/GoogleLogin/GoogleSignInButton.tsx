@@ -10,13 +10,12 @@ import { ReactComponent as GoogleLogo } from "../../assets/google_logo.svg";
 import { ReactComponent as GoogleLogoWhite } from "../../assets/google_logo_white.svg";
 
 import GoogleButtonStyling from "./GoogleButtonStyling";
-import apiCalendar from "../../calendar/googleCalendar";
 
 async function redirectToSignIn() {
   const provider: GoogleAuthProvider = new GoogleAuthProvider();
   provider.setCustomParameters({
-    prompt: 'select_account'
- });
+    prompt: "select_account",
+  });
 
   // redirect user to sign in page
   await signInWithRedirect(auth, provider);
