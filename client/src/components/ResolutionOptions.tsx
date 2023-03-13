@@ -5,7 +5,6 @@ import { useState, useContext } from "react";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
-// import UpdateResolutionForm from '../navigation/UpdateResolutionForm'
 
 interface ResolutionOptionsProps {
   resolution: Resolution

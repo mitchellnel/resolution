@@ -8,6 +8,7 @@ import {
   API_UPDATE_RESOLUTION_ENDPOINT,
 } from "../constants/apiEndpoints";
 import {
+  // Resolution CRUD
   Resolution,
   APICreateResolutionArguments,
   apiCreateResolutionArgumentsSchema,
@@ -21,6 +22,9 @@ import {
   APIDeleteResolutionArguments,
   apiDeleteResolutionArgumentsSchema,
   APIDeleteResolutionReturn,
+
+  // Goal-related
+  Goal,
 } from "../constants/apiInterfaces";
 import { RTDB_RESOLUTIONS_PATH } from "../constants/firebaseRTDBPaths";
 
@@ -46,32 +50,60 @@ router.post(
       const dataToAdd: Resolution = {
         title: createData.title,
         description: createData.description,
+        goals: {}, // we will push an actual object later, TypeScript mandates we put this here
       };
 
       // get reference to the database at the specified path
       const userResolutionsRef = ref(database, RTDB_RESOLUTIONS_PATH + user_id);
 
       // we use push to basically append to a list
-      const newResolutionRef = push(userResolutionsRef);
+      const newResolutionRef = await push(userResolutionsRef);
 
       try {
         await set(newResolutionRef, dataToAdd);
 
-        const logMessage = `Data Received: ${JSON.stringify(
-          createData
-        )}\n\t ... SUCCESS: ${JSON.stringify(dataToAdd)} added to the RTDB at ${
-          RTDB_RESOLUTIONS_PATH + user_id
-        }`;
+        // now add a sample goal to the resolution
+        const goalToAdd: Goal = {
+          description: "Your goal here!",
+          nTimesToAchieve: 1,
+          completed: false,
+        };
 
-        console.log(logMessage);
+        // get the key of the newly created resolution
+        const newResolutionKey = newResolutionRef.key;
 
-        res.status(200).json({ success: true } as APICreateResolutionReturn);
+        // get reference to the database at the specified path
+        const newResolutionGoalsRef = ref(
+          database,
+          RTDB_RESOLUTIONS_PATH + user_id + "/" + newResolutionKey + "/goals"
+        );
+
+        // push a new goal to the resolution
+        const newGoalRef = await push(newResolutionGoalsRef);
+
+        try {
+          await set(newGoalRef, goalToAdd);
+
+          // @ts-ignore
+          const logMessage = `Data Received: ${JSON.stringify(
+            createData
+          )}\n\t ... SUCCESS: ${JSON.stringify(
+            dataToAdd
+          )} added to the RTDB at ${RTDB_RESOLUTIONS_PATH + user_id}`;
+
+          // console.log(logMessage);
+
+          res.status(200).json({ success: true } as APICreateResolutionReturn);
+        } catch (err) {
+          // just throw the error to the catch block below
+          throw err;
+        }
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
           createData
         )}\n\t ... FAILURE: data could not be added to the DB: ${err}`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -83,7 +115,7 @@ router.post(
         data
       )}\n\t ... FAILURE: Body of POST to ${API_CREATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
 
-      console.log(logMessage);
+      // console.log(logMessage);
 
       res.status(400).json({
         success: false,
@@ -137,7 +169,7 @@ router.get(
       } catch (err) {
         const logMessage = `FAILURE: Call to /api/read-resolution was unsuccessful: ${err}`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -149,7 +181,7 @@ router.get(
         params
       )}\n\t ... FAILURE: Query Parameters of GET to ${API_READ_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
 
-      console.log(logMessage);
+      // console.log(logMessage);
 
       res.status(400).json({
         success: false,
@@ -175,11 +207,12 @@ router.post(
       const user_id = updateData.user_id;
       const firebase_key = updateData.firebase_key;
 
-      // create new object for the actual update to make
-      const dataToUpdate: Resolution = {
-        title: updateData.new_title,
-        description: updateData.new_description,
-      };
+      const new_title = updateData.new_title;
+      const new_description = updateData.new_description;
+
+      // get paths for title and description on the Resolution
+      const titlePath = `${RTDB_RESOLUTIONS_PATH}${user_id}/${firebase_key}/title`;
+      const descriptionPath = `${RTDB_RESOLUTIONS_PATH}${user_id}/${firebase_key}/description`;
 
       // get a reference to the database
       const databaseRef = ref(database);
@@ -187,30 +220,18 @@ router.post(
       // NOTE: you can simultaneously push multiple updates just by adding another field to
       //   the updates object
       const updates: any = {};
-      updates[`${RTDB_RESOLUTIONS_PATH}${user_id}/${firebase_key}`] =
-        dataToUpdate;
+      updates[titlePath] = new_title;
+      updates[descriptionPath] = new_description;
 
       // make the update
       try {
         await update(databaseRef, updates);
-
-        const logMessage = `Data Received: ${JSON.stringify(
-          updateData
-        )}\n\t ... SUCCESS: ${JSON.stringify(
-          dataToUpdate
-        )} updated to the RTDB at ${
-          RTDB_RESOLUTIONS_PATH + user_id
-        }/${firebase_key}`;
-
-        console.log(logMessage);
 
         res.status(200).json({ success: true } as APIUpdateResolutionReturn);
       } catch (err) {
         const logMessage = `Data Received: ${JSON.stringify(
           updateData
         )}\n\t ... FAILURE: update could not be made to the DB: ${err}`;
-
-        console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -221,8 +242,6 @@ router.post(
       const logMessage = `Data Received: ${JSON.stringify(
         data
       )}\n\t ... FAILURE: Body of POST to ${API_UPDATE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
-
-      console.log(logMessage);
 
       res.status(400).json({
         success: false,
@@ -262,11 +281,12 @@ router.post(
       try {
         await remove(deleteRef);
 
+        // @ts-ignore
         const logMessage = `Data Received: ${JSON.stringify(
           deleteData
         )}\n\t ... data at ${deletePath} successfully deleted`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(200).json({ success: true } as APIDeleteResolutionReturn);
       } catch (err) {
@@ -274,7 +294,7 @@ router.post(
           deleteData
         )}\n\t ... delete could not be made on the DB: ${err}`;
 
-        console.log(logMessage);
+        // console.log(logMessage);
 
         res.status(500).json({
           success: false,
@@ -286,7 +306,7 @@ router.post(
         data
       )}\n\t ... FAILURE: Body of POST to ${API_DELETE_RESOLUTION_ENDPOINT} is not in correct format: ${err}`;
 
-      console.log(logMessage);
+      // console.log(logMessage);
 
       res.status(400).json({
         success: false,
