@@ -1,12 +1,11 @@
-import { Card, Collapse, IconButton, Typography } from "@mui/material";
+import { Card, Collapse, Typography } from "@mui/material";
 import { Goal } from "../contexts/ResolutionContext";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import GoalOptions from "./GoalOptions";
 import UpdateGoalForm from "./UpdateGoalForm";
 
 import { useState, useContext } from "react";
 import { ResolutionContext } from "../contexts/ResolutionContext";
+import OccurrenceCounter from "./OccurrenceCounter";
 
 interface GoalCardProps {
   goal: Goal;
@@ -25,13 +24,10 @@ const GoalCard = ({
 
   const [editing, setEditing] = useState(false);
 
-  const handleGoalToggle = () => {
+  const handleGoalAchievement = () => {
     if (goal.nTimesToAchieve === 1) {
-      if (goal.completed) {
-        setCompleted(false);
-      } else {
-        setCompleted(true);
-      }
+      // lock goal on completion
+      setCompleted(true);
 
       return;
     }
@@ -50,6 +46,12 @@ const GoalCard = ({
             margin: "20px",
             marginLeft: "0px",
             boxShadow: 3,
+            transition: '1s',
+            ...(goal.completed && {
+                backgroundColor: '#90EE90',
+                textDecoration: 'line-through',
+                textDecorationThickness: '3px'
+              })
           }}
         >
           <div
@@ -74,23 +76,13 @@ const GoalCard = ({
                 <Typography variant="h5">
                   <strong>{goal.description}</strong>
                 </Typography>
-                <Typography variant="h6">
-                  <em>Need to achieve {goal.nTimesToAchieve} more times!</em>
-                </Typography>
               </div>
             </div>
-            <IconButton onClick={handleGoalToggle}>
-              {goal.completed ? (
-                <CheckCircleIcon fontSize="large" />
-              ) : (
-                <RadioButtonUncheckedIcon fontSize="large" />
-              )}
-            </IconButton>
+            <OccurrenceCounter completed={goal.completed} nTimesToAchieve={goal.nTimesToAchieve} goalAchievementHandler={handleGoalAchievement} />
           </div>
         </Card>
       </Collapse>
       <Collapse in={editing}>
-        {/* TODO: Finish submitForm implementation for update */}
         <UpdateGoalForm
           current_description={goal.description}
           submitForm={(description) =>

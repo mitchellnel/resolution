@@ -1,5 +1,6 @@
 import { User } from 'firebase/auth';
 import { createContext, useEffect, useReducer } from 'react';
+import apiCalendar from '../calendar/googleCalendar';
 import { onAuthStateChangedListener } from '../utils/firebase';
 
 export interface UserContextInterface {
@@ -71,6 +72,9 @@ export const UserProvider = ({ children } : UserProviderProps) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChangedListener((user : User | null) => {
             if (user){
+                // prompt user to sign-in to Google Calendar API
+                apiCalendar.handleAuthClick();
+                
                 dispatch({type: USER_ACTION_TYPES.SIGN_IN, payload: user})
             }
             else {

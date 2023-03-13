@@ -40,13 +40,6 @@ const ResolutionInfo = () => {
     }
   };
 
-  // prompt user to sign-in to Google Calendar API
-  useEffect(() => {
-    if (resolution) {
-      apiCalendar.handleAuthClick();
-    }
-  }, [resolution]);
-
   return (
     <>
       {resolution ? (

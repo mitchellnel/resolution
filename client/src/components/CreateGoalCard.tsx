@@ -21,7 +21,7 @@ const CreateGoalCard = ({ goalCreationHandler }: CreateGoalCardProps) => {
 
   const style = {
     height: "5rem",
-    width: "30%",
+    width: "40%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

@@ -176,7 +176,6 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
       axios
         .get(`/api/read-resolution?user_id=${currentUser.uid}`)
         .then((res) => {
-          console.log(convertAPIDataToResolutions(res.data.resolutions));
           setResolutions(convertAPIDataToResolutions(res.data.resolutions));
         })
         .catch((err) => {

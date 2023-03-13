@@ -16,10 +16,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import CreateIcon from '@mui/icons-material/Create';
 
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
-import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
-import SettingsIcon from '@mui/icons-material/Settings';
 import ProfileIcon from './ProfileIcon';
 import { useNavigate } from 'react-router-dom';
 
@@ -136,8 +135,7 @@ export default function HeaderDrawer({children}: HeaderDrawerProps) {
         <Divider />
         <List>
           {[{text: 'Dashboard', icon: <DashboardCustomizeIcon />, route: '/'}, 
-          {text: 'Feed', icon: <DynamicFeedIcon />, route: '/feed'}, 
-          {text: 'Settings', icon: <SettingsIcon />, route: '/settings'}].map(({text, icon, route}) => (
+          {text: 'Create Resolution', icon: <CreateIcon />, route: '/create'}].map(({text, icon, route}) => (
             <ListItem key={text} disablePadding>
                 <ListItemButton onClick={() => navigate(route)}>
                   <ListItemIcon>
