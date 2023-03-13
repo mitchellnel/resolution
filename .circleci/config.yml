@@ -65,12 +65,12 @@ jobs:
       - run:
           name: "Install and configure gh-pages package"
           command: |
-            npm install gh-pages
+            cd client && npm install --save-dev gh-pages
             git config user.name "mitchellnel"
             git config user.email "mitchellmclin@gmail.com"
       - run:
           name: "Deploy React application to gh-pages branch"
-          command: gh-pages --dist ~/resolution/client/build
+          command: cd client && npm run deploy
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
