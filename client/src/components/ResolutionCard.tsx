@@ -10,7 +10,6 @@ interface ResolutionCardProps {
 
 const ResolutionCard = ({resolution}: ResolutionCardProps) => {
 
-
   return (
     <Grid item xs={4}>
       <Link to={`/resolution/${resolution.id}`} style={{textDecoration: 'none'}}>
@@ -18,9 +17,8 @@ const ResolutionCard = ({resolution}: ResolutionCardProps) => {
           <CardHeader title={resolution.title} titleTypographyProps={{fontWeight: 'medium'}} action={<ResolutionOptions resolution={resolution}/>}/>
           <CardContent sx={{paddingTop: '0px'}}>
             <Typography gutterBottom>{resolution.description}</Typography>
-            <GoalProgress goalsCompleted={resolution.goals_completed} goalCount={resolution.goal_count}/>
+            <GoalProgress style={{}} goalsCompleted={resolution.goals_completed} goalCount={resolution.goal_count}/>
           </CardContent>
-          
         </Card>
       </Link>
     </Grid>

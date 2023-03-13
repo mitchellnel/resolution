@@ -1,22 +1,15 @@
-import React from "react";
-
 import Button from "@mui/material/Button";
 
 // Firebase
 import { signOut } from "firebase/auth";
+import apiCalendar from "../../calendar/googleCalendar";
 import { auth } from "../../utils/firebase";
 
 import GoogleButtonStyling from "./GoogleButtonStyling";
 
-interface GoogleSignOutButtonProps {
-  setAuthenticatedFlag: (flagState: boolean) => void;
-}
-
-function GoogleSignOutButton({
-  setAuthenticatedFlag,
-}: GoogleSignOutButtonProps) {
+function GoogleSignOutButton() {
   async function signOutUser() {
-    setAuthenticatedFlag(false);
+    apiCalendar.handleSignoutClick();
 
     await signOut(auth);
   }
