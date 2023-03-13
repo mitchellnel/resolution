@@ -53,7 +53,7 @@ jobs:
       # we would test here
       - persist_to_workspace:
           root: ~/resolution/client
-          paths: build
+          paths: [build]
   
   frontend_deploy:
     executor: node/default
@@ -64,13 +64,13 @@ jobs:
           at: ~/resolution/client
       - run:
           name: "Install and configure gh-pages package"
-          run: |
+          command: |
             npm install -g gh-pages
             git config user.name "mitchellnel"
             git config user.email "mitchellmclin@gmail.com"
       - run:
           name: "Deploy React application to gh-pages branch"
-          run: gh-pages --dist ~/resolution/client/build
+          command: gh-pages --dist ~/resolution/client/build
 
 
 # Invoke jobs via workflows
@@ -82,6 +82,11 @@ workflows:
   frontend_ci_cd:
     jobs:
       - frontend_build_and_test
-      - frontend_deploy
+      - frontend_deploy:
           requires:
             - frontend_build_and_test
+          filters:
+            branches:
+              only:
+                - main
+
