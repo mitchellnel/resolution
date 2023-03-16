@@ -11,19 +11,18 @@ import ResolutionInfo from "./navigation/ResolutionInfo";
 import UpdateResolutionForm from "./navigation/UpdateResolutionForm";
 
 function App() {
-
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/resolution">
       <UserProvider>
         <ResolutionProvider>
           <LogInModal />
           <HeaderDrawer>
             <Routes>
-              <Route path='*' element={<ErrorPage />} />
-              <Route path='/' element={<Dashboard />} />
-              <Route path='/create' element={<CreateResolutionForm />} />
-              <Route path='/update' element={<UpdateResolutionForm />} />
-              <Route path='/resolution/:id' element={<ResolutionInfo />} />
+              <Route path="*" element={<ErrorPage />} />
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/create" element={<CreateResolutionForm />} />
+              <Route path="/update" element={<UpdateResolutionForm />} />
+              <Route path="/resolution/:id" element={<ResolutionInfo />} />
             </Routes>
           </HeaderDrawer>
         </ResolutionProvider>
