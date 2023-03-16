@@ -5,7 +5,7 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "http://localhost:3333",
+      target: "https://resolution-api-bcmmz.onrender.com/",
       changeOrigin: true,
     })
   );
