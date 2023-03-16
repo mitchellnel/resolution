@@ -15,6 +15,18 @@ import {
   deleteGoalEvent,
   updateGoalEventSummary,
 } from "../calendar/goalCalendar";
+import {
+  API_ACHIEVE_GOAL_URL,
+  API_ASSIGN_EVENT_TO_GOAL_URL,
+  API_COMPLETE_GOAL_URL,
+  API_CREATE_GOAL_URL,
+  API_CREATE_RESOLUTION_URL,
+  API_DELETE_GOAL_URL,
+  API_DELETE_RESOLUTION_URL,
+  API_READ_RESOLUTION_URL,
+  API_UPDATE_GOAL_DESCRIPTION_URL,
+  API_UPDATE_RESOLUTION_URL,
+} from "../constants/apiEndpoints";
 
 export interface Resolution {
   id: string;
@@ -174,7 +186,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   const fetchAPI = useCallback(() => {
     if (currentUser) {
       axios
-        .get(`/api/read-resolution?user_id=${currentUser.uid}`)
+        .get(`${API_READ_RESOLUTION_URL}?user_id=${currentUser.uid}`)
         .then((res) => {
           setResolutions(convertAPIDataToResolutions(res.data.resolutions));
         })
@@ -200,7 +212,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   ) => {
     try {
       if (currentUser) {
-        await axios.post("/api/create-resolution", {
+        await axios.post(API_CREATE_RESOLUTION_URL, {
           user_id: currentUser.uid,
           title: title,
           description: description,
@@ -220,7 +232,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   const callAPIDeleteResolution = async (key: string) => {
     try {
       if (currentUser) {
-        await axios.post("/api/delete-resolution", {
+        await axios.post(API_DELETE_RESOLUTION_URL, {
           user_id: currentUser.uid,
           firebase_key: key,
         });
@@ -243,7 +255,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   ) => {
     try {
       if (currentUser) {
-        await axios.post("/api/update-resolution", {
+        await axios.post(API_UPDATE_RESOLUTION_URL, {
           user_id: currentUser.uid,
           firebase_key: key,
           new_title: new_title,
@@ -279,7 +291,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   ): Promise<string | undefined> => {
     try {
       if (currentUser) {
-        const response = await axios.post("/api/create-goal", {
+        const response = await axios.post(API_CREATE_GOAL_URL, {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           description: description,
@@ -336,7 +348,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   ) => {
     try {
       if (currentUser) {
-        await axios.post("/api/assign-event-to-goal", {
+        await axios.post(API_ASSIGN_EVENT_TO_GOAL_URL, {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           goal_key: goal_key,
@@ -355,7 +367,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   ) => {
     try {
       if (currentUser) {
-        await axios.post("/api/achieve-goal", {
+        await axios.post(API_ACHIEVE_GOAL_URL, {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           goal_key: goal_key,
@@ -379,7 +391,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   ) => {
     try {
       if (currentUser) {
-        await axios.post("/api/complete-goal", {
+        await axios.post(API_COMPLETE_GOAL_URL, {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           goal_key: goal_key,
@@ -407,7 +419,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   ) => {
     try {
       if (currentUser) {
-        await axios.post("/api/delete-goal", {
+        await axios.post(API_DELETE_GOAL_URL, {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           goal_key: goal_key,
@@ -441,7 +453,7 @@ export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   ) => {
     try {
       if (currentUser) {
-        await axios.post("/api/update-goal-description", {
+        await axios.post(API_UPDATE_GOAL_DESCRIPTION_URL, {
           user_id: currentUser.uid,
           resolution_key: resolution_key,
           goal_key: goal_key,
