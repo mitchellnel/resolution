@@ -5,7 +5,7 @@ import app from "./app";
 const PORT_NUM = 3333;
 
 const corsOptions: CorsOptions = {
-  origin: "https://mitchellnel.github.io",
+  origin: "*",
 };
 
 app.use(cors(corsOptions));
