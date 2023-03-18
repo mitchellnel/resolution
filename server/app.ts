@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import cors, { CorsOptions } from "cors";
 import dotenv from "dotenv";
 
 import resolutionCRUDAPI from "./routes/resolutionCRUDRoutes";
@@ -7,6 +8,12 @@ import goalCRUDAPI from "./routes/goalCRUDRoutes";
 dotenv.config({ path: "./.env.development.local" });
 
 const app: Express = express();
+
+const corsOptions: CorsOptions = {
+  origin: "*",
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
