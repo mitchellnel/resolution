@@ -149,6 +149,7 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
           fullWidth
           required
           error={descriptionError}
+          inputProps={{"data-testid": "create-goal-form-description"}}
         />
 
         <TextField
@@ -158,7 +159,7 @@ const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
           label="Number of times to achieve this goal"
           variant="outlined"
           color="secondary"
-          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          inputProps={{ inputMode: "numeric", pattern: "[0-9]*", "data-testid": "create-goal-form-times-to-achieve"}}
           fullWidth
           required
           error={timesToAchieveError}

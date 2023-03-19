@@ -2,12 +2,11 @@ import { Button, Typography } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 
 interface OccurrenceCounterProps {
-    completed: boolean,
     nTimesToAchieve: number,
     goalAchievementHandler: () => void
 }
 
-const OccurrenceCounter = ({ completed, nTimesToAchieve, goalAchievementHandler } : OccurrenceCounterProps) => {
+const OccurrenceCounter = ({ nTimesToAchieve, goalAchievementHandler } : OccurrenceCounterProps) => {
 
     const style = {
         height: '70%',
@@ -29,21 +28,14 @@ const OccurrenceCounter = ({ completed, nTimesToAchieve, goalAchievementHandler 
             opacity: 0,
             position: 'absolute'
         },
-        ...(completed && {
-            border: '',
-        })
       };
 
   return (
     <Button onClick={goalAchievementHandler} sx={style} color='success'>
-        {!completed &&
-        <>
-            <CheckIcon className='checkmark' fontSize="inherit" />
-            <Typography className='occurrences' fontSize="inherit" color="secondary">
-                {nTimesToAchieve}
-            </Typography>
-        </>
-        }
+        <CheckIcon className='checkmark' fontSize="inherit" />
+        <Typography className='occurrences' fontSize="inherit" color="secondary">
+            {nTimesToAchieve}
+        </Typography>
     </Button>
   );
 }

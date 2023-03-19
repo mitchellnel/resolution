@@ -78,7 +78,7 @@ const GoalCard = ({
                 </Typography>
               </div>
             </div>
-            <OccurrenceCounter completed={goal.completed} nTimesToAchieve={goal.nTimesToAchieve} goalAchievementHandler={handleGoalAchievement} />
+            {!goal.completed && <OccurrenceCounter nTimesToAchieve={goal.nTimesToAchieve} goalAchievementHandler={handleGoalAchievement} />}
           </div>
         </Card>
       </Collapse>
