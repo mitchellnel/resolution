@@ -59,6 +59,7 @@ const UpdateGoalForm = ({ current_description, submitForm, closeEditForm } : Upd
                 fullWidth
                 required
                 error={descriptionError}
+                inputProps={{"data-testid": "update-goal-form-description"}}
               />
                 <Button
                     type="button"

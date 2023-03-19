@@ -51,6 +51,7 @@ const GoalOptions = ({
             aria-controls={menuOpen ? "options" : undefined}
             aria-haspopup="true"
             aria-expanded={menuOpen ? "true" : undefined}
+            data-testid="goal-options-button"
           >
             <MoreVertIcon />
           </IconButton>

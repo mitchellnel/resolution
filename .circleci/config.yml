@@ -51,6 +51,9 @@ jobs:
           name: "Build the React application"
           command: cd client && npm run build
       # we would test here
+      - run:
+          name: "Run tests"
+          command: cd client && npm run test
       - persist_to_workspace:
           root: ~/resolution/client
           paths: [build]

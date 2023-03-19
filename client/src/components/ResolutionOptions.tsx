@@ -51,6 +51,7 @@ const ResolutionOptions = ({resolution}: ResolutionOptionsProps) => {
             aria-controls={menuOpen ? "options" : undefined}
             aria-haspopup="true"
             aria-expanded={menuOpen ? "true" : undefined}
+            data-testid="resolution-options-button"
             >
                 <MoreVertIcon />
             </IconButton>

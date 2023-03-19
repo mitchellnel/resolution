@@ -58,6 +58,7 @@ const CreateResolutionForm = () => {
                 required
                 fullWidth
                 error={titleError}
+                inputProps={{"data-testid": "create-resolution-form-title"}}
               />
               <TextField
                 value={description}
@@ -71,6 +72,7 @@ const CreateResolutionForm = () => {
                 fullWidth
                 required
                 error={descriptionError}
+                inputProps={{"data-testid": "create-resolution-form-description"}}
               />
               <Button
                 type="submit"
