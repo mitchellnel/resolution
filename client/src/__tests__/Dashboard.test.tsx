@@ -3,46 +3,44 @@ import Dashboard from "../navigation/Dashboard";
 import { Resolution, ResolutionContext } from "../contexts/ResolutionContext";
 import { BrowserRouter } from "react-router-dom";
 
-const mockResolutions : Resolution[] = [
-    {
-        id: "0",
-        title: "mock-title-0",
-        description: "mock-description-0",
-        goals: [],
-        goals_completed: 0,
-        goal_count: 1
-    },
-    {
-        id: "1",
-        title: "mock-title-1",
-        description: "mock-description-1",
-        goals: [],
-        goals_completed: 0,
-        goal_count: 1
-    }
-]
+const mockResolutions: Resolution[] = [
+  {
+    id: "0",
+    title: "mock-title-0",
+    description: "mock-description-0",
+    goals: [],
+    goals_completed: 0,
+    goal_count: 1,
+  },
+  {
+    id: "1",
+    title: "mock-title-1",
+    description: "mock-description-1",
+    goals: [],
+    goals_completed: 0,
+    goal_count: 1,
+  },
+];
 
 const MockResolutionContextValue = {
-    resolutions: mockResolutions,
-    addResolution: jest.fn(),
-    deleteResolution: jest.fn(),
-    updateResolution: jest.fn(), 
-    getResolutionById: jest.fn(),
-    addGoal: jest.fn(),
-    achieveGoal: jest.fn(),
-    setGoalCompleted: jest.fn(),
-    deleteGoal: jest.fn(),
-    updateGoal: jest.fn(),
-  }
+  resolutions: mockResolutions,
+  addResolution: jest.fn(),
+  deleteResolution: jest.fn(),
+  updateResolution: jest.fn(),
+  getResolutionById: jest.fn(),
+  addGoal: jest.fn(),
+  achieveGoal: jest.fn(),
+  setGoalCompleted: jest.fn(),
+  deleteGoal: jest.fn(),
+  updateGoal: jest.fn(),
+};
 
 function renderDashboard() {
   return render(
     <BrowserRouter>
-        <ResolutionContext.Provider
-        value={MockResolutionContextValue}
-        >
-            <Dashboard />
-        </ResolutionContext.Provider>
+      <ResolutionContext.Provider value={MockResolutionContextValue}>
+        <Dashboard />
+      </ResolutionContext.Provider>
     </BrowserRouter>
   );
 }
