@@ -59,4 +59,22 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 
 ### Frontend Documentation
 
-Frontend documentation can be found in "docs/modules.html"
+Frontend documentation was created using TypeDoc and can be found in the "docs" folder in "client". The main HTML file for the docs is located at "docs/modules.html"
+
+### Before Running Client Locally
+
+You need to declare a `.env` file that contains 3 pieces of information relevant to using the Google Calendar API. This will involve following the guide linked [here](https://docs.simplecalendar.io/google-api-key/).
+
+As a result of following the guide, and setting up the relevant Google Developer project, you should have 3 strings:
+- A Google API Key
+- A Google Client ID
+- A Google Client Secret
+
+Create a `.env` file within `client`, and add the following lines to it:
+```
+REACT_APP_GOOGLE_API_KEY="<your_google_api_key>"
+REACT_APP_GOOGLE_CLIENT_ID="<your_google_client_id>"
+REACT_APP_GOOGLE_CLIENT_SECRET="<your_google_client_secret>"
+```
+
+Then save this file.
