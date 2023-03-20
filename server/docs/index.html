@@ -1,0 +1,321 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>server</title><meta name="description" content="Documentation for server"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">server</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<h2>server</h2></div>
+<div class="tsd-panel tsd-typography">
+<a href="#quick-links" id="quick-links" style="color: inherit; text-decoration: none;">
+  <h1>Quick Links</h1>
+</a>
+<ul>
+<li><a href="https://github.com/mitchellnel/resolution/tree/main/server#getting-started-with-server">Getting Started with <code>server</code></a></li>
+<li><a href="https://github.com/mitchellnel/resolution/tree/main/server#api-documentation">API Documentation</a></li>
+</ul>
+
+<a href="#getting-started-with-server" id="getting-started-with-server" style="color: inherit; text-decoration: none;">
+  <h1>Getting Started with <code>server</code></h1>
+</a>
+
+<a href="#first-time-setup" id="first-time-setup" style="color: inherit; text-decoration: none;">
+  <h2>First Time Setup</h2>
+</a>
+<p>To install all of the necessary Node Modules, run:</p>
+<pre><code class="language-bash"><span class="hl-0">npm </span><span class="hl-1">install</span>
+</code></pre>
+<p>Then, to test that everything is working, run:</p>
+<pre><code><span class="hl-2">npm</span><span class="hl-0"> </span><span class="hl-2">start</span>
+</code></pre>
+<p>And proceed to <a href="http://localhost:3333">http://localhost:3333</a></p>
+
+<a href="#available-scripts" id="available-scripts" style="color: inherit; text-decoration: none;">
+  <h2>Available Scripts</h2>
+</a>
+<p>In the project directory, you can run:</p>
+
+<a href="#npm-start" id="npm-start" style="color: inherit; text-decoration: none;">
+  <h3><code>npm start</code></h3>
+</a>
+<p>Builds <em>and</em> runs the server.<br>Open <a href="http://localhost:3333">http://localhost:3333</a> to view it in your browser.</p>
+<p>This command will not cause the server to run if there are build errors. Some of these build errors may be unused variables. You can comment <code>// @ts-ignore</code> on the line before the error-causing line to ignore the error.</p>
+<p>The page <strong>will not</strong> reload when you make changes.</p>
+<p>The server <strong>will not</strong> update to reflect any saved changes in the source code that occur while running. See <code>npm run dev</code> to achieve this functionality.</p>
+
+<a href="#npm-run-build" id="npm-run-build" style="color: inherit; text-decoration: none;">
+  <h3><code>npm run build</code></h3>
+</a>
+<p>Builds the app for production to the <code>dist</code> folder.</p>
+<p>It correctly compiles all of the TypeScript down to JavaScript, also minifying the build.</p>
+
+<a href="#npm-run-dev" id="npm-run-dev" style="color: inherit; text-decoration: none;">
+  <h3><code>npm run dev</code></h3>
+</a>
+<p>Runs the server in a &quot;development setting&quot;.<br>Open <a href="http://localhost:3333">http://localhost:3333</a> to view it in your browser.</p>
+<p>The page <strong>will not</strong> reload when you make changes.</p>
+<p>However, the server <strong>will</strong> update to reflect any saved changes in the source code that occur while running. This means that if you make changes, and save them, the TypeScript will automatically be compiled, and the server restarted.</p>
+<p>This is achieved by using the <code>concurrently</code> package. We concurrently run <code>npx tsc --watch</code> to continually watch for changes in the source <code>.ts</code> files, recompiling the files whenever changes occur, and <code>nodemon</code> to restart the server whenever file changes occur.</p>
+
+<a href="#basic-express-guide" id="basic-express-guide" style="color: inherit; text-decoration: none;">
+  <h2>Basic Express Guide</h2>
+</a>
+<p>From the Express docs:</p>
+<blockquote>
+<p>Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.</p>
+</blockquote>
+<blockquote>
+<p>With a myriad of HTTP utility methods and middleware at your disposal, creating a robust API [with Express] is quick and easy.</p>
+</blockquote>
+<p>Both justify our usage of Express on the backend.</p>
+<p>We set up Express with the following code:</p>
+<pre><code class="language-typescript"><span class="hl-3">import</span><span class="hl-0"> </span><span class="hl-2">express</span><span class="hl-0">, { </span><span class="hl-2">Express</span><span class="hl-0">, </span><span class="hl-2">Request</span><span class="hl-0">, </span><span class="hl-2">Response</span><span class="hl-0"> } </span><span class="hl-3">from</span><span class="hl-0"> </span><span class="hl-1">&quot;express&quot;</span><span class="hl-0">;</span><br/><span class="hl-4">// express is essentially a constructor we use to initialise our server application</span><br/><span class="hl-4">// the latter 3 are types</span><br/><br/><span class="hl-4">// create an Express application -- we use this object for everything</span><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">app</span><span class="hl-0">: </span><span class="hl-7">Express</span><span class="hl-0"> = </span><span class="hl-8">express</span><span class="hl-0">();</span><br/><br/><span class="hl-4">// create a basic endpoint for GET on the root &quot;/&quot;</span><br/><span class="hl-2">app</span><span class="hl-0">.</span><span class="hl-8">get</span><span class="hl-0">(</span><span class="hl-1">&quot;/&quot;</span><span class="hl-0">, (</span><span class="hl-2">req</span><span class="hl-0">: </span><span class="hl-7">Request</span><span class="hl-0">, </span><span class="hl-2">res</span><span class="hl-0">: </span><span class="hl-7">Response</span><span class="hl-0">) </span><span class="hl-5">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-2">res</span><span class="hl-0">.</span><span class="hl-8">send</span><span class="hl-0">(</span><span class="hl-1">&quot;Express + TypeScript Server&quot;</span><span class="hl-0">);</span><br/><span class="hl-0">});</span><br/><span class="hl-4">// req is the HTTP Request, res is the HTTP Response we are sending back</span><br/><br/><span class="hl-4">// start the server using app.listen(portNumber)</span><br/><span class="hl-2">app</span><span class="hl-0">.</span><span class="hl-8">listen</span><span class="hl-0">(</span><span class="hl-9">3333</span><span class="hl-0">);</span>
+</code></pre>
+
+<a href="#dotenv-guide" id="dotenv-guide" style="color: inherit; text-decoration: none;">
+  <h2>dotenv Guide</h2>
+</a>
+<p>From the dotenv docs:</p>
+<blockquote>
+<p>Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env</p>
+</blockquote>
+<p>.env files are simple text configuration files that carry information that may be necessary for controlling your applications. They may also contain sensitive data that we don&#39;t want uploaded to GitHub (or other file hosting services), such as API keys.</p>
+<p>For usage instructions, see the docs <a href="https://www.npmjs.com/package/dotenv#Usage">here</a>.</p>
+
+<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
+  <h1>API Documentation</h1>
+</a>
+
+<a href="#resolution-crud" id="resolution-crud" style="color: inherit; text-decoration: none;">
+  <h2>Resolution CRUD</h2>
+</a>
+<p>Every resolution in the database is uniquely keyed by the Firebase Realtime Database service. This key is generated when the resolution is pushed to the database.</p>
+<p>These keys are received by the client when reading resolutions, and must be passed to the <code>/api/update-resolution</code> or <code>/api/delete-resolution</code> endpoints in order to utilise their functionality.</p>
+
+<a href="#apicreate-resolution" id="apicreate-resolution" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/create-resolution</code></h3>
+</a>
+<p>Creates a resolution and adds it to the database under the path <code>resolutions/user_id</code>.</p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>title</code> (string)</li>
+<li><code>description</code> (string)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APICreateResolutionArguments</code>, and the return object is interfaces as <code>APICreateResolutionReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+<p>A sample Goal for the newly created Resolution will be created when this endpoint is called.</p>
+
+<a href="#apiread-resolutionuser_idltuser_idgt" id="apiread-resolutionuser_idltuser_idgt" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/read-resolution?user_id=&lt;user_id&gt;</code></h3>
+</a>
+<p>Reads all of the resolutions that belong to a user -- these are located in the database under the path <code>resolutions/user_id</code></p>
+<p>This API must be called by making a <strong>GET</strong> request on this endpoint to the server (using HTTP). The arguments for the request will be sent as query parameters.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating read success. If the read failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then a <code>resolutions</code> field will be populated with what is essentially map of Firebase RTDB keys to resolution objects -- objects that have a title and description field representing the fields of a resolution.</p>
+<p>If the the request has <em>extra</em> query parameters than those defined above, an error <strong>will not</strong> be thrown. If the request lacks any of the query parameters defined above, an error <strong>will</strong> be thrown.</p>
+<p>Note that since Goals are part of a single Resolution object, calling this endpoint will also return the list of Goals associated with each Resolution.</p>
+
+<a href="#apiupdate-resolution" id="apiupdate-resolution" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/update-resolution</code></h3>
+</a>
+<p>Updates a specific resolution that belongs to the user -- these are located in the database under the path <code>resolutions/user_id/firebase_key</code></p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>firebase_key</code> (string)</li>
+<li><code>new_title</code> (string)</li>
+<li><code>new_description</code> (string)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APIUpdateResolutionArguments</code>, and the return object is interfaces as <code>APIUpdateResolutionReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+<p>A <code>new_title</code> and a <code>new_description</code> must <strong>both</strong> be passed to make the update. This should be somewhat trivial to implement on the front-end using the received resolution data.</p>
+
+<a href="#apidelete-resolution" id="apidelete-resolution" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/delete-resolution</code></h3>
+</a>
+<p>Deletes a specific resolution that belongs to the user -- these are located in the database under the path <code>resolutions/user_id</code></p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>firebase_key</code> (string)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APIDeleteResolutionArguments</code>, and the return object is interfaces as <code>APIDeleteResolutionReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+
+<a href="#goal-crud" id="goal-crud" style="color: inherit; text-decoration: none;">
+  <h2>Goal CRUD</h2>
+</a>
+<p>Every Goal in the database is uniquely keyed by the Firebase Realtime Database service. This key is generated when the Goal is pushed to the database.</p>
+<p>These keys are received by the client when reading Goals, and must be passed to the <code>/api/complete-goal</code>, <code>/api/update-goal-description</code>, and <code>/api/delete-goal</code> endpoints in order to utilise their functionality.</p>
+<p>The Goals are located under the path <code>resolutions/user_id/resolution_key/goals/</code>.</p>
+
+<a href="#apicreate-goal" id="apicreate-goal" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/create-goal</code></h3>
+</a>
+<p>Creates a Goal and adds it to the database under the path <code>resolutions/user_id/resolution_key/goals</code>.</p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>resolution_key</code> (string)</li>
+<li><code>description</code> (string)</li>
+<li><code>nTimesToAchieve</code> (integer)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APICreateGoalArguments</code>, and the return object is interfaces as <code>APICreateGoalReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+<p>The <code>description</code> field is required to create a Goal. It cannot be an empty string.</p>
+
+<a href="#apiread-goaluser_idltuser_idgtampresolution_keyltresolution_keygt" id="apiread-goaluser_idltuser_idgtampresolution_keyltresolution_keygt" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/read-goal?user_id=&lt;user_id&gt;&amp;resolution_key=&lt;resolution_key&gt;</code></h3>
+</a>
+<p>Reads all of the Goals that belong to a user&#39;s Resolution -- these are located in the database under the path <code>resolutions/user_id/resolution_key/goals</code></p>
+<p>This API must be called by making a <strong>GET</strong> request on this endpoint to the server (using HTTP). The arguments for the request will be sent as query parameters.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>resolution_key</code> (string)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating read success. If the read failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then a <code>goals</code> field will be populated with what is essentially map of Firebase RTDB keys to Goal objects -- objects that have a description and complete field that represent the Goal&#39;s description and whether it has been completed, respectively.</p>
+<p>If the the request has <em>extra</em> query parameters than those defined above, an error <strong>will not</strong> be thrown. If the request lacks any of the query parameters defined above, an error <strong>will</strong> be thrown.</p>
+
+<a href="#apiassign-event-to-goal" id="apiassign-event-to-goal" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/assign-event-to-goal</code></h3>
+</a>
+<p>Assigns a Google Calendar Event ID to a specific Goal that belongs to a user&#39;s Resolution -- this field is located in the database under the path <code>resolutions/user_id/resolution_key/goals/goal_key/event_id</code></p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>resolution_key</code> (string)</li>
+<li><code>goal_key</code> (string)</li>
+<li><code>event_id</code> (string)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APIAssignEventToGoalArguments</code>, and the return object is interfaces as <code>APIAssignEventToGoalReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+
+<a href="#apiachieve-goal" id="apiachieve-goal" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/achieve-goal</code></h3>
+</a>
+<p>Decrements the <code>nTimesToAchieve</code> field on a specific Goal that belongs to a user&#39;s Resolution -- this field is located in the database under the path <code>resolutions/user_id/resolution_key/goals/goal_key/nTimesToAchieve</code></p>
+<p>This endpoint is only designed to reduce <code>nTimesToAchieve</code> by 1. If the <code>nTimesToAchieve</code> field is already 1, then the endpoint will return an error.</p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>resolution_key</code> (string)</li>
+<li><code>goal_key</code> (string)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APIAchieveGoalArguments</code>, and the return object is interfaces as <code>APIAchieveGoalReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+
+<a href="#apicomplete-goal" id="apicomplete-goal" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/complete-goal</code></h3>
+</a>
+<p>Updates the complete field on a specific Goal that belongs to a user&#39;s Resolution -- this field is located in the database under the path <code>resolutions/user_id/resolution_key/goals/goal_key/completed</code></p>
+<p>This endpoint will only work when the <code>nTimesToAchieve</code> field is 1. If the <code>nTimesToAchieve</code> field is not 1, then the endpoint will return an error.</p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>resolution_key</code> (string)</li>
+<li><code>goal_key</code> (string)</li>
+<li><code>completed</code> (Boolean)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APICompleteGoalArguments</code>, and the return object is interfaces as <code>APICompleteGoalReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+<p>The <code>completed</code> field must be passed to make the update. It can either be <code>true</code> or <code>false</code>. The API <strong>will not</strong> automatically flip the Boolean -- the desired completion state must be passed via the arguments.</p>
+
+<a href="#apiupdate-goal-description" id="apiupdate-goal-description" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/update-goal-description</code></h3>
+</a>
+<p>Updates the description field on a specific Goal that belongs to a user&#39;s Resolution -- this field is located in the database under the path <code>resolutions/user_id/resolution_key/goals/goal_key/description</code></p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>resolution_key</code> (string)</li>
+<li><code>goal_key</code> (string)</li>
+<li><code>new_description</code> (Boolean)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APIUpdateGoalDescriptionArguments</code>, and the return object is interfaces as <code>APIUpdateGoalDescriptionReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+<p>The <code>new_description</code> field must be passed to make the update. It cannot be an empty string.</p>
+
+<a href="#apidelete-goal" id="apidelete-goal" style="color: inherit; text-decoration: none;">
+  <h3><code>/api/delete-goal</code></h3>
+</a>
+<p>Deletes a specific Goal that belongs a user&#39;s Resolution -- these are located in the database under the path <code>resolutions/user_id/resolution_key/goals</code></p>
+<p>This API must be called by making a <strong>POST</strong> request on this endpoint to the server (using HTTP). The body of the request will contain the arguments in JSON format.</p>
+<p>Arguments:</p>
+<ul>
+<li><code>user_id</code> (string)</li>
+<li><code>resolution_key</code> (string)</li>
+<li><code>goal_key</code> (string)</li>
+</ul>
+<p>Returns: a JSON object with a Boolean field indicating creation success. If the create operation failed, then a <code>reason</code> field will be defined with an error message. If the read succeeded, then this field will not exist.</p>
+<p>The argument object is interfaced as <code>APIDeleteGoalArguments</code>, and the return object is interfaces as <code>APIDeleteGoalReturn</code>.</p>
+<p>If the body of the request has <em>extra</em> fields than those defined above, an error <strong>will not</strong> be thrown. If the body of the request lacks any of the fields defined above, an error <strong>will</strong> be thrown.</p>
+
+<a href="#typescript-interfaces" id="typescript-interfaces" style="color: inherit; text-decoration: none;">
+  <h2>TypeScript Interfaces</h2>
+</a>
+<p>To make utilising the APIs easier, various TypeScript interfaces can be found in the respectice <a href="https://github.com/mitchellnel/resolution/tree/main/server/constants">server-side</a> and <a href="https://github.com/mitchellnel/resolution/tree/main/client/src/constants">client-side</a> constant directories.</p>
+</div></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current selected"><a href="modules.html">server</a>
+<ul></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="tsd-kind-variable"><a href="variables/API_ACHIEVE_GOAL_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-variable)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-32-path"></rect><path d="M11.106 16L8.85 7.24H9.966L11.454 13.192C11.558 13.608 11.646 13.996 11.718 14.356C11.79 14.708 11.842 14.976 11.874 15.16C11.906 14.976 11.954 14.708 12.018 14.356C12.09 13.996 12.178 13.608 12.282 13.192L13.758 7.24H14.85L12.582 16H11.106Z" fill="var(--color-text)" id="icon-32-text"></path></svg>API_<wbr/>ACHIEVE_<wbr/>GOAL_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_ASSIGN_EVENT_TO_GOAL_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>ASSIGN_<wbr/>EVENT_<wbr/>TO_<wbr/>GOAL_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_COMPLETE_GOAL_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>COMPLETE_<wbr/>GOAL_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_CREATE_GOAL_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>CREATE_<wbr/>GOAL_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_CREATE_RESOLUTION_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>CREATE_<wbr/>RESOLUTION_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_DELETE_GOAL_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>DELETE_<wbr/>GOAL_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_DELETE_RESOLUTION_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>DELETE_<wbr/>RESOLUTION_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_READ_GOAL_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>READ_<wbr/>GOAL_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_READ_RESOLUTION_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>READ_<wbr/>RESOLUTION_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_UPDATE_GOAL_DESCRIPTION_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>UPDATE_<wbr/>GOAL_<wbr/>DESCRIPTION_<wbr/>ENDPOINT</a></li>
+<li class="tsd-kind-variable"><a href="variables/API_UPDATE_RESOLUTION_ENDPOINT.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>API_<wbr/>UPDATE_<wbr/>RESOLUTION_<wbr/>ENDPOINT</a></li></ul></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="assets/main.js"></script></body></html>

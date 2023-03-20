@@ -98,7 +98,11 @@ const doesGoalExist = async (
   return { exists: true };
 };
 
-router.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
+router
+/**
+ * @api
+ */
+.post(API_CREATE_GOAL_ENDPOINT, async (req: Request, res: Response) => {
   const data = req.body;
 
   // try to unwrap data into APICreateGoalArguments type
