@@ -1,23 +1,35 @@
 # resolution
 
-The `client` directory contains the source code for the Resolution web application (frontend).
-
-The `server` directory contains the source code for the Resolution application server (backend).
-
-### Scrum Template
-
-https://github.com/cs130-w21/template
-
-### Drive for Reports
-
-https://drive.google.com/drive/folders/1GCe9TgQowahJrPfd_S_L7c2iRKytozyB
-
-# Repository Template
-
 [![CircleCI](https://circleci.com/gh/mitchellnel/resolution.svg?style=svg&circle-token=4e703b3e44a7959f7bb2adc6f71ca66fc881f5bc)](https://circleci.com/gh/mitchellnel/resolution)
 [![Coverage Status](https://coveralls.io/repos/github/mitchellnel/resolution/badge.svg?branch=release-prep&t=McYqbM)](https://coveralls.io/github/mitchellnel/resolution?branch=release-prep)
 
 [![Release](https://img.shields.io/github/v/release/mitchellnel/resolution?label=release)](https://github.com/mitchellnel/resolution/releases/latest)
+
+(for some reason ^^^ this release badge doesn't work and I honestly cannot work out why)
+
+The `client` directory contains the source code for the Resolution web application (frontend).
+
+The `server` directory contains the source code for the Resolution application server (backend).
+
+### Documentation
+
+[Backend API Endpoint Documention](https://github.com/mitchellnel/resolution/blob/main/server/README.md)
+
+[Backend Server TypeDoc Documentation](https://github.com/mitchellnel/resolution/tree/main/server/docs)
+
+[Frontend Documentation](https://github.com/mitchellnel/resolution/tree/main/client/docs)
+
+### CI/CD Builds
+
+CI/CD builds can be triggered manually by repository contributors.
+
+They are also triggered automatically when a pull request is created or updated, and when a commit is pushed to the `main` branch.
+
+If an update it committed to the `client` directory the CD pipeline will be triggered for the frontend application, which will push the build of the application to the `gh-pages` branch.
+
+# Scrum Template
+
+https://github.com/cs130-w21/template
 
 This repo serves as a template for repositories in this organization. The following information describes how the native features/workflows of Github can be customized to work in a scrum development process.
 
