@@ -53,6 +53,12 @@ However, the server **will** update to reflect any saved changes in the source c
 
 This is achieved by using the `concurrently` package. We concurrently run `npx tsc --watch` to continually watch for changes in the source `.ts` files, recompiling the files whenever changes occur, and `nodemon` to restart the server whenever file changes occur.
 
+### `npm test`
+
+Runs the test suite for the server using Jest.
+
+Invoking this command will also generate coverage results, which can be found in the `coverage` folder.
+
 ## Basic Express Guide
 
 From the Express docs:
