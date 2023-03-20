@@ -1,3 +1,6 @@
+/**
+ * Enumeration for representing frequency reminder for Google Calendar reminders.
+ */
 enum ReminderFrequency {
   None = "none",
   Daily = "daily",
@@ -5,6 +8,9 @@ enum ReminderFrequency {
   Monthly = "monthly",
 }
 
+/**
+ * Enumeration for representing days of the week.
+ */
 enum Weekday {
   Monday = 0,
   Tuesday = 1,
@@ -16,3 +22,4 @@ enum Weekday {
 }
 
 export { ReminderFrequency, Weekday };
+

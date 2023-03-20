@@ -9,6 +9,15 @@ import GoalProgress from "../components/GoalProgress/GoalProgress";
 import { ReminderFrequency, Weekday } from "../types";
 import { Dayjs } from "dayjs";
 
+/**
+ * The page that shows advanced information about a resolution, including its title, description, and its list of goals.
+ * On the top right corner of the page, {@link GoalProgress} is also rendered, which displays resolution progress dependent
+ * on what proportion of goals are completed.
+ * 
+ * @group Components
+ * @category Navigation
+ * @returns ResolutionInfo navigation component
+ */
 const ResolutionInfo = () => {
   // Pull goal CRUD functions from resolution context and pass them as props into appropriate components
   const { getResolutionById, addGoal, achieveGoal, setGoalCompleted } =

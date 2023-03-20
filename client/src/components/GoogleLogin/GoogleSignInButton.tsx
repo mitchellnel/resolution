@@ -9,7 +9,18 @@ import { auth } from "../../utils/firebase";
 import { ReactComponent as GoogleLogo } from "../../assets/google_logo.svg";
 import { ReactComponent as GoogleLogoWhite } from "../../assets/google_logo_white.svg";
 
-import GoogleButtonStyling from "./GoogleButtonStyling";
+const GoogleButtonStyling = {
+  backgroundColor: "#f8f8f8",
+  color: "#5485eb",
+  fontWeight: 800,
+  fontSize: "1.2rem",
+  paddingBottom: "15px",
+  paddingTop: "15px",
+  "&:hover": {
+    backgroundColor: "#5485eb",
+    color: "#f8f8f8",
+  },
+};
 
 async function redirectToSignIn() {
   const provider: GoogleAuthProvider = new GoogleAuthProvider();
@@ -21,6 +32,13 @@ async function redirectToSignIn() {
   await signInWithRedirect(auth, provider);
 }
 
+/**
+ * Button to sign into the application by prompting a redirect to a page to sign in with Google.
+ * 
+ * @group Components
+ * @category Page
+ * @returns GoogleSignInButton component
+ */
 function GoogleSignInButton() {
   const [buttonMouseover, setButtonMouseover] = useState<Boolean>(false);
 

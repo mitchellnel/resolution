@@ -77,6 +77,14 @@ interface HeaderDrawerProps {
   children: React.ReactNode
 }
 
+/**
+ * Wraps navigation components in a navigation bar displaying {@link ProfileIcon} and a collapsible left drawer
+ * that shows links to {@link Dashboard} and to {@link CreateGoalForm}.
+ * 
+ * @group Components
+ * @category Navbar
+ * @returns HeaderDrawer component
+ */
 export default function HeaderDrawer({children}: HeaderDrawerProps) {
 
   const theme = useTheme();

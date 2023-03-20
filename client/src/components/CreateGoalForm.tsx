@@ -17,7 +17,22 @@ import { LocalizationProvider, MobileTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 
-interface CreateGoalFormProps {
+/**
+ * The props type for {@link CreateGoalForm}.
+ * 
+ * @category Component Props
+ */
+export interface CreateGoalFormProps {
+  /**
+   * Function that calls the backend API to create a goal in the database.
+   * 
+   * @param description - Description of new goal
+   * @param timesToAchieve - Times to achieve of new goal
+   * @param reminderFrequency - Reminder frequency of new goal
+   * @param reminderTime - Reminder time of new goal if reminderFrequency is not None
+   * @param reminderDay - Reminder day of new goal if weekly reminder
+   * @param reminderDate - Reminder date of new goal if monthly reminder
+   */
   submitForm: (
     description: string,
     timesToAchieve: number,
@@ -26,9 +41,21 @@ interface CreateGoalFormProps {
     reminderDay: Weekday,
     reminderDate: number
   ) => void;
+  /**
+   * Collapses the form through the {@link CreateGoalCard} component.
+   */
   closeForm: () => void;
 }
 
+/**
+ * The component that allows users to create a goal for a given resolution. Contains form inputs for
+ * a description, times to achieve, reminder frequency (None, Daily, Weekly, Monthly), reminder time (if 
+ * reminder frequency is not None), reminder day (for Weekly reminders), and reminder date (for Monthly reminders).
+ * 
+ * @group Components
+ * @category Page
+ * @returns CreateGoalForm component
+ */
 const CreateGoalForm = ({ submitForm, closeForm }: CreateGoalFormProps) => {
   const fieldStyle = {
     marginTop: 3,

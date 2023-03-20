@@ -4,10 +4,26 @@ import { Resolution } from "../contexts/ResolutionContext";
 import { Link} from "react-router-dom";
 import ResolutionOptions from "./ResolutionOptions";
 
-interface ResolutionCardProps {
+/**
+ * The props type for {@link ResolutionCard}.
+ * 
+ * @category Component Props
+ */
+export interface ResolutionCardProps {
+  /**
+   * The resolution to display
+   */
   resolution: Resolution
 }
 
+/**
+ * Displays resolution information on the {@link Dashboard}. Shows resolution title, description, as well as 
+ * {@link GoalProgress}, which displays resolution progress dependent on what proportion of goals are completed.
+ * 
+ * @group Components
+ * @category Page
+ * @returns ResolutionCard component
+ */
 const ResolutionCard = ({resolution}: ResolutionCardProps) => {
 
   return (

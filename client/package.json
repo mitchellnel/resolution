@@ -52,5 +52,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "typedoc": "^0.23.28",
+    "typedoc-plugin-merge-modules": "^4.0.1"
   }
 }

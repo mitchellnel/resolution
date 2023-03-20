@@ -1,6 +1,13 @@
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
+/**
+ * The page that displays a 404 error when a nonexistent route is accessed.
+ * 
+ * @group Components
+ * @category Navigation
+ * @returns ErrorPage navigation component
+ */
 const ErrorPage = () => {
 
   return (

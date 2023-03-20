@@ -7,13 +7,41 @@ import { useState, useContext } from "react";
 import { ResolutionContext } from "../contexts/ResolutionContext";
 import OccurrenceCounter from "./OccurrenceCounter";
 
-interface GoalCardProps {
+/**
+ * The props of {@link GoalCard}.
+ * 
+ * @category Component Props
+ */
+export interface GoalCardProps {
+  /**
+   * The current goal
+   */
   goal: Goal;
+  /**
+   * The key of the resolution that the current goal is attached to
+   */
   resolutionKey: string;
+  /**
+   * Function that calls the backend API to achieve a goal in the database
+   */
   achieveGoal: () => void;
+  /**
+   * @param completed True for complete goal, false for incomplete goal
+   * @returns Function that calls the backend API to set the completed flag for a goal
+   */
   setCompleted: (completed: boolean) => void;
 }
 
+/**
+ * A goal card, which displays the goal description as well as the {@link OccurrenceCounter}, which
+ * displays the number of times needed to achieve a goal for goal completion. Goal completion is denoted by
+ * the removal of {@link OccurrenceCounter} on the goal card, a strikethrough of the goal, as well as the background
+ * of the goal card becoming green.
+ * 
+ * @group Components
+ * @category Page
+ * @returns GoalCard component
+ */
 const GoalCard = ({
   goal,
   resolutionKey,

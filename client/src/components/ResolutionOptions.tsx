@@ -6,10 +6,26 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 
-interface ResolutionOptionsProps {
+/**
+ * The props type for {@link ResolutionOptions}.
+ * 
+ * @category Component Props
+ */
+export interface ResolutionOptionsProps {
+  /**
+   * The current resolution
+   */
   resolution: Resolution
 }
 
+/**
+ * A button with 3 dots that when clicked, that will show an option to edit the resolution of the {@link ResolutionCard} it is attached to,
+ * or delete the resolution of the {@link ResolutionCard} it is attached to.
+ * 
+ * @group Components
+ * @category Page
+ * @returns ResolutionOptions component
+ */
 const ResolutionOptions = ({resolution}: ResolutionOptionsProps) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
