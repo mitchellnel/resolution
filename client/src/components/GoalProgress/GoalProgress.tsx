@@ -1,11 +1,32 @@
 import './GoalProgress.css'
 
-interface GoalProgressProps {
+/**
+ * The props type for {@link GoalProgress}.
+ * 
+ * @category Component Props
+ */
+export interface GoalProgressProps {
+  /**
+   * The style for {@link GoalProgress}
+   */
   style: any,
+  /**
+   * The number of goals completed
+   */
   goalsCompleted: number,
+  /**
+   * The total number of goals
+   */
   goalCount: number
 }
 
+/**
+ * Displays a progress bar showing how many goals are completed compared to how many goals exist.
+ * 
+ * @group Components
+ * @category Page
+ * @returns GoalProgress component
+ */
 const GoalProgress = ({style, goalsCompleted, goalCount}: GoalProgressProps) => {
 
   return (

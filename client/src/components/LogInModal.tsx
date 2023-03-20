@@ -15,6 +15,15 @@ const style = {
     p: 4,
   };
 
+/**
+ * A log in modal that prompts the user to log in if the user is not logged in. Takes advantage of the
+ * authenticated flag from {@link UserContext} to make the determination of whether the user is logged
+ * in or not.
+ * 
+ * @group Components
+ * @category Modal
+ * @returns LogInModal component
+ */
 const LogInModal = () => {
 
     const { authenticated } = useContext(UserContext);

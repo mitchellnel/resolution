@@ -4,7 +4,15 @@ import { useState } from 'react';
 import { ResolutionContext } from '../contexts/ResolutionContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-
+/**
+ * The form page that allows users to update an existing resolution. Contains title and description form inputs.
+ * Initial render fills title and description form inputs with current resolution title and descriptions. Clicking
+ * the update button calls the backend API to update the resolution and redirects the user to the {@link Dashboard}.
+ * 
+ * @group Components
+ * @category Navigation
+ * @returns UpdateResolutionForm navigation component
+ */
 const UpdateResolutionForm = () => {
 
     const navigate = useNavigate();

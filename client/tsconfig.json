@@ -22,5 +22,10 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "typedocOptions": {
+    "entryPointStrategy": "expand",
+    "entryPoints": ["src/components", "src/navigation", "src/contexts", "src/types"],
+    "out": "docs",
+}
 }

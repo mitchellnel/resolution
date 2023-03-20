@@ -4,6 +4,13 @@ import CreateResolutionCard from '../components/CreateResolutionCard';
 import ResolutionCard from '../components/ResolutionCard'
 import { ResolutionContext } from '../contexts/ResolutionContext';
 
+/**
+ * The page that displays all {@link ResolutionCard}s of the current user.
+ * 
+ * @group Components
+ * @category Navigation
+ * @returns Dashboard navigation component
+ */
 const Dashboard = () => {
 
     const { resolutions } = useContext(ResolutionContext);

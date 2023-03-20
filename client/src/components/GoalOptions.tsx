@@ -8,12 +8,34 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import { ResolutionContext } from "../contexts/ResolutionContext";
 
-interface GoalOptionsProps {
+/**
+ * The props for {@link GoalOptions}.
+ * 
+ * @category Component Props
+ */
+export interface GoalOptionsProps {
+  /**
+   * The current goal
+   */
   goal: Goal;
+  /**
+   * The key of the resolution that the current goal is attached to
+   */
   resolutionKey: string;
+  /**
+   * Opens the form through the {@link GoalCard} component.
+   */
   openEditForm: () => void;
 }
 
+/**
+ * A button with 3 dots that when clicked, that will show an option to edit the goal of the {@link GoalCard} it is attached to,
+ * or delete the goal of the {@link GoalCard} it is attached to.
+ * 
+ * @group Components
+ * @category Page
+ * @returns GoalOptions component
+ */
 const GoalOptions = ({
   goal,
   resolutionKey,

@@ -1,11 +1,32 @@
 import { Button, Typography } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 
-interface OccurrenceCounterProps {
+/**
+ * The props type for {@link OccurrenceCounter}.
+ * 
+ * @category Component Props
+ */
+export interface OccurrenceCounterProps {
+    /**
+     * Times to achieve current goal
+     */
     nTimesToAchieve: number,
+  /**
+   * Function that calls the backend API to achieve a goal in the database
+   */
     goalAchievementHandler: () => void
 }
 
+/**
+ * A component attached to {@link GoalCard}s that are not completed. Shows the number of achievements left
+ * for a certain goal when not hovered. When the component is hovered, a green checkmark appears and it
+ * can be clicked, which will send an achievement request to the backend API, causing the number of achievements
+ * left to decrement.
+ * 
+ * @group Components
+ * @category Page
+ * @returns OccurrenceCounter component
+ */
 const OccurrenceCounter = ({ nTimesToAchieve, goalAchievementHandler } : OccurrenceCounterProps) => {
 
     const style = {

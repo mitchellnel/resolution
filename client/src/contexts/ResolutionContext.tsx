@@ -28,33 +28,119 @@ import {
   API_UPDATE_RESOLUTION_URL,
 } from "../constants/apiEndpoints";
 
+/**
+ * The type of a resolution object.
+ * 
+ * @category Object Types
+ */
 export interface Resolution {
+  /**
+   * Id of resolution
+   */
   id: string;
+  /**
+   * Title of resolution
+   */
   title: string;
+  /**
+   * Description of resolution
+   */
   description: string;
+  /**
+   * List of goals attached to resolution
+   */
   goals: Goal[];
+  /**
+   * Number of goals completed for the resolution
+   */
   goals_completed: number;
+  /**
+   * Total number of goals contained by the resolution
+   */
   goal_count: number;
 }
 
+/**
+ * The type of a goal object.
+ * 
+ * @category Object Types
+ */
 export interface Goal {
+  /**
+   * Id of goal
+   */
   id: string;
+  /**
+   * Description of goal
+   */
   description: string;
+  /**
+   * Times to achieve for goal
+   */
   nTimesToAchieve: number;
+  /**
+   * Whether goal is completed or not
+   */
   completed: boolean;
+  /**
+   * Goal eventID
+   */
   eventID?: string;
 }
 
+/**
+ * The object accessed through ResolutionContext.
+ * 
+ * @category Contexts
+ */
 export interface ResolutionContextInterface {
+  /**
+   * List of resolutions of current user.
+   */
   resolutions: Resolution[];
+  /**
+   * Function that calls the backend API to create a resolution in the database.
+   * 
+   * @param title - Resolution title
+   * @param description - Resolution description
+   */
   addResolution: (title: string, description: string) => void;
+  /**
+   * Function that calls the backend API to delete a resolution from the database then fetches to update current list of resolutions.
+   * 
+   * @param key - Key of resolution to delete
+   */
   deleteResolution: (key: string) => void;
+  /**
+   * Function that calls the backend API to update an existing resolution in the database then fetches to update current list of resolutions.
+   * 
+   * @param key - Key of resolution to update
+   * @param new_title - New resolution title
+   * @param new_description - New resolution description
+   */
   updateResolution: (
     key: string,
     new_title: string,
     new_description: string
   ) => void;
+  /**
+   * Function that gets the resolution given an id.
+   * 
+   * @param id - Id of resolution to search for or undefined
+   * @returns The resolution linked to that id or undefined if the resolution with this id does not exist or if the id is undefined
+   */
   getResolutionById: (id: string | undefined) => Resolution | undefined;
+  /**
+   * Function that calls the backend API to add a goal for a given resolution in the database then fetches to update current list of resolutions.
+   * 
+   * @param resolution_key - Key of resolution to update
+   * @param description - Description of new goal
+   * @param timesToAchieve - Times to achieve of new goal
+   * @param reminderFrequency - Reminder frequency of new goal
+   * @param reminderTime - Reminder time of new goal if reminderFrequency is not None
+   * @param reminderDay - Reminder day of new goal if weekly reminder
+   * @param reminderDate - Reminder date of new goal if monthly reminder
+   */
   addGoal: (
     resolution_key: string,
     description: string,
@@ -64,17 +150,48 @@ export interface ResolutionContextInterface {
     reminderDay: Weekday,
     reminderDate: number
   ) => void;
+  /**
+   * Function that calls the backend API to achieve a goal for a given resolution in the database then fetches to update current list of resolutions.
+   * 
+   * @param resolution_key - Key of resolution to update
+   * @param goal_key - Key of goal to achieve
+   */
   achieveGoal: (resolution_key: string, goal_key: string) => void;
+  /**
+   * Function that calls the backend API to complete a goal for a given resolution in the database then fetches to update current list of resolutions.
+   * 
+   * @param resolution_key - Key of resolution to update
+   * @param goal_key - Key of goal to complete
+   * @param complete - True for complete goal, false for incomplete goal
+   * @returns 
+   */
   setGoalCompleted: (
     resolution_key: string,
     goal_key: string,
     complete: boolean
   ) => void;
+  /**
+   * Function that calls the backend API to delete a goal for a given resolution in the database then fetches to update current list of resolutions.
+   * 
+   * @param resolution_key - Key of resolution to update
+   * @param goal_key - Key of goal to delete
+   * @param event_id - Goal eventID
+   * @returns 
+   */
   deleteGoal: (
     resolution_key: string,
     goal_key: string,
     event_id: string
   ) => void;
+  /**
+   * Function that calls the backend API to update a goal for a given resolution in the database then fetches to update current list of resolutions.
+   * 
+   * @param resolution_key - Key of resolution to update
+   * @param goal_key - Key of goal to update
+   * @param event_id - Goal eventID
+   * @param new_description - New goal description
+   * @returns 
+   */
   updateGoal: (
     resolution_key: string,
     goal_key: string,
@@ -83,6 +200,11 @@ export interface ResolutionContextInterface {
   ) => void;
 }
 
+/**
+ * React Context that provides fields listed in {@link ResolutionContextInterface}.
+ * 
+ * @group Contexts
+ */
 export const ResolutionContext = createContext<ResolutionContextInterface>({
   resolutions: [],
   addResolution: () => null,
@@ -136,6 +258,13 @@ const resolutionsReducer = (
   }
 };
 
+/**
+ * Provides children components access to fields in {@link ResolutionContext}.
+ * 
+ * @group Components
+ * @category Context Provider
+ * @returns ResolutionProvider component
+ */
 export const ResolutionProvider = ({ children }: ResolutionProviderProps) => {
   const { currentUser } = useContext(UserContext);
 

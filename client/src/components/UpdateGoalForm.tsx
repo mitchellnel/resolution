@@ -2,12 +2,36 @@ import React from 'react';
 import { Button, Container, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
-interface UpdateGoalFormProps {
+/**
+ * The props type for {@link UpdateGoalForm}.
+ * 
+ * @category Component Props
+ */
+export interface UpdateGoalFormProps {
+    /**
+     * The current description of the existing goal to edit
+     */
     current_description: string;
+    /**
+     * Function that calls the backend API to update the goal to edit with a new description
+     * 
+     * @param description - New description for existing goal to edit
+     */
     submitForm: (description : string) => void;
+    /**
+     * Closes the form through the {@link GoalCard} component.
+     */
     closeEditForm: () => void;
 }
 
+/**
+ * The component that allows users to update the description of an existing goal for a given resolution. Contains form input
+ * for the new description.
+ * 
+ * @group Components
+ * @category Page
+ * @returns UpdateGoalForm component
+ */
 const UpdateGoalForm = ({ current_description, submitForm, closeEditForm } : UpdateGoalFormProps ) => {
 
     const fieldStyle = {

@@ -4,7 +4,15 @@ import { useState } from 'react';
 import { ResolutionContext } from '../contexts/ResolutionContext';
 import { useNavigate } from 'react-router-dom';
 
-
+/**
+ * The form page that allows users to create a new resolution. Contains title and description form inputs.
+ * Clicking the create button calls the backend API to create the new resolution and redirects the user to
+ * the {@link Dashboard}.
+ * 
+ * @group Components
+ * @category Navigation
+ * @returns CreateResolutionForm navigation component
+ */
 const CreateResolutionForm = () => {
 
     const navigate = useNavigate();

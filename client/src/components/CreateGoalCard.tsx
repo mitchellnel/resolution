@@ -5,7 +5,22 @@ import { useState } from "react";
 import { ReminderFrequency, Weekday } from "../types";
 import { Dayjs } from "dayjs";
 
-interface CreateGoalCardProps {
+/**
+ * The props type for {@link CreateGoalCard}.
+ * 
+ * @category Component Props
+ */
+export interface CreateGoalCardProps {
+  /**
+   * Function that calls the backend API to create a goal in the database.
+   * 
+   * @param description - Description of new goal
+   * @param timesToAchieve - Times to achieve of new goal
+   * @param reminderFrequency - Reminder frequency of new goal
+   * @param reminderTime - Reminder time of new goal if reminderFrequency is not None
+   * @param reminderDay - Reminder day of new goal if weekly reminder
+   * @param reminderDate - Reminder date of new goal if monthly reminder
+   */
   goalCreationHandler: (
     description: string,
     timesToAchieve: number,
@@ -16,6 +31,15 @@ interface CreateGoalCardProps {
   ) => void;
 }
 
+/**
+ * A card component that, when not clicked, shows a button to add a new goal. When the button is clicked,
+ * the button collapses and the {@link CreateGoalForm} expands. Collapses when either the submit button or cancel
+ * button on {@link CreateGoalForm} is clicked.
+ * 
+ * @group Components
+ * @category Page
+ * @returns CreateGoalCard component
+ */
 const CreateGoalCard = ({ goalCreationHandler }: CreateGoalCardProps) => {
   const [expanded, setExpanded] = useState(false);
 

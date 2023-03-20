@@ -3,6 +3,16 @@ import { UserContext, UserContextInterface } from '../contexts/UserContext';
 import { useContext, useState } from 'react';
 import GoogleSignOutButton from "./GoogleLogin/GoogleSignOutButton";
 
+/**
+ * The component on the upper right hand corner of {@link HeaderDrawer}, that when logged in shows the
+ * current user's Google account display name as well as their Google account profile picture. When not logged in,
+ * "NOT SIGNED IN" is displayed instead. Current user information is ascertained through the currentUser field
+ * from {@link UserContext}.
+ * 
+ * @group Components
+ * @category Navbar
+ * @returns ProfileIcon component
+ */
 const ProfileIcon = () => {
 
     interface UserInfo {
