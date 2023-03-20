@@ -57,10 +57,6 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-### Frontend Documentation
-
-Frontend documentation was created using TypeDoc and can be found in the "docs" folder in "client". The main HTML file for the docs is located at "docs/modules.html"
-
 ### Before Running Client Locally
 
 You need to declare a `.env` file that contains 3 pieces of information relevant to using the Google Calendar API. This will involve following the guide linked [here](https://docs.simplecalendar.io/google-api-key/).
@@ -78,3 +74,7 @@ REACT_APP_GOOGLE_CLIENT_SECRET="<your_google_client_secret>"
 ```
 
 Then save this file.
+
+### Frontend Documentation
+
+Frontend documentation was created using TypeDoc and can be found in the "docs" folder in "client". The main HTML file for the docs is located at "docs/modules.html"
