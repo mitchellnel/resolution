@@ -5,8 +5,6 @@
 
 [![Release](https://img.shields.io/github/v/release/mitchellnel/resolution?label=release)](https://github.com/mitchellnel/resolution/releases/latest)
 
-(for some reason ^^^ this release badge doesn't work and I honestly cannot work out why)
-
 The `client` directory contains the source code for the Resolution web application (frontend).
 
 The `server` directory contains the source code for the Resolution application server (backend).
